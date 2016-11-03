@@ -1,0 +1,74 @@
+<svg height="300" width="600" xmlns="http://www.w3.org/2000/svg" version="1.1">
+  <defs>
+    <style>
+     <![CDATA[
+      .ball text {
+        font-size: 18px;
+        text-anchor: middle;
+        stroke: gray;
+        stroke-width: 0;
+        fill: white;
+      }
+      .month text{
+        font-size: 4px;
+        text-anchor: middle;
+        stroke: gray;
+        stroke-width: 0;
+        fill: black;
+      }
+     ]]>
+  </style>
+    <radialGradient id="r1" cx=".4" cy=".4" r=".6">
+      <stop offset="0%" stop-color="#0066FF"></stop>
+      <stop offset="60%" stop-color="#005CE6"></stop>
+      <stop offset="80%" stop-color="#0047B3"></stop>
+      <stop offset="100%" stop-color="#003380"></stop>
+    </radialGradient>
+    <radialGradient id="r2" cx=".4" cy=".4" r=".6">
+      <stop offset="0%" stop-color="#33CC33"></stop>
+      <stop offset="60%" stop-color="#2EB82E"></stop>
+      <stop offset="80%" stop-color="#248F24"></stop>
+      <stop offset="100%" stop-color="#196619"></stop>
+    </radialGradient>
+  </defs>
+  <g id="m1" class="month" transform="scale(5)">
+    <polygon points="0,0 20,0 25,5 20,10 0,10 5,5" fill="orange" stroke="white" stroke-width="1"/>
+    <text x="13.5" y="6.5">March</text>
+  </g>
+  <g id="m2" class="month" transform="scale(5) translate(20, 0)">
+    <polygon points="0,0 20,0 25,5 20,10 0,10 5,5" fill="orange" stroke="white" stroke-width="1"/>
+    <text x="13.5" y="6.5">April</text>
+  </g>
+  <g id="m3" class="month" transform="scale(5) translate(40, 0)">
+    <polygon points="0,0 20,0 25,5 20,10 0,10 5,5" fill="orange" stroke="white" stroke-width="1"/>
+    <text x="13.5" y="6.5">May</text>
+  </g>
+  <g class="ball" transform="translate(20, 50)">
+    <circle cx="15" cy="15" r="15" fill="url(#r1)"/>
+    <text x="15" y="22">1</text>
+  </g>
+  <g class="ball" transform="translate(50, 50)">
+    <circle cx="15" cy="15" r="15" fill="url(#r1)"/>
+    <text x="15" y="22">2</text>
+  </g>
+  <g class="ball" transform="translate(80, 50)">
+    <circle cx="15" cy="15" r="15" fill="url(#r1)"/>
+    <text x="15" y="22">3</text>
+  </g>
+  <g class="ball" transform="translate(110, 50)">
+    <circle cx="15" cy="15" r="15" fill="url(#r2)"/>
+    <text x="15" y="22">4</text>
+  </g>
+  <g class="ball" transform="translate(140, 50)">
+    <circle cx="15" cy="15" r="15" fill="url(#r2)"/>
+    <text x="15" y="22">5</text>
+  </g>
+  <g class="ball" transform="translate(170, 50)">
+    <circle cx="15" cy="15" r="15" fill="url(#r2)"/>
+    <text x="15" y="22">6</text>
+  </g>
+  <!-- <rect height="100" width="70" fill="white" stroke="red"
+    stroke-width="10" x="5" y="5" rx="5"/>
+  <circle cx="40" cy="105" r="3" fill="white"/>
+  <text font-size="18px" text-anchor="middle" stroke="black" stroke-width="0" fill="#008B6F" x="15" y="50">Hello !</text> -->
+</svg>

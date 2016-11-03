@@ -1,0 +1,212 @@
+$color-1: #D5FBFF;
+$color-2: #9FBCBF;
+$color-3: #647678;
+$color-4: #2F3738;
+$color-5: #59D8E5;
+$divider: 8px;
+
+@mixin freshTurboscent {
+    background: #F1F2B5;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(#F1F2B5 , #135058);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(#F1F2B5 , #135058);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+@mixin aLostMemory {
+    background-color: #FFB88C;
+    /* fallback for old browsers */
+    background-image: -webkit-linear-gradient(#DE6262 , #FFB88C);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background-image: linear-gradient(#DE6262 , #FFB88C);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+@import "flexbox";
+@import "component";
+
+body {
+    background-color: $color-1;
+    //background: url("../public/img/bg.jpg") 0 /cover fixed;
+}
+/*Surface*/
+#surface {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    display: inline-flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 1;
+
+    &.flex-center {
+        @include flex-center();
+    }
+
+    &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, .5);
+        border-radius: 0.5em;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+    }
+    div.window {
+        background-color: rgba(255,255,255, .7);
+        border-radius: 0.5em;
+        div.state {
+            display: flex;
+            justify-content: flex-end;
+            padding-top: 0.5em;
+            i {
+                margin-right: 0.5em;
+                width: 1.5em;
+                height: 1.5em;
+                border: 1px black solid;
+                border-radius: 50%;
+                text-align: center;
+                line-height: 1.5em;
+                background-color: #fcb188;
+                &:hover{
+                    cursor: pointer;
+                    background-color: #e16b66;
+                }
+            }
+        }
+        div.wizard {
+            padding: 1.5em 2.5em 1em 1em;
+            input {
+                font-size: 1.2em;
+                margin-left: 1em;
+                text-align: center;
+                background: rgba(0,0,0,0);
+                border-width: 0 0 1px 0;
+            }
+
+            div.btn-panel {
+                padding-top: 3em;
+                div.button{
+                    @include big-button {
+                        @include aLostMemory;
+                    }
+                }
+            }
+        }
+    }
+
+}
+/*EditBox*/
+div {
+    &#editbox {
+        width: 50%;
+        height: 500px;
+        float: left;
+    }
+}
+
+div.editbox {
+    .edit-row {
+        border: 1px black solid;
+        padding: 1em;
+
+        &.edit-date {
+            background-color: gray;
+        }
+
+        &.ball-panel {
+            background-color: $color-2;
+        }
+
+        label.edit-lbl {
+            padding-right: 1em;
+        }
+
+        input {
+            margin-right: 1em;
+        }
+
+        span.edit-lbl {
+            padding-right: 1em;
+        }
+
+        span.edit-ball {
+            margin-right: 1em;
+            background: blue;
+        }
+    }
+
+    div.btn-canvas {
+        display: inline-block;
+        padding: 0.5em;
+        border: 1px black solid;
+        border-radius: 0.5em;
+        @include freshTurboscent;
+    }
+
+    div.btn-action {
+        margin-top: -12px;
+        left: 70%;
+        position: relative;
+
+        span.btn-plus {
+            @include aLostMemory;
+
+            &:before {
+                border-bottom: 1px gray solid;
+            }
+        }
+    }
+}
+
+/*SVG*/
+svg {
+    width: 50%;
+    float: left;
+}
+
+circle.blue {
+    fill: url("#blue");
+}
+
+circle.green {
+    fill: url("#green");
+}
+
+.ball text {
+    font-size: 18px;
+    text-anchor: middle;
+    stroke: gray;
+    stroke-width: 0;
+    fill: white;
+}
+
+line {
+    stroke: gray;
+    stroke-width: 8px;
+}
+
+text.clip-path {
+    clip-path: url("#textClip");
+}
+
+.month text {
+    font-size: 20px;
+    text-anchor: middle;
+    stroke: gray;
+    stroke-width: 0;
+    fill: black;
+}
+
+span.circle {
+    border: 1px solid black;
+    border-radius: 50%;
+    text-align: center;
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+}

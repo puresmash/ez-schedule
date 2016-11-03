@@ -1,0 +1,38 @@
+<svg height="30" width="30" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <radialGradient id="blue" cx=".4" cy=".4" r=".6">
+      <stop offset="0%" stop-color="#0066FF"></stop>
+      <stop offset="60%" stop-color="#005CE6"></stop>
+      <stop offset="80%" stop-color="#0047B3"></stop>
+      <stop offset="100%" stop-color="#003380"></stop>
+    </radialGradient>
+    <radialGradient id="green" cx=".4" cy=".4" r=".6">
+      <stop offset="0%" stop-color="#33CC33"></stop>
+      <stop offset="60%" stop-color="#2EB82E"></stop>
+      <stop offset="80%" stop-color="#248F24"></stop>
+      <stop offset="100%" stop-color="#196619"></stop>
+    </radialGradient>
+    <style>
+     <![CDATA[
+      .ball text {
+        font-size: 18px;
+        text-anchor: middle;
+        stroke: gray;
+        stroke-width: 0;
+        fill: white;
+      }
+      circle.blue{
+        fill: url(#blue);
+      }
+      circle.green{
+        fill: url(#green);
+      }
+     ]]>
+   </style>
+  </defs>
+  <g class="ball">
+    <circle cx="15" cy="15" r="15" class="param(color) blue"/>
+    <text x="15" y="22" content-value="param(num) 0">0</text>
+  </g>
+  <script type="text/ecmascript" xlink:href="https://www.w3.org/TR/SVGParamPrimer/param.js"/>
+</svg>

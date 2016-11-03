@@ -1,0 +1,19 @@
+
+@mixin big-button(){
+    cursor: pointer;
+    display: inline-block;
+    padding: 1.2em;
+    border-radius: 0.5em;
+
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.3),0 2px 6px rgba(0,0,0,0.25);
+
+    // Default color
+    @include aLostMemory;
+    // Allow passing mixin block to change color
+    @content;
+
+    &:hover {
+        background-position: 0 -0.6em;
+        background-repeat: repeat-x;
+    }
+}
