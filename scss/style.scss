@@ -85,12 +85,15 @@ body {
                 text-align: center;
                 background: rgba(0,0,0,0);
                 border-width: 0 0 1px 0;
+                min-width: 200px;
+                text-align: left;
             }
 
             div.btn-panel {
                 padding-top: 3em;
                 div.button{
                     @include big-button {
+                        margin-left: 1em;
                         @include aLostMemory;
                     }
                 }

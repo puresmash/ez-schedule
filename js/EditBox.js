@@ -9,7 +9,7 @@ class EditBox extends React.Component {
   }
 
   render(){
-    let {actBalls} = this.props;
+    let {sDate, eDate, actBalls} = this.props;
     let ballPanel = this.getBallPanel(actBalls);
     console.log('Rendering editbox');
     return(
@@ -17,12 +17,12 @@ class EditBox extends React.Component {
         <div className="edit-row edit-date">
           <label className="edit-lbl">Start</label>
 
-          <input type="month" name="sDate" id="sDate" onChange={
+          <input type="month" name="sDate" id="sDate" value={sDate} onChange={
             (event) => this._handleChangeDateS(event)
           }/>
 
           <label className="edit-lbl">End</label>
-          <input type="month" name="eDate" id="eDate" onChange={
+          <input type="month" name="eDate" id="eDate" value={eDate} onChange={
             (event) => this._handleChangeDateE(event)
           }/>
 
@@ -129,9 +129,11 @@ class EditRow extends React.Component {
 }
 
 function mapStateToProps(state) {
+  const {sDate, eDate} = state.updateBar;
   console.log(`calling mSTPs: monthAry=${state.monthAry}`);
-  console.log(state);
   return {
+    sDate,
+    eDate,
     monthAry: state.updateBar.monthAry,
     actBalls: state.updateBall.actBalls,
     preBalls: state.updateBall.preBalls

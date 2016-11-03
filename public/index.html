@@ -27,9 +27,14 @@
         <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
         <script type="text/javascript">
           $(function() {
-            $('#sDate').datepicker({ minDate: "-3M", maxDate: "+6M" });
+            $('input#sDate').datepicker({
+                 minDate: "-3M", maxDate: "+6M", dateFormat: "yy-mm",
+                 onSelect: function() {
+                    $(this).change();
+                 }
+             });
 
-            $('input#datepicker').datepicker({ minDate: "-3M", maxDate: "+6M" });
+            $('input#eDate').datepicker({ minDate: "-3M", maxDate: "+6M", dateFormat: "yy-mm" });
           });
 
         </script>
