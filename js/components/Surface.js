@@ -1,7 +1,7 @@
 
 import React from 'react';
 import {connect} from 'react-redux';
-import {UpdDate, CreateCanvas, AddActBall, UpdActBall, UpdPreBall, UpdDesc} from '../actions/index.js';
+import {UpdDate, CreateCanvas} from '../actions/index.js';
 
 import 'react-date-picker/index.css'
 import { DateField, DatePicker } from 'react-date-picker';
@@ -66,15 +66,9 @@ class Surface extends React.Component {
     _handleChangeDateS(dateString){
       this.props.dispatch(UpdDate(dateString, 'start'));
     }
-    // _handleChangeDateS(event){
-    //   this.props.dispatch(UpdDate(event.target.value, 'start'));
-    // }
     _handleChangeDateE(dateString){
       this.props.dispatch(UpdDate(dateString, 'end'));
     }
-    // _handleChangeDateE(event){
-    //   this.props.dispatch(UpdDate(event.target.value, 'end'));
-    // }
 
     // _handleChangeDateS(){
     //   let sDate = ReactDOM.findDOMNode(this.refs.sDate).value;
@@ -116,9 +110,6 @@ class Surface extends React.Component {
 
         return(
             <div>
-                {/* <input id="sDate" ref="sDate" type="text" name="sDate" placeholder="Insert Start Date" onChange={
-                  (event) => this._handleChangeDateS(event)
-                }/> */}
                 <DateField
                   dateFormat="YYYY-MM"
                   forceValidDate={false}
@@ -143,9 +134,6 @@ class Surface extends React.Component {
                   />
                 </DateField>
 
-                {/* <input id="eDate" ref="eDate" type="text" name="eDate" placeholder="Insert End Date  " onChange={
-                  (event) => this._handleChangeDateE(event)
-                }/> */}
                 <DateField
                   dateFormat="YYYY-MM"
                   forceValidDate={false}

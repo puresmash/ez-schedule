@@ -121,11 +121,15 @@ class Graph extends React.Component {
       this.scale = this.width / ((monthAry.length-1) * (barWidth - 5) + barWidth);
     }
 
-    for(let [key, value] of monthAry.entries()){
-      console.log(`${key}, ${value}`);
-      let title = `t-${key}`
-      ary.push(<MonthBar key={title} index={key} title={value.mstr} scale={this.scale}/>);
-    }
+    // for(let [key, value] of monthAry.entries()){
+    //   console.log(`${key}, ${value}`);
+    //   let title = `t-${key}`
+    //   ary.push(<MonthBar key={title} index={key} title={value.mstr} scale={this.scale}/>);
+    // }
+    monthAry.forEach((ele,index) => {
+        console.log(ele);
+        ary.push(<MonthBar index={index} title={ele} scale={this.scale}/>);
+    });
     return ary;
   }
 

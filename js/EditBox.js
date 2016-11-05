@@ -2,6 +2,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {UpdDate, CreateCanvas, AddActBall, UpdActBall, UpdPreBall, UpdDesc} from './actions/index.js'
+import moment from 'moment';
 
 class EditBox extends React.Component {
   constructor(props){
@@ -17,7 +18,7 @@ class EditBox extends React.Component {
         <div className="edit-row edit-date">
           <label className="edit-lbl">Start</label>
 
-          <input type="month" name="sDate" id="sDate" value={sDate} onChange={
+          <input type="month" name="sDate" id="sDate" min={moment().subtract(3, 'M').format('YYYY-MM')} value={sDate} onChange={
             (event) => this._handleChangeDateS(event)
           }/>
 

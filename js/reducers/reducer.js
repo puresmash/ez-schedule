@@ -1,4 +1,5 @@
 import {combineReducers} from 'redux';
+import moment from 'moment';
 
 function updateBall(state={actBalls: [], preBalls: []}, action){
   switch (action.type) {
@@ -100,43 +101,20 @@ function updateBar(state={}, action){
       if(!sDate || !eDate || eDate<sDate){
         return state;
       }
-      let yearS = parseInt(sDate.substring(0, 4));
-      let yearE = parseInt(eDate.substring(0, 4));
-      let monthS = parseInt(sDate.substring(5, 7));
-      let monthE = parseInt(eDate.substring(5, 7));
 
+      let diff = moment(eDate, 'YYYY-MM').diff(moment(sDate, 'YYYY-MM'),'months');
+      console.log(diff);
+      if(diff<0){
+          console.error('invalid month range(<0)');
+          return;
+      }
       let ary = [];
-
-
-      for(let y=yearS, m=0, mB=0; y<=yearE; y++){
-        if(y===yearS){
-          m = monthS;
-          console.log("sFlag==");
-        }
-        else {
-          m = 1;
-        }
-        if(y===yearE){
-          mB = monthE;
-          console.log("eFlag==");
-        }
-        else{
-          mB = 12;
-        }
-
-        for(; m<=mB; m++){
-          ary.push({
-            mstr: defMonth[m-1],
-            y,
-            m
-          });
-        }
+      for(let i=0; i<=diff; i++){
+          ary.push(moment(sDate, 'YYYY-MM').add(i, 'M').format('MMM'));
       }
 
       console.log(`reducer: ${action.type} ${ary}`);
-      // if(eDate.getDate() < sDate.getDate()){
-      //   months--;
-      // }
+
       return Object.assign({}, state, {
         monthAry: ary
       });
@@ -145,8 +123,6 @@ function updateBar(state={}, action){
       return state;
   }
 }
-
-const defMonth = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 /*
 {
