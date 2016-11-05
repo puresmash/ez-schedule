@@ -1,14 +1,22 @@
 
 import React from 'react';
 import {connect} from 'react-redux';
-import {UpdDate, CreateCanvas, AddActBall, UpdActBall, UpdPreBall, UpdDesc} from '../actions/index.js'
+import {UpdDate, CreateCanvas, AddActBall, UpdActBall, UpdPreBall, UpdDesc} from '../actions/index.js';
+
+import 'react-date-picker/index.css'
+import { DateField, DatePicker } from 'react-date-picker';
+
+
 
 class Surface extends React.Component {
     constructor(){
       super();
       this.state = { closeComponent: false };
+      this.constructMap();
     }
-
+    onChange(dateString){
+      console.log(dateString);
+    }
     render(){
       let {sDate, eDate} = this.props;
       let wizard = this.getWizard(sDate, eDate);
@@ -22,19 +30,14 @@ class Surface extends React.Component {
               </div>
               <div className="wizard">
                 {wizard}
+
                 <div className="btn-panel">
                   <div className="button">
                     <i className="fa fa-cloud-download" aria-hidden="true">
                       <span style={{paddingLeft: '0.5em'}}>Sync Cloud</span>
                     </i>
                   </div>
-                  <div className="button" onClick={
-                    (event) => this._createCanvas()
-                  }>
-                    <i className="fa fa-paint-brush" aria-hidden="true">
-                      <span style={{paddingLeft: '0.5em'}}>Draw Graph</span>
-                    </i>
-                  </div>
+                  {this.getWizardStep('paint')}
                 </div>
               </div>
           </div>
@@ -42,16 +45,36 @@ class Surface extends React.Component {
       );
     }
 
+    constructMap(){
+        let step = new Map();
+        step.set('paint',
+            <div className="button" onClick={
+              (event) => this._createCanvas()
+            }>
+              <i className="fa fa-paint-brush" aria-hidden="true">
+                <span style={{paddingLeft: '0.5em'}}>Draw Graph</span>
+              </i>
+            </div>
+        );
+        this.step = step;
+    }
+
     _createCanvas(){
       this.props.dispatch(CreateCanvas());
     }
 
-    _handleChangeDateS(event){
-      this.props.dispatch(UpdDate(event.target.value, 'start'));
+    _handleChangeDateS(dateString){
+      this.props.dispatch(UpdDate(dateString, 'start'));
     }
-    _handleChangeDateE(event){
-      this.props.dispatch(UpdDate(event.target.value, 'end'));
+    // _handleChangeDateS(event){
+    //   this.props.dispatch(UpdDate(event.target.value, 'start'));
+    // }
+    _handleChangeDateE(dateString){
+      this.props.dispatch(UpdDate(dateString, 'end'));
     }
+    // _handleChangeDateE(event){
+    //   this.props.dispatch(UpdDate(event.target.value, 'end'));
+    // }
 
     // _handleChangeDateS(){
     //   let sDate = ReactDOM.findDOMNode(this.refs.sDate).value;
@@ -74,8 +97,18 @@ class Surface extends React.Component {
         return {};
     }
 
-    getWizardStep(sDate, eDate){
-        // if(sDate && )
+    getWizardStep(key){
+        return this.step.get(key);
+        // map.set('next',
+        //     <div className="button" onClick={
+        //       (event) => this._createCanvas()
+        //     }>
+        //       <i className="fa fa-paint-brush" aria-hidden="true">
+        //         <span style={{paddingLeft: '0.5em'}}>Draw Graph</span>
+        //       </i>
+        //     </div>
+        //     'fa-arrow-right'
+        // );
     }
 
     getWizard(sDate, eDate){
@@ -83,13 +116,59 @@ class Surface extends React.Component {
 
         return(
             <div>
-                <input id="sDate" ref="sDate" type="text" name="sDate" placeholder="Insert Start Date" onChange={
+                {/* <input id="sDate" ref="sDate" type="text" name="sDate" placeholder="Insert Start Date" onChange={
                   (event) => this._handleChangeDateS(event)
-                }/>
+                }/> */}
+                <DateField
+                  dateFormat="YYYY-MM"
+                  forceValidDate={false}
+                  minDate="2016-05"
+                  maxDate="2017-01"
+                  placeholder="Insert Start Date"
+                  onChange={
+                      (dateString)=>this._handleChangeDateS(dateString)
+                  }
+                  style={{marginLeft: '1em'}}
+                >
+                  <DatePicker
+                    navigation={true}
+                    locale="en"
+                    forceValidDate={true}
+                    highlightWeekends={false}
+                    highlightToday={false}
+                    weekNumbers={false}
+                    weekStartDay={0}
+                    footer={true}
+                    weekDayNames={false}
+                  />
+                </DateField>
 
-                <input id="eDate" ref="eDate" type="text" name="eDate" placeholder="Insert End Date  " onChange={
+                {/* <input id="eDate" ref="eDate" type="text" name="eDate" placeholder="Insert End Date  " onChange={
                   (event) => this._handleChangeDateE(event)
-                }/>
+                }/> */}
+                <DateField
+                  dateFormat="YYYY-MM"
+                  forceValidDate={false}
+                  minDate="2016-05"
+                  maxDate="2017-01"
+                  placeholder="Insert End Date"
+                  onChange={
+                      (dateString)=>this._handleChangeDateE(dateString)
+                  }
+                  style={{marginLeft: '1em'}}
+                >
+                  <DatePicker
+                    navigation={true}
+                    locale="en"
+                    forceValidDate={true}
+                    highlightWeekends={false}
+                    highlightToday={false}
+                    weekNumbers={false}
+                    weekStartDay={0}
+                    footer={true}
+                    weekDayNames={false}
+                  />
+                </DateField>
             </div>
         );
 

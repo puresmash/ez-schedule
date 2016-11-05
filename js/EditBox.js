@@ -4,8 +4,8 @@ import {connect} from 'react-redux';
 import {UpdDate, CreateCanvas, AddActBall, UpdActBall, UpdPreBall, UpdDesc} from './actions/index.js'
 
 class EditBox extends React.Component {
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
   }
 
   render(){

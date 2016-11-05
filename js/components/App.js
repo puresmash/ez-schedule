@@ -7,7 +7,7 @@ const App = () => (
   <div>
     <Surface />
     <Graph />
-    <EditBox />
+    <EditBox sDate="" eDate=""/>
   </div>
 )
 
