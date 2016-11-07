@@ -4,10 +4,10 @@ import {EditBox} from '../EditBox.js';
 import {Surface} from './Surface.js';
 
 const App = () => (
-  <div>
+  <div id="App">
     <Surface />
     <Graph />
-    <EditBox sDate="" eDate=""/>
+    <EditBox visible={false}/>
   </div>
 )
 

@@ -4,44 +4,94 @@ import {connect} from 'react-redux';
 import {UpdDate, CreateCanvas, AddActBall, UpdActBall, UpdPreBall, UpdDesc} from './actions/index.js'
 import moment from 'moment';
 
+const MAX_MONTH = 6;
+const MIN_MONTH = -3;
+
 class EditBox extends React.Component {
+
+  static defaultProps = {
+    sDate: '',
+    eDate: '',
+    visible : false,
+  };
+  static propTypes = {
+        visible: React.PropTypes.bool,
+  };
+
   constructor(props){
     super(props);
+    let visibleFlag = props.visible || EditBox.defaultProps.visible;
+    this.state = {
+        visibleFlag :  eval(visibleFlag)
+    }
   }
 
   render(){
     let {sDate, eDate, actBalls} = this.props;
+    let {visibleFlag} = this.state;
     let ballPanel = this.getBallPanel(actBalls);
     console.log('Rendering editbox');
     return(
       <div id="editbox" className="editbox">
-        <div className="edit-row edit-date">
-          <label className="edit-lbl">Start</label>
-
-          <input type="month" name="sDate" id="sDate" min={moment().subtract(3, 'M').format('YYYY-MM')} value={sDate} onChange={
-            (event) => this._handleChangeDateS(event)
-          }/>
-
-          <label className="edit-lbl">End</label>
-          <input type="month" name="eDate" id="eDate" value={eDate} onChange={
-            (event) => this._handleChangeDateE(event)
-          }/>
-
-          <div className="btn-canvas" onClick={
-            (event) => this._createCanvas()
-          }>genCanvas</div>
-
+        <div style={{fontSize: '3em', display: 'flex', justifyContent: 'flex-end'}}>
+            <i className="fa fa-minus-square-o" aria-hidden="true" onClick={
+                () => this.toggleVisible()
+            }>
+            </i>
         </div>
-        {ballPanel}
-        <div className="btn-action" onClick={
-          () => this._addBall()
-        }>
-          <span className="circle btn-plus" >+</span>
+        <div id="container" style={{visibility: this.getVisible(visibleFlag)}}>
+            <div className="edit-row edit-date">
+                <div>
+                    <div className="edit-row-detail" style={{marginBottom: '8px'}}>
+                        <label className="edit-lbl">Start</label>
+                        <input type="month" name="sDate" id="sDate" value={sDate}
+                        min={moment().add(MIN_MONTH, 'M').format('YYYY-MM')}
+                        max={moment().add(MAX_MONTH, 'M').format('YYYY-MM')}
+                        onChange={
+                          (event) => this._handleChangeDateS(event)
+                        }/>
+                    </div>
+
+                    <div className="edit-row-detail">
+                        <label className="edit-lbl">End</label>
+                        <input type="month" name="eDate" id="eDate" value={eDate}
+                        min={moment().add(MIN_MONTH, 'M').format('YYYY-MM')}
+                        max={moment().add(MAX_MONTH, 'M').format('YYYY-MM')}
+                        onChange={
+                          (event) => this._handleChangeDateE(event)
+                        }/>
+                    </div>
+                </div>
+
+
+                <div style={{display: 'inline-flex',alignItems: 'center'}}>
+                    <div className="btn-canvas" onClick={
+                        (event) => this._createCanvas()
+                    }>
+                        <i className="fa fa-repeat" aria-hidden="true"></i>
+                    </div>
+                </div>
+
+
+
+            </div>
+            {ballPanel}
+            <div className="btn-action" onClick={
+              () => this._addBall()
+            }>
+              <span className="circle btn-plus" >+</span>
+            </div>
         </div>
       </div>
     );
   }
 
+  toggleVisible(){
+      this.setState({visibleFlag: this.state.visibleFlag ^ true});
+  }
+  getVisible(flag){
+      return (flag ? 'visible':'hidden');
+  }
   _createCanvas(){
     this.props.dispatch(CreateCanvas());
   }
@@ -63,18 +113,6 @@ class EditBox extends React.Component {
       let b = `pre-${key}`;
       ary.push(
         <EditRow sort={value.sort} a={a} b={b}/>
-      // <div className="edit-row ball-panel">
-      //   <span id={a} className="circle edit-ball">{value.sort}</span>
-      //   <input type="text" id="datepicker" key={a} placeholder="mm/dd/yyyy"
-      //     onChange={ (event) => this._updActBall(event, {a})}/>
-      //
-      //   <span id={b} className="circle edit-ball">{value.sort}</span>
-      //   <input type="text" id="datepicker" key={b} placeholder="mm/dd/yyyy"
-      //     onChange={ (event) => this._updPreBall(event, {b})}/>
-      //
-      //   <input type="text" defaultValue=""
-      //     onChange={ (event) => this._updDesc(event, {b})}/>
-      // </div>
       );
     }
     return ary;

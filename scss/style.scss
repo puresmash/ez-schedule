@@ -64,17 +64,11 @@ body {
             padding-top: 0.5em;
             i {
                 margin-right: 0.5em;
-                width: 1.5em;
-                height: 1.5em;
-                border: 1px black solid;
-                border-radius: 50%;
-                text-align: center;
-                line-height: 1.5em;
-                background-color: #fcb188;
-                &:hover{
-                    cursor: pointer;
-                    background-color: #e16b66;
-                }
+                @include thumb{
+                    line-height: 23px;
+                };
+                @include aLostMemory
+
             }
         }
         div.wizard {
@@ -103,22 +97,30 @@ body {
     }
 
 }
-/*EditBox*/
-div {
-    &#editbox {
-        width: 50%;
-        height: 500px;
-        float: left;
-    }
+
+div#app {
+    display: flex;
 }
 
+/*EditBox*/
 div.editbox {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    right: 0;
     .edit-row {
         border: 1px black solid;
         padding: 1em;
 
         &.edit-date {
             background-color: gray;
+            display: flex;
+            flex-direction: row;
+            div.edit-row-detail {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+            }
         }
 
         &.ball-panel {
@@ -152,24 +154,20 @@ div.editbox {
     }
 
     div.btn-action {
-        margin-top: -12px;
+        margin-top: -13px;
         left: 70%;
         position: relative;
 
         span.btn-plus {
             @include aLostMemory;
-
-            &:before {
-                border-bottom: 1px gray solid;
-            }
         }
     }
 }
 
 /*SVG*/
 svg {
-    width: 50%;
-    float: left;
+    width: 90%;
+    // float: left;
 }
 
 circle.blue {
@@ -206,11 +204,5 @@ text.clip-path {
 }
 
 span.circle {
-    border: 1px solid black;
-    border-radius: 50%;
-    text-align: center;
-    display: inline-block;
-    width: 25px;
-    height: 25px;
-    line-height: 25px;
+    @include thumb;
 }

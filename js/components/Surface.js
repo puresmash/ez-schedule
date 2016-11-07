@@ -6,8 +6,6 @@ import {UpdDate, CreateCanvas} from '../actions/index.js';
 import 'react-date-picker/index.css'
 import { DateField, DatePicker } from 'react-date-picker';
 
-
-
 class Surface extends React.Component {
     constructor(){
       super();

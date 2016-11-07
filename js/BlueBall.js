@@ -22,7 +22,7 @@ class Graph extends React.Component {
     let width = 600;
 
     return(
-      <svg width="500" height="500">
+      <svg>
         <defs>
           <radialGradient id="blue" cx=".4" cy=".4" r=".6">
             <stop offset="0%" style={{stopColor: "#0066FF"}}></stop>

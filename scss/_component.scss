@@ -17,3 +17,21 @@
         background-repeat: repeat-x;
     }
 }
+
+@mixin thumb() {
+    border: 1px solid black;
+    border-radius: 50%;
+    text-align: center;
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+    box-sizing: border-box;
+    // Allow passing mixin block to adjust line-height
+    @content;
+    &:hover{
+        cursor: pointer;
+        background-position: 0 -16px;
+        background-repeat: repeat-x;
+    }
+}
