@@ -1,0 +1,189 @@
+body {
+  background-color: #D5FBFF; }
+
+/*Surface*/
+#surface {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  display: inline-flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 1; }
+  #surface.flex-center {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center; }
+  #surface:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 0.5em;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1; }
+  #surface div.window {
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 0.5em; }
+    #surface div.window div.state {
+      display: flex;
+      justify-content: flex-end;
+      padding-top: 0.5em; }
+      #surface div.window div.state i {
+        margin-right: 0.5em;
+        border: 1px solid black;
+        border-radius: 50%;
+        text-align: center;
+        display: inline-block;
+        width: 26px;
+        height: 26px;
+        line-height: 26px;
+        box-sizing: border-box;
+        line-height: 23px;
+        background-color: #FFB88C;
+        /* fallback for old browsers */
+        background-image: -webkit-linear-gradient(#DE6262, #FFB88C);
+        /* Chrome 10-25, Safari 5.1-6 */
+        background-image: linear-gradient(#DE6262, #FFB88C);
+        /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ }
+        #surface div.window div.state i:hover {
+          cursor: pointer;
+          background-position: 0 -16px;
+          background-repeat: repeat-x; }
+    #surface div.window div.wizard {
+      padding: 1.5em 2.5em 1em 1em; }
+      #surface div.window div.wizard input {
+        font-size: 1.2em;
+        text-align: center;
+        background: transparent;
+        border-width: 0 0 1px 0;
+        min-width: 160px;
+        max-width: 160px;
+        text-align: left; }
+      #surface div.window div.wizard div.btn-panel {
+        padding-top: 3em; }
+        #surface div.window div.wizard div.btn-panel div.button {
+          cursor: pointer;
+          display: inline-block;
+          padding: 1.2em;
+          border-radius: 0.5em;
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 2px 6px rgba(0, 0, 0, 0.25);
+          background-color: #FFB88C;
+          /* fallback for old browsers */
+          background-image: -webkit-linear-gradient(#DE6262, #FFB88C);
+          /* Chrome 10-25, Safari 5.1-6 */
+          background-image: linear-gradient(#DE6262, #FFB88C);
+          /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+          margin-left: 1em;
+          background-color: #FFB88C;
+          /* fallback for old browsers */
+          background-image: -webkit-linear-gradient(#DE6262, #FFB88C);
+          /* Chrome 10-25, Safari 5.1-6 */
+          background-image: linear-gradient(#DE6262, #FFB88C);
+          /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ }
+          #surface div.window div.wizard div.btn-panel div.button:hover {
+            background-position: 0 -0.6em;
+            background-repeat: repeat-x; }
+
+div#app {
+  display: flex; }
+
+/*EditBox*/
+div.editbox {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  right: 0; }
+  div.editbox .edit-row {
+    border: 1px black solid;
+    padding: 1em; }
+    div.editbox .edit-row.edit-date {
+      background-color: gray;
+      display: flex;
+      flex-direction: row; }
+      div.editbox .edit-row.edit-date div.edit-row-detail {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end; }
+    div.editbox .edit-row.ball-panel {
+      background-color: #9FBCBF; }
+    div.editbox .edit-row label.edit-lbl {
+      padding-right: 1em; }
+    div.editbox .edit-row input {
+      margin-right: 1em; }
+    div.editbox .edit-row span.edit-lbl {
+      padding-right: 1em; }
+    div.editbox .edit-row span.edit-ball {
+      margin-right: 1em;
+      background: blue; }
+  div.editbox div.btn-canvas {
+    display: inline-block;
+    padding: 0.5em;
+    border: 1px black solid;
+    border-radius: 0.5em;
+    background: #F1F2B5;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(#F1F2B5, #135058);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(#F1F2B5, #135058);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ }
+  div.editbox div.btn-action {
+    margin-top: -13px;
+    left: 70%;
+    position: relative; }
+    div.editbox div.btn-action span.btn-plus {
+      background-color: #FFB88C;
+      /* fallback for old browsers */
+      background-image: -webkit-linear-gradient(#DE6262, #FFB88C);
+      /* Chrome 10-25, Safari 5.1-6 */
+      background-image: linear-gradient(#DE6262, #FFB88C);
+      /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ }
+
+/*SVG*/
+svg {
+  width: 90%; }
+
+circle.blue {
+  fill: url("#blue"); }
+
+circle.green {
+  fill: url("#green"); }
+
+.ball text {
+  font-size: 18px;
+  text-anchor: middle;
+  stroke: gray;
+  stroke-width: 0;
+  fill: white; }
+
+line {
+  stroke: gray;
+  stroke-width: 8px; }
+
+text.clip-path {
+  clip-path: url("#textClip"); }
+
+.month text {
+  font-size: 20px;
+  text-anchor: middle;
+  stroke: gray;
+  stroke-width: 0;
+  fill: black; }
+
+span.circle {
+  border: 1px solid black;
+  border-radius: 50%;
+  text-align: center;
+  display: inline-block;
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+  box-sizing: border-box; }
+  span.circle:hover {
+    cursor: pointer;
+    background-position: 0 -16px;
+    background-repeat: repeat-x; }

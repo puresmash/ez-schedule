@@ -13,6 +13,3 @@ playground*.html
 # Sass
 .sass-cache/
 *.css.map
-
-# Assets
-assets
