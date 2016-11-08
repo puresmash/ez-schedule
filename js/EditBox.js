@@ -23,14 +23,14 @@ class EditBox extends React.Component {
     super(props);
     let visibleFlag = props.visible || EditBox.defaultProps.visible;
     this.state = {
-        visibleFlag :  eval(visibleFlag)
+        visibleFlag
     }
   }
 
   render(){
     let {sDate, eDate, actBalls} = this.props;
     let {visibleFlag} = this.state;
-    let ballPanel = this.getBallPanel(actBalls);
+    let ballPanel = this.getBallPanel(actBalls, visibleFlag);
     console.log('Rendering editbox');
     return(
       <div id="editbox" className="editbox">
@@ -48,14 +48,14 @@ class EditBox extends React.Component {
                         <Calendar onChange={this._handleChangeDateS.bind(this)} placeholder={'Insert Start Date'}
                                   maxDate={moment().add(MAX_MONTH, 'M').format('YYYY-MM')}
                                   minDate={moment().add(MIN_MONTH, 'M').format('YYYY-MM')}
-                                  value={sDate}></Calendar>
+                                  value={sDate} clearIcon={visibleFlag}></Calendar>
                     </div>
                     <div className="edit-row-detail" style={{marginBottom: '8px'}}>
                         <label className="edit-lbl">End</label>
                         <Calendar onChange={this._handleChangeDateE.bind(this)} placeholder={'Insert End Date'}
                                   maxDate={moment().add(MAX_MONTH, 'M').format('YYYY-MM')}
                                   minDate={moment().add(MIN_MONTH, 'M').format('YYYY-MM')}
-                                  value={eDate}></Calendar>
+                                  value={eDate} clearIcon={visibleFlag}></Calendar>
                     </div>
                 </div>
 
@@ -79,7 +79,8 @@ class EditBox extends React.Component {
   }
 
   toggleVisible(){
-      this.setState({visibleFlag: this.state.visibleFlag ^ true});
+      let flag = Boolean(this.state.visibleFlag ^ true);
+      this.setState({visibleFlag: flag});
   }
   getVisible(flag){
       return (flag ? 'visible':'hidden');
@@ -103,14 +104,14 @@ class EditBox extends React.Component {
     this.props.dispatch(AddActBall());
   }
 
-  getBallPanel(ballAry=[]){
+  getBallPanel(ballAry=[], visibleFlag){
     let ary = [];
     for(let [key, value] of ballAry.entries()){
       console.log(`${key}, ${value}`);
       let a = `act-${key}`;
       let b = `pre-${key}`;
       ary.push(
-        <EditRow sort={value.sort} a={a} b={b}/>
+        <EditRow sort={value.sort} a={a} b={b} visibleFlag={visibleFlag}/>
       );
     }
     return ary;
@@ -133,7 +134,7 @@ class EditRow extends React.Component {
     // ReactDOM.findDOMNode().findDOMNode(`${a}`).datepicker();
   }
   render(){
-    let {sort, a, b} = this.props;
+    let {sort, a, b, visibleFlag} = this.props;
     return(
       <div className="edit-row ball-panel">
         <div className="edit-row-detail" style={{marginBottom: '8px'}}>
@@ -141,7 +142,8 @@ class EditRow extends React.Component {
             <Calendar onChange={(dateString) => this._updActBall(dateString, a)} placeholder={'Insert Actual Date'}
                       maxDate={moment().add(MAX_MONTH, 'M').format('MM/DD/YYYY')}
                       minDate={moment().add(MIN_MONTH, 'M').format('MM/DD/YYYY')}
-                      dateFormat={'MM/DD/YYYY'}></Calendar>
+                      dateFormat={'MM/DD/YYYY'}
+                      clearIcon={visibleFlag}></Calendar>
             {/* <input type="text" id="datepicker" ref={a} placeholder="mm/dd/yyyy"
               onChange={ (event) => this._updActBall(event, {a})}/> */}
         </div>
@@ -150,7 +152,8 @@ class EditRow extends React.Component {
             <Calendar onChange={(dateString) => this._updPreBall(dateString, b)} placeholder={'Insert Predict Date'}
                       maxDate={moment().add(MAX_MONTH, 'M').format('MM/DD/YYYY')}
                       minDate={moment().add(MIN_MONTH, 'M').format('MM/DD/YYYY')}
-                      dateFormat={'MM/DD/YYYY'}></Calendar>
+                      dateFormat={'MM/DD/YYYY'}
+                      clearIcon={visibleFlag}></Calendar>
             {/* <input type="text" id="datepicker" ref={b} placeholder="mm/dd/yyyy"
               onChange={ (event) => this._updPreBall(event, {b})}/> */}
         </div>

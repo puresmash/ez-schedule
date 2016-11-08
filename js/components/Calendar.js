@@ -38,6 +38,7 @@ export default class Calendar extends React.Component{
                   (dateString, id)=>this.props.onChange(dateString, id)
               }
               style={{marginLeft: '1em'}}
+              clearIcon={this.props.clearIcon}
             >
                 <DatePicker
                     navigation={true}
