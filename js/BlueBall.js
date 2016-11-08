@@ -22,7 +22,7 @@ class Graph extends React.Component {
     let width = 600;
 
     return(
-      <svg>
+      <svg height="500px">
         <defs>
           <radialGradient id="blue" cx=".4" cy=".4" r=".6">
             <stop offset="0%" style={{stopColor: "#0066FF"}}></stop>
@@ -105,6 +105,7 @@ class Graph extends React.Component {
     let x = monthAry.findIndex(
       element => element.y === date.y && element.m === date.m
     );
+    // console.log(`Adjust Ball ${x}+${date}+${monthAry}`);
     return x = (20 * x + (date.d/31) * 20 + 5) * this.scale
   }
 
@@ -121,15 +122,15 @@ class Graph extends React.Component {
       this.scale = this.width / ((monthAry.length-1) * (barWidth - 5) + barWidth);
     }
 
-    // for(let [key, value] of monthAry.entries()){
-    //   console.log(`${key}, ${value}`);
-    //   let title = `t-${key}`
-    //   ary.push(<MonthBar key={title} index={key} title={value.mstr} scale={this.scale}/>);
-    // }
-    monthAry.forEach((ele,index) => {
-        console.log(ele);
-        ary.push(<MonthBar index={index} title={ele} scale={this.scale}/>);
-    });
+    for(let [key, value] of monthAry.entries()){
+      console.log(`${key}, ${value}`);
+      let title = `t-${key}`;
+      ary.push(<MonthBar key={title} index={key} title={value.mstr} scale={this.scale}/>);
+    }
+    // monthAry.forEach((ele,index) => {
+    //     console.log(ele);
+    //     ary.push(<MonthBar index={index} title={ele} scale={this.scale}/>);
+    // });
     return ary;
   }
 

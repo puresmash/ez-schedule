@@ -110,7 +110,12 @@ function updateBar(state={}, action){
       }
       let ary = [];
       for(let i=0; i<=diff; i++){
-          ary.push(moment(sDate, 'YYYY-MM').add(i, 'M').format('MMM'));
+          let date = moment(sDate, 'YYYY-MM').add(i, 'M');
+          ary.push({
+              mstr: date.format('MMM'),
+              y: parseInt(date.format('YYYY')),
+              m: parseInt(date.format('MM'))
+          });
       }
 
       console.log(`reducer: ${action.type} ${ary}`);

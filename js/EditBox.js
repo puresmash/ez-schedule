@@ -2,6 +2,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {UpdDate, CreateCanvas, AddActBall, UpdActBall, UpdPreBall, UpdDesc} from './actions/index.js'
+import Calendar from './components/Calendar.js'
 import moment from 'moment';
 
 const MAX_MONTH = 6;
@@ -44,25 +45,19 @@ class EditBox extends React.Component {
                 <div>
                     <div className="edit-row-detail" style={{marginBottom: '8px'}}>
                         <label className="edit-lbl">Start</label>
-                        <input type="month" name="sDate" id="sDate" value={sDate}
-                        min={moment().add(MIN_MONTH, 'M').format('YYYY-MM')}
-                        max={moment().add(MAX_MONTH, 'M').format('YYYY-MM')}
-                        onChange={
-                          (event) => this._handleChangeDateS(event)
-                        }/>
+                        <Calendar onChange={this._handleChangeDateS.bind(this)} placeholder={'Insert Start Date'}
+                                  maxDate={moment().add(MAX_MONTH, 'M').format('YYYY-MM')}
+                                  minDate={moment().add(MIN_MONTH, 'M').format('YYYY-MM')}
+                                  value={sDate}></Calendar>
                     </div>
-
-                    <div className="edit-row-detail">
+                    <div className="edit-row-detail" style={{marginBottom: '8px'}}>
                         <label className="edit-lbl">End</label>
-                        <input type="month" name="eDate" id="eDate" value={eDate}
-                        min={moment().add(MIN_MONTH, 'M').format('YYYY-MM')}
-                        max={moment().add(MAX_MONTH, 'M').format('YYYY-MM')}
-                        onChange={
-                          (event) => this._handleChangeDateE(event)
-                        }/>
+                        <Calendar onChange={this._handleChangeDateE.bind(this)} placeholder={'Insert End Date'}
+                                  maxDate={moment().add(MAX_MONTH, 'M').format('YYYY-MM')}
+                                  minDate={moment().add(MIN_MONTH, 'M').format('YYYY-MM')}
+                                  value={eDate}></Calendar>
                     </div>
                 </div>
-
 
                 <div style={{display: 'inline-flex',alignItems: 'center'}}>
                     <div className="btn-canvas" onClick={
@@ -71,9 +66,6 @@ class EditBox extends React.Component {
                         <i className="fa fa-repeat" aria-hidden="true"></i>
                     </div>
                 </div>
-
-
-
             </div>
             {ballPanel}
             <div className="btn-action" onClick={
@@ -95,11 +87,17 @@ class EditBox extends React.Component {
   _createCanvas(){
     this.props.dispatch(CreateCanvas());
   }
-  _handleChangeDateS(event){
-    this.props.dispatch(UpdDate(event.target.value, 'start'));
+   // _handleChangeDateS(event){
+   //   this.props.dispatch(UpdDate(event.target.value, 'start'));
+   // }
+  _handleChangeDateS(dateString){
+    this.props.dispatch(UpdDate(dateString, 'start'));
   }
-  _handleChangeDateE(event){
-    this.props.dispatch(UpdDate(event.target.value, 'end'));
+   // _handleChangeDateE(event){
+   //   this.props.dispatch(UpdDate(event.target.value, 'end'));
+   // }
+  _handleChangeDateE(dateString){
+    this.props.dispatch(UpdDate(dateString, 'end'));
   }
   _addBall(){
     this.props.dispatch(AddActBall());
@@ -128,39 +126,55 @@ class EditRow extends React.Component {
   }
   componentDidMount(){
     console.log('EditRow mounted');
-    let a = this.props.a;
-    let b = this.props.b;
-    console.log(`${a} ${b}`);
+    // let a = this.props.a;
+    // let b = this.props.b;
+    // console.log(`${a} ${b}`);
     console.log(ReactDOM.findDOMNode(this));
-    ReactDOM.findDOMNode(this).findDOMNode(`${a}`).datepicker();
+    // ReactDOM.findDOMNode().findDOMNode(`${a}`).datepicker();
   }
   render(){
     let {sort, a, b} = this.props;
     return(
       <div className="edit-row ball-panel">
         <span id={a} className="circle edit-ball">{sort}</span>
-        <input type="text" id="datepicker" ref={a} placeholder="mm/dd/yyyy"
-          onChange={ (event) => this._updActBall(event, {a})}/>
+        <Calendar onChange={(dateString) => this._updPreBall(dateString, a)} placeholder={'Insert Predict Date'}
+                  maxDate={moment().add(MAX_MONTH, 'M').format('MM/DD/YYYY')}
+                  minDate={moment().add(MIN_MONTH, 'M').format('MM/DD/YYYY')}
+                  dateFormat={'MM/DD/YYYY'}></Calendar>
+        {/* <input type="text" id="datepicker" ref={a} placeholder="mm/dd/yyyy"
+          onChange={ (event) => this._updActBall(event, {a})}/> */}
 
         <span id={b} className="circle edit-ball">{sort}</span>
-        <input type="text" id="datepicker" ref={b} placeholder="mm/dd/yyyy"
-          onChange={ (event) => this._updPreBall(event, {b})}/>
+        <Calendar onChange={(dateString) => this._updActBall(dateString, b)} placeholder={'Insert Actual Date'}
+                  maxDate={moment().add(MAX_MONTH, 'M').format('MM/DD/YYYY')}
+                  minDate={moment().add(MIN_MONTH, 'M').format('MM/DD/YYYY')}
+                  dateFormat={'MM/DD/YYYY'}></Calendar>
+        {/* <input type="text" id="datepicker" ref={b} placeholder="mm/dd/yyyy"
+          onChange={ (event) => this._updPreBall(event, {b})}/> */}
 
         <input type="text" defaultValue=""
           onChange={ (event) => this._updDesc(event, {b})}/>
       </div>
     );
   }
-  _updActBall(event, id){
-    id = id.a;
-    this.props.dispatch(UpdActBall(id, event.target.value));
-    console.log(`UpdActBall-id: ${id}`);
-    console.log(id);
+  _updActBall(dateString, id){
+    this.props.dispatch(UpdActBall(id, dateString));
+    console.log(`UpdActBall-id: ${id}, dateString: ${dateString}`);
   }
-  _updPreBall(event, id){
-    id = id.b;
-    this.props.dispatch(UpdPreBall(id, event.target.value));
+  // _updActBall(event, id){
+  //   id = id.a;
+  //   this.props.dispatch(UpdActBall(id, event.target.value));
+  //   console.log(`UpdActBall-id: ${id}`);
+  //   console.log(id);
+  // }
+  _updPreBall(dateString, id){
+    this.props.dispatch(UpdPreBall(id, dateString));
+    console.log(`UpdActBall-id: ${id}, dateString: ${dateString}`);
   }
+  // _updPreBall(event, id){
+  //   id = id.b;
+  //   this.props.dispatch(UpdPreBall(id, event.target.value));
+  // }
   _updDesc(event, id){
     id = id.b;
     this.props.dispatch(UpdDesc(id, event.target.value));
