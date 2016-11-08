@@ -136,24 +136,29 @@ class EditRow extends React.Component {
     let {sort, a, b} = this.props;
     return(
       <div className="edit-row ball-panel">
-        <span id={a} className="circle edit-ball">{sort}</span>
-        <Calendar onChange={(dateString) => this._updPreBall(dateString, a)} placeholder={'Insert Predict Date'}
-                  maxDate={moment().add(MAX_MONTH, 'M').format('MM/DD/YYYY')}
-                  minDate={moment().add(MIN_MONTH, 'M').format('MM/DD/YYYY')}
-                  dateFormat={'MM/DD/YYYY'}></Calendar>
-        {/* <input type="text" id="datepicker" ref={a} placeholder="mm/dd/yyyy"
-          onChange={ (event) => this._updActBall(event, {a})}/> */}
-
-        <span id={b} className="circle edit-ball">{sort}</span>
-        <Calendar onChange={(dateString) => this._updActBall(dateString, b)} placeholder={'Insert Actual Date'}
-                  maxDate={moment().add(MAX_MONTH, 'M').format('MM/DD/YYYY')}
-                  minDate={moment().add(MIN_MONTH, 'M').format('MM/DD/YYYY')}
-                  dateFormat={'MM/DD/YYYY'}></Calendar>
-        {/* <input type="text" id="datepicker" ref={b} placeholder="mm/dd/yyyy"
-          onChange={ (event) => this._updPreBall(event, {b})}/> */}
-
-        <input type="text" defaultValue=""
-          onChange={ (event) => this._updDesc(event, {b})}/>
+        <div className="edit-row-detail" style={{marginBottom: '8px'}}>
+            <span id={a} className="circle edit-ball">{sort}</span>
+            <Calendar onChange={(dateString) => this._updActBall(dateString, a)} placeholder={'Insert Actual Date'}
+                      maxDate={moment().add(MAX_MONTH, 'M').format('MM/DD/YYYY')}
+                      minDate={moment().add(MIN_MONTH, 'M').format('MM/DD/YYYY')}
+                      dateFormat={'MM/DD/YYYY'}></Calendar>
+            {/* <input type="text" id="datepicker" ref={a} placeholder="mm/dd/yyyy"
+              onChange={ (event) => this._updActBall(event, {a})}/> */}
+        </div>
+        <div className="edit-row-detail" style={{marginBottom: '8px'}}>
+            <span id={b} className="circle edit-ball">{sort}</span>
+            <Calendar onChange={(dateString) => this._updPreBall(dateString, b)} placeholder={'Insert Predict Date'}
+                      maxDate={moment().add(MAX_MONTH, 'M').format('MM/DD/YYYY')}
+                      minDate={moment().add(MIN_MONTH, 'M').format('MM/DD/YYYY')}
+                      dateFormat={'MM/DD/YYYY'}></Calendar>
+            {/* <input type="text" id="datepicker" ref={b} placeholder="mm/dd/yyyy"
+              onChange={ (event) => this._updPreBall(event, {b})}/> */}
+        </div>
+        <div className="edit-row-detail" style={{marginBottom: '8px'}}>
+            <label className="edit-lbl">Desc</label>
+            <input type="text" defaultValue="" placeholder="description"
+              onChange={ (event) => this._updDesc(event, {b})}/>
+        </div>
       </div>
     );
   }
@@ -169,7 +174,7 @@ class EditRow extends React.Component {
   // }
   _updPreBall(dateString, id){
     this.props.dispatch(UpdPreBall(id, dateString));
-    console.log(`UpdActBall-id: ${id}, dateString: ${dateString}`);
+    console.log(`UpdPreBall-id: ${id}, dateString: ${dateString}`);
   }
   // _updPreBall(event, id){
   //   id = id.b;
