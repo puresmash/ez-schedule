@@ -1,4 +1,4 @@
-let nextActBallId = 0;
+let nextBallId = 0;
 //let nextPreBallId = 0;
 
 export const UpdActBall = (id, date) =>{
@@ -17,11 +17,11 @@ export const UpdPreBall = (id, date) =>{
   }
 }
 
-export const AddActBall = () => {
+export const AddBall = () => {
   return {
     type: 'ADD_BALL',
-    id: nextActBallId++,
-    color: 'blue'
+    id: nextBallId++,
+    color: 'red'
   }
 }
 

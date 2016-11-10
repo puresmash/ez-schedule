@@ -5,6 +5,8 @@ import {connect} from 'react-redux';
 import {UpdDate, CreateCanvas, AddActBall, UpdActBall, UpdPreBall} from './actions/index.js';
 // Date String Validate
 import StringUtils from './utils/Utils.js';
+import MonthBar from './components/MonthBar.js'
+import ColorBall from './components/ColorBall.js';
 
 class Graph extends React.Component {
   constructor(){
@@ -32,6 +34,12 @@ class Graph extends React.Component {
         <div style={{backgroundColor: 'white', border: '1px solid gray'}}>
           <svg height="500px" width={this.state.width}>
             <defs>
+                <radialGradient id="red" cx=".4" cy=".4" r=".6">
+                  <stop offset="0%" style={{stopColor: "#FF0066"}}></stop>
+                  <stop offset="60%" style={{stopColor: "#E6005C"}}></stop>
+                  <stop offset="80%" style={{stopColor: "#B30047"}}></stop>
+                  <stop offset="100%" style={{stopColor: "#800033"}}></stop>
+                </radialGradient>
               <radialGradient id="blue" cx=".4" cy=".4" r=".6">
                 <stop offset="0%" style={{stopColor: "#0066FF"}}></stop>
                 <stop offset="60%" style={{stopColor: "#005CE6"}}></stop>
@@ -87,7 +95,7 @@ class Graph extends React.Component {
       }
 
       let x = this._adjustBallCord(date, monthAry);
-      ary.push(<BlueBall key={key} x={x} y={120}
+      ary.push(<ColorBall key={key} x={x} y={120}
         color={value.color} desc={value.desc} text={value.sort}/>);
     }
     return ary;
@@ -104,7 +112,7 @@ class Graph extends React.Component {
       }
 
       let x = this._adjustBallCord(date, monthAry);
-      ary.push(<BlueBall key={key} x={x} y={200}
+      ary.push(<ColorBall key={key} x={x} y={200}
         color={value.color} desc={value.desc} text={value.sort}/>);
     }
     return ary;
@@ -145,61 +153,6 @@ class Graph extends React.Component {
 
 }
 
-class BlueBall extends React.Component {
-  constructor(){
-      super();
-  }
-  render(){
-    // Cut radius
-    let x = this.props.x - 15;
-    let trans = `translate(${x}, ${this.props.y})`;
-    let text = this.props.text;
-    return(
-      <g className="ball" transform={trans}>
-        <circle cx="15" cy="15" r="15" className={this.props.color}/>
-        <text x="15" y="22">{text}</text>
-      </g>
-    );
-  }
-}
-
-class MonthBar extends React.Component {
-  constructor(){
-    super();
-  }
-  render(){
-    //scale(5)
-    let scale = this.props.scale;
-    let x0 = scale*5;
-    let x1 = scale*20;
-    let x2 = scale*25;
-
-    let transX = scale*20*this.props.index;
-    let textX = scale*12.5;
-
-    let trans = `translate(${transX}, 0)`;
-    let title = this.props.title;
-    //points="0,0 20,0 25,5 20,10 0,10 5,5"
-    let points =`0,0 ${x1},0 ${x2},25 ${x1},50 0,50 ${x0},25`;
-
-    let clipWidth = scale*15;
-
-    return(
-      <g id="month" className="month" transform={trans}>
-        <defs>
-          <clipPath id="textClip">
-            <rect x={x0} y="0" width={clipWidth} height="50"/>
-          </clipPath>
-        </defs>
-
-        <polygon points={points} fill="orange" stroke="white" strokeWidth="1"/>
-
-        <text className="clip-path" x={textX} y="32.5" clipPath="url(#textClip)">{title}</text>
-      </g>
-    );
-  }
-}
-
 function mapStateToProps(state) {
   console.log(`calling mSTPs: monthAry=${state.monthAry}`);
   console.log(state);
@@ -210,95 +163,6 @@ function mapStateToProps(state) {
   };
 }
 
-// class EditBox extends React.Component {
-//   constructor(){
-//     super();
-//   }
-//
-//   render(){
-//     let {actBalls} = this.props;
-//     let ballPanel = this.getBallPanel(actBalls);
-//     console.log('Rendering editbox');
-//     return(
-//       <div id="editbox">
-//         <div>
-//           <span>Start</span>
-//           <input type="month" name="sDate" onChange={
-//             (event) => this._handleChangeDateS(event)
-//           }/>
-//
-//           <span>End</span>
-//           <input type="month" name="eDate" onChange={
-//             (event) => this._handleChangeDateE(event)
-//           }/>
-//
-//           <button onClick={
-//             (event) => this._createCanvas()
-//           }>genCanvas</button>
-//
-//         </div>
-//         {ballPanel}
-//         <div onClick={
-//           () => this._addBall()
-//         }>
-//           <span className="circle btn-plus" >+</span>
-//         </div>
-//       </div>
-//     );
-//   }
-//
-//   _createCanvas(){
-//     this.props.dispatch(CreateCanvas());
-//   }
-//   _handleChangeDateS(event){
-//     this.props.dispatch(UpdDate(event.target.value, 'start'));
-//   }
-//   _handleChangeDateE(event){
-//     this.props.dispatch(UpdDate(event.target.value, 'end'));
-//   }
-//   _addBall(){
-//     this.props.dispatch(AddActBall());
-//   }
-//   _updActBall(event, id){
-//     id = id.a;
-//     this.props.dispatch(UpdActBall(id, event.target.value));
-//     console.log(`UpdActBall-id: ${id}`);
-//     console.log(id);
-//   }
-//   _updPreBall(event, id){
-//     id = id.b
-//     this.props.dispatch(UpdPreBall(id, event.target.value));
-//   }
-//   getBallPanel(ballAry=[]){
-//     let ary = [];
-//     for(let [key, value] of ballAry.entries()){
-//       console.log(`${key}, ${value}`);
-//       let a = `act-${key}`;
-//       let b = `pre-${key}`;
-//       ary.push(
-//       <div>
-//         <span id={a} className="circle edit-ball">{value.sort}</span>
-//         <input type="text" key={a} defaultValue="01/01"
-//           onChange={ (event) => this._updActBall(event, {a})}/>
-//
-//         <span id={b} className="circle edit-ball">{value.sort}</span>
-//         <input type="text" key={b} defaultValue="02/01"
-//           onChange={ (event) => this._updPreBall(event, {b})}/>
-//
-//         <input type="text" defaultValue="kick start"/>
-//       </div>
-//       );
-//     }
-//     return ary;
-//   }
-// }
-
-// EditBox.propTypes = {
-//   sDate: React.PropTypes.instanceOf(Date),
-//   eDate: React.PropTypes.instanceOf(Date)
-// }
-
-// EditBox = connect(mapStateToProps)(EditBox);
 Graph = connect(mapStateToProps)(Graph);
-// module.exports = BlueBall;
+
 export { Graph };

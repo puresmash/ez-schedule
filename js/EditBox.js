@@ -1,7 +1,7 @@
 
 import React from 'react';
 import {connect} from 'react-redux';
-import {UpdDate, CreateCanvas, AddActBall, UpdActBall, UpdPreBall, UpdDesc} from './actions/index.js'
+import {UpdDate, CreateCanvas, AddBall, UpdActBall, UpdPreBall, UpdDesc} from './actions/index.js'
 import Calendar from './components/Calendar.js'
 import moment from 'moment';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -146,7 +146,7 @@ class EditBox extends React.Component {
     this.props.dispatch(UpdDate(moment(dateString).format('YYYY-MM-DD'), 'end'));
   }
   _addBall(){
-    this.props.dispatch(AddActBall());
+    this.props.dispatch(AddBall());
   }
 
   getBallPanel(ballAry=[], visibleFlag){
