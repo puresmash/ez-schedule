@@ -5,7 +5,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var extractCSS = new ExtractTextPlugin('./css/[name].css');
 
 module.exports = {
-    entry: "./js/entry.js",
+    entry: ['babel-polyfill', './js/entry.js'],
     output:{
         path: "./public/assets/",
         filename: "bundle.js",

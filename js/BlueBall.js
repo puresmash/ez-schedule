@@ -9,8 +9,6 @@ import StringUtils from './utils/Utils.js';
 class Graph extends React.Component {
   constructor(){
     super();
-    console.log('!@!@!!!@!@!');
-    console.log(screen);
     this.state = {
         width : screen.width,
     }
