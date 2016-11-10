@@ -26,6 +26,7 @@ $divider: 8px;
 
 body {
     background-color: $color-1;
+    margin: 0px;
     //background: url("../public/img/bg.jpg") 0 /cover fixed;
 }
 /*Surface*/
@@ -114,7 +115,7 @@ div.editbox {
     right: 0;
     div#container{
         position: absolute;
-        top: 72px;
+        top: 64px;
     }
     .edit-row {
         border: 1px black solid;

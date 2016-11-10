@@ -51,6 +51,8 @@ class Surface extends React.Component {
               <div className="wizard">
                 <MuiThemeProvider>
                   <DatePicker
+                      onChange={this._handleChangeDateS.bind(this)}
+                      shouldDisableDate={(date)=>{return date.getDate() != 1}}
                       floatingLabelText="Insert Start Date"
                       minDate={moment().add(MIN_MONTH, 'M').toDate()}
                       maxDate={moment().add(MAX_MONTH, 'M').toDate()}
@@ -59,6 +61,10 @@ class Surface extends React.Component {
                 </MuiThemeProvider>
                 <MuiThemeProvider>
                   <DatePicker
+                      onChange={this._handleChangeDateE.bind(this)}
+                      shouldDisableDate={(date)=>{
+                          return date.getDate() != moment(date).daysInMonth()
+                      }}
                       floatingLabelText="Insert End Date"
                       minDate={moment().add(MIN_MONTH, 'M').toDate()}
                       maxDate={moment().add(MAX_MONTH, 'M').toDate()}
@@ -97,12 +103,14 @@ class Surface extends React.Component {
     _createCanvas(){
       this.props.dispatch(CreateCanvas());
     }
-
-    _handleChangeDateS(dateString){
-      this.props.dispatch(UpdDate(dateString, 'start'));
+    getDisableDate(date){
+        return date.getDate() != 1;
     }
-    _handleChangeDateE(dateString){
-      this.props.dispatch(UpdDate(dateString, 'end'));
+    _handleChangeDateS(event, dateString){
+      this.props.dispatch(UpdDate(moment(dateString).format('YYYY-MM-DD'), 'start'));
+    }
+    _handleChangeDateE(event, dateString){
+      this.props.dispatch(UpdDate(moment(dateString).format('YYYY-MM-DD'), 'end'));
     }
 
     // _handleChangeDateS(){

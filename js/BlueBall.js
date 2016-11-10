@@ -11,7 +11,15 @@ class Graph extends React.Component {
     super();
     console.log('!@!@!!!@!@!');
     console.log(screen);
-    this.width = screen.width;
+    this.state = {
+        width : screen.width,
+    }
+  }
+  componentDidMount() {
+        window.addEventListener("resize", this.updateDimensions.bind(this));
+  }
+  updateDimensions() {
+        this.setState({width: window.innerWidth});
   }
   render(){
     let monthNum = 5;
@@ -24,7 +32,7 @@ class Graph extends React.Component {
 
     return(
         <div style={{backgroundColor: 'white', border: '1px solid gray'}}>
-          <svg height="500px">
+          <svg height="500px" width={this.state.width}>
             <defs>
               <radialGradient id="blue" cx=".4" cy=".4" r=".6">
                 <stop offset="0%" style={{stopColor: "#0066FF"}}></stop>
@@ -40,8 +48,8 @@ class Graph extends React.Component {
               </radialGradient>
             </defs>
             {title}
-            <line x1="0" y1="135" x2={this.width} y2="135"></line>
-            <line x1="0" y1="215" x2={this.width} y2="215"></line>
+            <line x1="0" y1="135" x2={this.state.width} y2="135"></line>
+            <line x1="0" y1="215" x2={this.state.width} y2="215"></line>
             {preBallAry}
             {actBallAry}
 
@@ -119,10 +127,10 @@ class Graph extends React.Component {
     let ary = [];
     let scale = 0;
     if(monthAry.length == 1){
-      this.scale = this.width / (monthAry.length * barWidth);
+      this.scale = this.state.width / (monthAry.length * barWidth);
     }
     else{
-      this.scale = this.width / ((monthAry.length-1) * (barWidth - 5) + barWidth);
+      this.scale = this.state.width / ((monthAry.length-1) * (barWidth - 5) + barWidth);
     }
 
     for(let [key, value] of monthAry.entries()){
@@ -160,7 +168,6 @@ class BlueBall extends React.Component {
 class MonthBar extends React.Component {
   constructor(){
     super();
-    // this.propTypes = { x: React.PropTypes.number };
   }
   render(){
     //scale(5)
@@ -187,9 +194,9 @@ class MonthBar extends React.Component {
           </clipPath>
         </defs>
 
-        <polygon points={points} fill="orange" stroke="white" stroke-width="1"/>
+        <polygon points={points} fill="orange" stroke="white" strokeWidth="1"/>
 
-        <text className="clip-path" x={textX} y="32.5" clip-path="url(#textClip)">{title}</text>
+        <text className="clip-path" x={textX} y="32.5" clipPath="url(#textClip)">{title}</text>
       </g>
     );
   }
