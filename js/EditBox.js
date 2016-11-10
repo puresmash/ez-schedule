@@ -4,6 +4,10 @@ import {connect} from 'react-redux';
 import {UpdDate, CreateCanvas, AddActBall, UpdActBall, UpdPreBall, UpdDesc} from './actions/index.js'
 import Calendar from './components/Calendar.js'
 import moment from 'moment';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import AppBar from 'material-ui/AppBar';
+import DatePicker from 'material-ui/DatePicker';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 
 const MAX_MONTH = 6;
 const MIN_MONTH = -3;
@@ -11,8 +15,8 @@ const MIN_MONTH = -3;
 class EditBox extends React.Component {
 
   static defaultProps = {
-    sDate: '',
-    eDate: '',
+    sDate: moment().format('YYYY-MM'),
+    eDate: moment().format('YYYY-MM'),
     visible : false,
   };
   static propTypes = {
@@ -23,6 +27,9 @@ class EditBox extends React.Component {
     super(props);
     let visibleFlag = props.visible || EditBox.defaultProps.visible;
     this.state = {
+        open: true,
+        autoOk: true,
+        disableYearSelection: true,
         visibleFlag
     }
   }
@@ -34,28 +41,70 @@ class EditBox extends React.Component {
     console.log('Rendering editbox');
     return(
       <div id="editbox" className="editbox">
-        <div style={{fontSize: '3em', display: 'flex', justifyContent: 'flex-end'}}>
+        <MuiThemeProvider>
+        <AppBar
+          title="Paint Schedule"
+          iconElementLeft={
+              <i
+                className="fa fa-bars"
+                aria-hidden="true"
+                style={{lineHeight: '46px', paddingLeft: '6px',
+                        paddingRight: '6px', fontSize: '20px', color: 'white'}}
+                onClick={
+                  () => this.toggleVisible()
+              }>
+              </i>
+          }
+          iconClassNameRight="muidocs-icon-navigation-expand-more"
+          style={{zIndex: '0'}}
+        />
+        </MuiThemeProvider>
+        {/* <div style={{fontSize: '3em', display: 'flex', justifyContent: 'flex-end'}}>
             <i className="fa fa-minus-square-o" aria-hidden="true" onClick={
                 () => this.toggleVisible()
             }>
             </i>
-        </div>
+        </div> */}
         <div id="container" style={{visibility: this.getVisible(visibleFlag)}}>
             <div className="edit-row edit-date">
                 <div>
                     <div className="edit-row-detail" style={{marginBottom: '8px'}}>
                         <label className="edit-lbl">Start</label>
-                        <Calendar onChange={this._handleChangeDateS.bind(this)} placeholder={'Insert Start Date'}
+                        <MuiThemeProvider>
+                          <DatePicker
+                              onChange={this._handleChangeDateS.bind(this)}
+                              shouldDisableDate={(date)=>{return date.getDate() != 1}}
+                              value={moment(sDate).toDate()}
+                              hintText="Insert Start Date"
+                              minDate={moment().add(MIN_MONTH, 'M').toDate()}
+                              maxDate={moment().add(MAX_MONTH, 'M').toDate()}
+                              autoOk={this.state.autoOk}
+                              disableYearSelection={this.state.disableYearSelection}/>
+                        </MuiThemeProvider>
+                        {/* <Calendar onChange={this._handleChangeDateS.bind(this)} placeholder={'Insert Start Date'}
                                   maxDate={moment().add(MAX_MONTH, 'M').format('YYYY-MM')}
                                   minDate={moment().add(MIN_MONTH, 'M').format('YYYY-MM')}
-                                  value={sDate} clearIcon={visibleFlag}></Calendar>
+                                  value={sDate} clearIcon={visibleFlag}></Calendar> */}
                     </div>
                     <div className="edit-row-detail" style={{marginBottom: '8px'}}>
                         <label className="edit-lbl">End</label>
-                        <Calendar onChange={this._handleChangeDateE.bind(this)} placeholder={'Insert End Date'}
+                        <MuiThemeProvider>
+                          <DatePicker
+                              onChange={this._handleChangeDateE.bind(this)}
+                              shouldDisableDate={(date)=>{
+                                  return date.getDate() != moment(date).daysInMonth()
+                              }}
+                              value={moment(eDate).toDate()}
+                              hintText="Insert End Date"
+                              minDate={moment().add(MIN_MONTH, 'M').toDate()}
+                              maxDate={moment().add(MAX_MONTH, 'M').toDate()}
+                              autoOk={this.state.autoOk}
+                              disableYearSelection={this.state.disableYearSelection}/>
+                        </MuiThemeProvider>
+                        {/* <Calendar onChange={this._handleChangeDateE.bind(this)} placeholder={'Insert End Date'}
                                   maxDate={moment().add(MAX_MONTH, 'M').format('YYYY-MM')}
                                   minDate={moment().add(MIN_MONTH, 'M').format('YYYY-MM')}
-                                  value={eDate} clearIcon={visibleFlag}></Calendar>
+                                  value={eDate} clearIcon={visibleFlag}></Calendar> */}
                     </div>
                 </div>
 
@@ -88,17 +137,11 @@ class EditBox extends React.Component {
   _createCanvas(){
     this.props.dispatch(CreateCanvas());
   }
-   // _handleChangeDateS(event){
-   //   this.props.dispatch(UpdDate(event.target.value, 'start'));
-   // }
-  _handleChangeDateS(dateString){
-    this.props.dispatch(UpdDate(dateString, 'start'));
+  _handleChangeDateS(event, dateString){
+    this.props.dispatch(UpdDate(moment(dateString).format('YYYY-MM-DD'), 'start'));
   }
-   // _handleChangeDateE(event){
-   //   this.props.dispatch(UpdDate(event.target.value, 'end'));
-   // }
-  _handleChangeDateE(dateString){
-    this.props.dispatch(UpdDate(dateString, 'end'));
+  _handleChangeDateE(event, dateString){
+    this.props.dispatch(UpdDate(moment(dateString).format('YYYY-MM-DD'), 'end'));
   }
   _addBall(){
     this.props.dispatch(AddActBall());
@@ -119,8 +162,16 @@ class EditBox extends React.Component {
 }
 
 class EditRow extends React.Component {
-  constructor(){
-      super();
+    static defaultProps = {
+        autoOk: true,
+        disableYearSelection: true,
+    };
+    static propTypes = {
+        autoOk: React.PropTypes.bool,
+        disableYearSelection: React.PropTypes.bool,
+    };
+  constructor(props){
+      super(props);
   }
   componentWillMount(){
     console.log('EditRow will mount');
@@ -134,26 +185,36 @@ class EditRow extends React.Component {
     // ReactDOM.findDOMNode().findDOMNode(`${a}`).datepicker();
   }
   render(){
-    let {sort, a, b, visibleFlag} = this.props;
+    let {sort, a, b, visibleFlag, sDate, eDate} = this.props;
     return(
       <div className="edit-row ball-panel">
         <div className="edit-row-detail" style={{marginBottom: '8px'}}>
             <span id={a} className="circle edit-ball">{sort}</span>
-            <Calendar onChange={(dateString) => this._updActBall(dateString, a)} placeholder={'Insert Actual Date'}
-                      maxDate={moment().add(MAX_MONTH, 'M').format('MM/DD/YYYY')}
-                      minDate={moment().add(MIN_MONTH, 'M').format('MM/DD/YYYY')}
-                      dateFormat={'MM/DD/YYYY'}
-                      clearIcon={visibleFlag}></Calendar>
+            <MuiThemeProvider>
+                <DatePicker
+                    style={{display: 'inline'}}
+                    onChange={(event, dateString) => this._updActBall(event, dateString, a)}
+                    floatingLabelText="Insert Actual Date"
+                    minDate={moment(sDate).toDate()}
+                    maxDate={moment(eDate).toDate()}
+                    autoOk={this.props.autoOk}
+                    disableYearSelection={this.props.disableYearSelection}/>
+            </MuiThemeProvider>
             {/* <input type="text" id="datepicker" ref={a} placeholder="mm/dd/yyyy"
               onChange={ (event) => this._updActBall(event, {a})}/> */}
         </div>
         <div className="edit-row-detail" style={{marginBottom: '8px'}}>
             <span id={b} className="circle edit-ball">{sort}</span>
-            <Calendar onChange={(dateString) => this._updPreBall(dateString, b)} placeholder={'Insert Predict Date'}
-                      maxDate={moment().add(MAX_MONTH, 'M').format('MM/DD/YYYY')}
-                      minDate={moment().add(MIN_MONTH, 'M').format('MM/DD/YYYY')}
-                      dateFormat={'MM/DD/YYYY'}
-                      clearIcon={visibleFlag}></Calendar>
+            <MuiThemeProvider>
+                <DatePicker
+                    style={{display: 'inline'}}
+                    onChange={(event, dateString) => this._updPreBall(event, dateString, b)}
+                    floatingLabelText="Insert Predict Date"
+                    minDate={moment(sDate).toDate()}
+                    maxDate={moment(eDate).toDate()}
+                    autoOk={this.props.autoOk}
+                    disableYearSelection={this.props.disableYearSelection}/>
+            </MuiThemeProvider>
             {/* <input type="text" id="datepicker" ref={b} placeholder="mm/dd/yyyy"
               onChange={ (event) => this._updPreBall(event, {b})}/> */}
         </div>
@@ -165,8 +226,8 @@ class EditRow extends React.Component {
       </div>
     );
   }
-  _updActBall(dateString, id){
-    this.props.dispatch(UpdActBall(id, dateString));
+  _updActBall(event, dateString, id){
+    this.props.dispatch(UpdActBall(id, moment(dateString).format('MM/DD/YYYY')));
     console.log(`UpdActBall-id: ${id}, dateString: ${dateString}`);
   }
   // _updActBall(event, id){
@@ -175,8 +236,8 @@ class EditRow extends React.Component {
   //   console.log(`UpdActBall-id: ${id}`);
   //   console.log(id);
   // }
-  _updPreBall(dateString, id){
-    this.props.dispatch(UpdPreBall(id, dateString));
+  _updPreBall(event, dateString, id){
+    this.props.dispatch(UpdPreBall(id, moment(dateString).format('MM/DD/YYYY')));
     console.log(`UpdPreBall-id: ${id}, dateString: ${dateString}`);
   }
   // _updPreBall(event, id){

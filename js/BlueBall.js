@@ -9,7 +9,17 @@ import StringUtils from './utils/Utils.js';
 class Graph extends React.Component {
   constructor(){
     super();
-    this.width = 600;
+    console.log('!@!@!!!@!@!');
+    console.log(screen);
+    this.state = {
+        width : screen.width,
+    }
+  }
+  componentDidMount() {
+        window.addEventListener("resize", this.updateDimensions.bind(this));
+  }
+  updateDimensions() {
+        this.setState({width: window.innerWidth});
   }
   render(){
     let monthNum = 5;
@@ -19,32 +29,33 @@ class Graph extends React.Component {
     let preBallAry = this.getPreBallList(preBalls, monthAry);
     let actBallAry = this.getActBallList(actBalls, monthAry);
     let descAry = this.getDescList(preBalls);
-    let width = 600;
 
     return(
-      <svg height="500px">
-        <defs>
-          <radialGradient id="blue" cx=".4" cy=".4" r=".6">
-            <stop offset="0%" style={{stopColor: "#0066FF"}}></stop>
-            <stop offset="60%" style={{stopColor: "#005CE6"}}></stop>
-            <stop offset="80%" style={{stopColor: "#0047B3"}}></stop>
-            <stop offset="100%" style={{stopColor: "#003380"}}></stop>
-          </radialGradient>
-          <radialGradient id="green" cx=".4" cy=".4" r=".6">
-            <stop offset="0%" style={{stopColor: "#33CC33"}}></stop>
-            <stop offset="60%" style={{stopColor: "#2EB82E"}}></stop>
-            <stop offset="80%" style={{stopColor: "#248F24"}}></stop>
-            <stop offset="100%" style={{stopColor: "#196619"}}></stop>
-          </radialGradient>
-        </defs>
-        {title}
-        <line x1="0" y1="135" x2={width} y2="135"></line>
-        <line x1="0" y1="215" x2={width} y2="215"></line>
-        {preBallAry}
-        {actBallAry}
+        <div style={{backgroundColor: 'white', border: '1px solid gray'}}>
+          <svg height="500px" width={this.state.width}>
+            <defs>
+              <radialGradient id="blue" cx=".4" cy=".4" r=".6">
+                <stop offset="0%" style={{stopColor: "#0066FF"}}></stop>
+                <stop offset="60%" style={{stopColor: "#005CE6"}}></stop>
+                <stop offset="80%" style={{stopColor: "#0047B3"}}></stop>
+                <stop offset="100%" style={{stopColor: "#003380"}}></stop>
+              </radialGradient>
+              <radialGradient id="green" cx=".4" cy=".4" r=".6">
+                <stop offset="0%" style={{stopColor: "#33CC33"}}></stop>
+                <stop offset="60%" style={{stopColor: "#2EB82E"}}></stop>
+                <stop offset="80%" style={{stopColor: "#248F24"}}></stop>
+                <stop offset="100%" style={{stopColor: "#196619"}}></stop>
+              </radialGradient>
+            </defs>
+            {title}
+            <line x1="0" y1="135" x2={this.state.width} y2="135"></line>
+            <line x1="0" y1="215" x2={this.state.width} y2="215"></line>
+            {preBallAry}
+            {actBallAry}
 
-        {descAry}
-      </svg>
+            {descAry}
+          </svg>
+      </div>
     );
   }
 
@@ -116,10 +127,10 @@ class Graph extends React.Component {
     let ary = [];
     let scale = 0;
     if(monthAry.length == 1){
-      this.scale = this.width / (monthAry.length * barWidth);
+      this.scale = this.state.width / (monthAry.length * barWidth);
     }
     else{
-      this.scale = this.width / ((monthAry.length-1) * (barWidth - 5) + barWidth);
+      this.scale = this.state.width / ((monthAry.length-1) * (barWidth - 5) + barWidth);
     }
 
     for(let [key, value] of monthAry.entries()){
@@ -157,7 +168,6 @@ class BlueBall extends React.Component {
 class MonthBar extends React.Component {
   constructor(){
     super();
-    // this.propTypes = { x: React.PropTypes.number };
   }
   render(){
     //scale(5)
@@ -184,9 +194,9 @@ class MonthBar extends React.Component {
           </clipPath>
         </defs>
 
-        <polygon points={points} fill="orange" stroke="white" stroke-width="1"/>
+        <polygon points={points} fill="orange" stroke="white" strokeWidth="1"/>
 
-        <text className="clip-path" x={textX} y="32.5" clip-path="url(#textClip)">{title}</text>
+        <text className="clip-path" x={textX} y="32.5" clipPath="url(#textClip)">{title}</text>
       </g>
     );
   }

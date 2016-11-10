@@ -6,8 +6,8 @@ import {Surface} from './Surface.js';
 const App = () => (
   <div id="App">
     <Surface />
-    <Graph />
     <EditBox visible={false}/>
+    <Graph />
   </div>
 )
 

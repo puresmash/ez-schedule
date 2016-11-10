@@ -102,7 +102,7 @@ function updateBar(state={}, action){
         return state;
       }
 
-      let diff = moment(eDate, 'YYYY-MM').diff(moment(sDate, 'YYYY-MM'),'months');
+      let diff = moment(eDate, 'YYYY-MM-DD').diff(moment(sDate, 'YYYY-MM-DD'),'months');
       console.log(diff);
       if(diff<0){
           console.error('invalid month range(<0)');
@@ -110,7 +110,7 @@ function updateBar(state={}, action){
       }
       let ary = [];
       for(let i=0; i<=diff; i++){
-          let date = moment(sDate, 'YYYY-MM').add(i, 'M');
+          let date = moment(sDate, 'YYYY-MM-DD').add(i, 'M');
           ary.push({
               mstr: date.format('MMM'),
               y: parseInt(date.format('YYYY')),
