@@ -124,37 +124,16 @@ class Graph extends React.Component {
 
   _adjustBallCord(date, monthAry){
 
-
-
     let x = monthAry.findIndex(
       element => element.y === date.y && element.m === date.m
     );
     let translate = (SCALABLE_BAR_WIDTH * this.scale  + CONVEX_LENGTH) * x + CONVEX_LENGTH;
     let distance = ((date.d - 1) / monthAry[x].daysInMonth) * (SCALABLE_BAR_WIDTH * this.scale + CONVEX_LENGTH);
-    console.log('testtesttest');
-    console.log(translate);
-    console.log(distance);
-    console.log(monthAry[x]);
-    console.log(x)
-    console.log(date.d);
-    console.log('endendendedn');
+
     return translate + distance;
-    // console.log(`Adjust Ball ${x}+${date}+${monthAry}`);
-    // return x = (20 * x + (date.d/31) * 20 + 5) * this.scale
   }
 
   getTitleList(monthAry=[]){
-    //store.dispatch({type: 'OnUpdDateS'})
-    // let width = 600;
-    // let barWidth = 25;
-
-    // let scale = 0;
-    // if(monthAry.length == 1){
-    //   this.scale = this.state.width / (monthAry.length * barWidth);
-    // }
-    // else{
-    //   this.scale = this.state.width / ((monthAry.length-1) * (barWidth - 5) + barWidth);
-    // }
     // w-25(n+1)/sbw * n
     let scale = (this.state.width - CONVEX_LENGTH * (monthAry.length + 1)) / (SCALABLE_BAR_WIDTH * monthAry.length);
     this.scale = scale;
