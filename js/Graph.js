@@ -58,8 +58,8 @@ class Graph extends React.Component {
               </radialGradient>
             </defs>
             {title}
-            <line x1="0" y1="135" x2={this.state.width} y2="135"></line>
-            <line x1="0" y1="215" x2={this.state.width} y2="215"></line>
+            <line x1={CONVEX_LENGTH} y1="135" x2={this.state.width} y2="135"></line>
+            <line x1={CONVEX_LENGTH} y1="215" x2={this.state.width} y2="215"></line>
             {preBallAry}
             {actBallAry}
 
