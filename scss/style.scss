@@ -78,6 +78,7 @@ body {
         }
         div.wizard {
             padding: 1.5em 1em 1em 1em;
+
             input {
                 font-size: 1.2em;
                 // margin-left: 1em;
@@ -87,6 +88,12 @@ body {
                 min-width: 160px;
                 max-width: 160px;
                 text-align: left;
+            }
+
+            div.datepicker-wizard > div{
+                @media screen and (max-width: 500px) {
+                    width: 90% !important;
+                }
             }
 
             div.btn-panel {

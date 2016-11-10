@@ -4,43 +4,28 @@ import moment from 'moment';
 function updateBall(state={actBalls: [], preBalls: []}, action){
   switch (action.type) {
     case 'UPD_ACT_BALL':
-      //
-      return Object.assign({}, state, {
-        actBalls: state.actBalls.map((actBall, index) => {
-          // console.log("UPD BALL=====");
-          // console.log(actBall);
-          // console.log(index);
-          // console.log(action.id);
-          // console.log(action.date);
-          if(actBall.id===action.id){
-            return Object.assign({}, actBall, {
-              date: action.date
-            });
-          }
-          //return if id not found
-          return actBall;
-        })
-      });
-    // case 'UPD_PRE_BALL':
-    //   return Object.assign({}, state, {
-    //     preBalls: state.preBalls.map((preBall, index) => {
-    //       if(preBall.id===action.id){
-    //         return Object.assign({}, preBall, {
-    //           date: action.date
-    //         })
-    //       }
-    //       //return if id not found
-    //       return preBall;
-    //     })
-    //   })
+        let {actBalls} = state;
+        actBalls = actBalls.map(ball =>{
+            if(ball.id===action.id){
+              return Object.assign({}, ball, {
+                  date: action.date
+              });
+            }
+            return ball;
+        });
+        return Object.assign({}, state, { actBalls });
+
     case 'UPD_PRE_BALL':
-       let {preBalls} = state;
-       preBalls = preBalls.map(p => {
-         if(p.id === action.id)
-           return Object.assign({}, p, { date: action.date })
-         return preBall
-       })
-    return Object.assign({}, state, { preBalls })
+        let {preBalls} = state;
+        preBalls = preBalls.map(ball => {
+            if(ball.id === action.id){
+                return Object.assign({}, ball, {
+                    date: action.date
+                });
+            }
+            return ball;
+        });
+        return Object.assign({}, state, { preBalls })
 
     case 'UPD_DESC':
 
