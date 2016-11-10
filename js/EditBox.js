@@ -7,7 +7,8 @@ import moment from 'moment';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import DatePicker from 'material-ui/DatePicker';
-import injectTapEventPlugin from 'react-tap-event-plugin';
+
+import EditRow from './components/EditRow.js';
 
 const MAX_MONTH = 6;
 const MIN_MONTH = -3;
@@ -37,7 +38,7 @@ class EditBox extends React.Component {
   render(){
     let {sDate, eDate, actBalls} = this.props;
     let {visibleFlag} = this.state;
-    let ballPanel = this.getBallPanel(actBalls, visibleFlag);
+    let ballPanel = this.getBallPanel(actBalls, sDate, eDate);
     console.log('Rendering editbox');
     return(
       <div id="editbox" className="editbox">
@@ -149,114 +150,23 @@ class EditBox extends React.Component {
     this.props.dispatch(AddBall());
   }
 
-  getBallPanel(ballAry=[], visibleFlag){
+  getBallPanel(ballAry=[], sDate, eDate){
     let ary = [];
     for(let [key, value] of ballAry.entries()){
       console.log(`${key}, ${value}`);
       let a = `act-${key}`;
       let b = `pre-${key}`;
       ary.push(
-        <EditRow sort={value.sort} a={a} b={b} visibleFlag={visibleFlag}/>
+        <EditRow key={`row-${key}`} sort={value.sort} a={a} b={b} sDate={sDate} eDate={eDate}/>
       );
     }
     return ary;
   }
 }
 
-class EditRow extends React.Component {
-    static defaultProps = {
-        autoOk: true,
-        disableYearSelection: true,
-    };
-    static propTypes = {
-        autoOk: React.PropTypes.bool,
-        disableYearSelection: React.PropTypes.bool,
-    };
-  constructor(props){
-      super(props);
-  }
-  componentWillMount(){
-    console.log('EditRow will mount');
-  }
-  componentDidMount(){
-    console.log('EditRow mounted');
-    // let a = this.props.a;
-    // let b = this.props.b;
-    // console.log(`${a} ${b}`);
-    console.log(ReactDOM.findDOMNode(this));
-    // ReactDOM.findDOMNode().findDOMNode(`${a}`).datepicker();
-  }
-  render(){
-    let {sort, a, b, visibleFlag, sDate, eDate} = this.props;
-    return(
-      <div className="edit-row ball-panel">
-        <div className="edit-row-detail" style={{marginBottom: '8px'}}>
-            <span id={a} className="circle edit-ball">{sort}</span>
-            <MuiThemeProvider>
-                <DatePicker
-                    className="datepicker-ball"
-                    style={{display: 'inline'}}
-                    onChange={(event, dateString) => this._updActBall(event, dateString, a)}
-                    floatingLabelText="Insert Actual Date"
-                    minDate={moment(sDate).toDate()}
-                    maxDate={moment(eDate).toDate()}
-                    autoOk={this.props.autoOk}
-                    disableYearSelection={this.props.disableYearSelection}/>
-            </MuiThemeProvider>
-            {/* <input type="text" id="datepicker" ref={a} placeholder="mm/dd/yyyy"
-              onChange={ (event) => this._updActBall(event, {a})}/> */}
-        </div>
-        <div className="edit-row-detail" style={{marginBottom: '8px'}}>
-            <span id={b} className="circle edit-ball">{sort}</span>
-            <MuiThemeProvider>
-                <DatePicker
-                    className="datepicker-ball"
-                    style={{display: 'inline'}}
-                    onChange={(event, dateString) => this._updPreBall(event, dateString, b)}
-                    floatingLabelText="Insert Predict Date"
-                    minDate={moment(sDate).toDate()}
-                    maxDate={moment(eDate).toDate()}
-                    autoOk={this.props.autoOk}
-                    disableYearSelection={this.props.disableYearSelection}/>
-            </MuiThemeProvider>
-            {/* <input type="text" id="datepicker" ref={b} placeholder="mm/dd/yyyy"
-              onChange={ (event) => this._updPreBall(event, {b})}/> */}
-        </div>
-        <div className="edit-row-detail" style={{marginBottom: '8px'}}>
-            <label className="edit-lbl">Desc</label>
-            <input type="text" defaultValue="" placeholder="description"
-              onChange={ (event) => this._updDesc(event, {b})}/>
-        </div>
-      </div>
-    );
-  }
-  _updActBall(event, dateString, id){
-    this.props.dispatch(UpdActBall(id, moment(dateString).format('MM/DD/YYYY')));
-    console.log(`UpdActBall-id: ${id}, dateString: ${dateString}`);
-  }
-  // _updActBall(event, id){
-  //   id = id.a;
-  //   this.props.dispatch(UpdActBall(id, event.target.value));
-  //   console.log(`UpdActBall-id: ${id}`);
-  //   console.log(id);
-  // }
-  _updPreBall(event, dateString, id){
-    this.props.dispatch(UpdPreBall(id, moment(dateString).format('MM/DD/YYYY')));
-    console.log(`UpdPreBall-id: ${id}, dateString: ${dateString}`);
-  }
-  // _updPreBall(event, id){
-  //   id = id.b;
-  //   this.props.dispatch(UpdPreBall(id, event.target.value));
-  // }
-  _updDesc(event, id){
-    id = id.b;
-    this.props.dispatch(UpdDesc(id, event.target.value));
-  }
-}
-
 function mapStateToProps(state) {
   const {sDate, eDate} = state.updateBar;
-  console.log(`calling mSTPs: monthAry=${state.monthAry}`);
+  console.log(`calling mSTPs: sDate=${sDate}, eDate=${eDate}`);
   return {
     sDate,
     eDate,
@@ -267,6 +177,5 @@ function mapStateToProps(state) {
 }
 
 EditBox = connect(mapStateToProps)(EditBox);
-EditRow = connect(mapStateToProps)(EditRow);
 
 export {EditBox};

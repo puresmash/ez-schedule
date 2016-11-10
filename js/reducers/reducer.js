@@ -96,10 +96,12 @@ function updateBar(state={}, action){
       let ary = [];
       for(let i=0; i<=diff; i++){
           let date = moment(sDate, 'YYYY-MM-DD').add(i, 'M');
+          let daysInMonth = date.daysInMonth();
           ary.push({
               mstr: date.format('MMM'),
               y: parseInt(date.format('YYYY')),
-              m: parseInt(date.format('MM'))
+              m: parseInt(date.format('MM')),
+              daysInMonth
           });
       }
 
