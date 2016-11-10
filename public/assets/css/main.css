@@ -103,7 +103,14 @@ div.editbox {
   right: 0; }
   div.editbox div#container {
     position: absolute;
+    overflow: scroll;
     top: 64px; }
+  @media screen and (max-width: 500px) {
+    div.editbox div.datepicker-bar > div {
+      width: 128px !important; } }
+  @media screen and (max-width: 500px) {
+    div.editbox div.datepicker-ball > div {
+      width: 160px !important; } }
   div.editbox .edit-row {
     border: 1px black solid;
     padding: 1em; }

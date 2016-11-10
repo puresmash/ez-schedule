@@ -28342,8 +28342,6 @@
 
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Graph).call(this));
 
-	    console.log('!@!@!!!@!@!');
-	    console.log(screen);
 	    _this.state = {
 	      width: screen.width
 	    };
@@ -29038,11 +29036,12 @@
 	                  _MuiThemeProvider2.default,
 	                  null,
 	                  _react2.default.createElement(_DatePicker2.default, {
+	                    className: 'datepicker-bar',
 	                    onChange: this._handleChangeDateS.bind(this),
 	                    shouldDisableDate: function shouldDisableDate(date) {
 	                      return date.getDate() != 1;
 	                    },
-	                    value: (0, _moment2.default)(sDate).toDate(),
+	                    value: sDate ? (0, _moment2.default)(sDate).toDate() : '',
 	                    hintText: 'Insert Start Date',
 	                    minDate: (0, _moment2.default)().add(MIN_MONTH, 'M').toDate(),
 	                    maxDate: (0, _moment2.default)().add(MAX_MONTH, 'M').toDate(),
@@ -29062,11 +29061,12 @@
 	                  _MuiThemeProvider2.default,
 	                  null,
 	                  _react2.default.createElement(_DatePicker2.default, {
+	                    className: 'datepicker-bar',
 	                    onChange: this._handleChangeDateE.bind(this),
 	                    shouldDisableDate: function shouldDisableDate(date) {
 	                      return date.getDate() != (0, _moment2.default)(date).daysInMonth();
 	                    },
-	                    value: (0, _moment2.default)(eDate).toDate(),
+	                    value: eDate ? (0, _moment2.default)(eDate).toDate() : '',
 	                    hintText: 'Insert End Date',
 	                    minDate: (0, _moment2.default)().add(MIN_MONTH, 'M').toDate(),
 	                    maxDate: (0, _moment2.default)().add(MAX_MONTH, 'M').toDate(),
@@ -29179,8 +29179,8 @@
 	}(_react2.default.Component);
 
 	EditBox.defaultProps = {
-	  sDate: (0, _moment2.default)().format('YYYY-MM'),
-	  eDate: (0, _moment2.default)().format('YYYY-MM'),
+	  sDate: '',
+	  eDate: '',
 	  visible: false
 	};
 	EditBox.propTypes = {
@@ -29239,6 +29239,7 @@
 	            _MuiThemeProvider2.default,
 	            null,
 	            _react2.default.createElement(_DatePicker2.default, {
+	              className: 'datepicker-ball',
 	              style: { display: 'inline' },
 	              onChange: function onChange(event, dateString) {
 	                return _this4._updActBall(event, dateString, a);
@@ -29262,6 +29263,7 @@
 	            _MuiThemeProvider2.default,
 	            null,
 	            _react2.default.createElement(_DatePicker2.default, {
+	              className: 'datepicker-ball',
 	              style: { display: 'inline' },
 	              onChange: function onChange(event, dateString) {
 	                return _this4._updPreBall(event, dateString, b);
