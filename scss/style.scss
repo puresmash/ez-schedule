@@ -107,7 +107,6 @@ body {
 div#app {
     // display: flex;
 }
-
 /*EditBox*/
 div.editbox {
     display: flex;
@@ -116,7 +115,18 @@ div.editbox {
     right: 0;
     div#container{
         position: absolute;
+        overflow: scroll;
         top: 64px;
+    }
+    div.datepicker-bar > div{
+        @media screen and (max-width: 500px) {
+            width: 128px !important;
+        }
+    }
+    div.datepicker-ball > div{
+        @media screen and (max-width: 500px) {
+            width: 160px !important;
+        }
     }
     .edit-row {
         border: 1px black solid;

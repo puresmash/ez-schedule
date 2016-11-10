@@ -15,8 +15,8 @@ const MIN_MONTH = -3;
 class EditBox extends React.Component {
 
   static defaultProps = {
-    sDate: moment().format('YYYY-MM'),
-    eDate: moment().format('YYYY-MM'),
+    sDate: '',
+    eDate: '',
     visible : false,
   };
   static propTypes = {
@@ -72,9 +72,10 @@ class EditBox extends React.Component {
                         <label className="edit-lbl">Start</label>
                         <MuiThemeProvider>
                           <DatePicker
+                              className="datepicker-bar"
                               onChange={this._handleChangeDateS.bind(this)}
                               shouldDisableDate={(date)=>{return date.getDate() != 1}}
-                              value={moment(sDate).toDate()}
+                              value={sDate? moment(sDate).toDate(): ''}
                               hintText="Insert Start Date"
                               minDate={moment().add(MIN_MONTH, 'M').toDate()}
                               maxDate={moment().add(MAX_MONTH, 'M').toDate()}
@@ -90,11 +91,12 @@ class EditBox extends React.Component {
                         <label className="edit-lbl">End</label>
                         <MuiThemeProvider>
                           <DatePicker
+                              className="datepicker-bar"
                               onChange={this._handleChangeDateE.bind(this)}
                               shouldDisableDate={(date)=>{
                                   return date.getDate() != moment(date).daysInMonth()
                               }}
-                              value={moment(eDate).toDate()}
+                              value={eDate? moment(eDate).toDate(): ''}
                               hintText="Insert End Date"
                               minDate={moment().add(MIN_MONTH, 'M').toDate()}
                               maxDate={moment().add(MAX_MONTH, 'M').toDate()}
@@ -192,6 +194,7 @@ class EditRow extends React.Component {
             <span id={a} className="circle edit-ball">{sort}</span>
             <MuiThemeProvider>
                 <DatePicker
+                    className="datepicker-ball"
                     style={{display: 'inline'}}
                     onChange={(event, dateString) => this._updActBall(event, dateString, a)}
                     floatingLabelText="Insert Actual Date"
@@ -207,6 +210,7 @@ class EditRow extends React.Component {
             <span id={b} className="circle edit-ball">{sort}</span>
             <MuiThemeProvider>
                 <DatePicker
+                    className="datepicker-ball"
                     style={{display: 'inline'}}
                     onChange={(event, dateString) => this._updPreBall(event, dateString, b)}
                     floatingLabelText="Insert Predict Date"
