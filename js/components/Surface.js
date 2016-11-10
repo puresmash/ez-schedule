@@ -2,35 +2,72 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {UpdDate, CreateCanvas} from '../actions/index.js';
+import moment from 'moment';
 
-import 'react-date-picker/index.css'
-import { DateField, DatePicker } from 'react-date-picker';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import DatePicker from 'material-ui/DatePicker';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
+// import MyDialog from './Window.js'
+
+const MAX_MONTH = 6;
+const MIN_MONTH = -3;
 
 class Surface extends React.Component {
     constructor(){
       super();
-      this.state = { closeComponent: false };
+      this.state = {
+          open: true,
+          autoOk: true,
+          disableYearSelection: true,
+          closeComponent: false,
+      };
       this.constructMap();
     }
     onChange(dateString){
       console.log(dateString);
     }
+    handleOpen(){
+        this.setState({open: true});
+    }
+
+    handleClose(){
+        this.setState({open: false});
+    }
     render(){
-      let {sDate, eDate} = this.props;
-      let wizard = this.getWizard(sDate, eDate);
+       let {sDate, eDate} = this.props;
+    //   let wizard = this.getWizard(sDate, eDate);
+
       return(
+        //   <MyDialog></MyDialog>
         <div id="surface" className="flex-center" style={this.getVisWindow()}>
           <div className="window">
               <div className="state">
+                    <h2>Sync or Create</h2>
                     <i className="fa fa-times" aria-hidden="true" onClick={
                         ()=>this.closeWindow()
                     }></i>
               </div>
               <div className="wizard">
-                {wizard}
+                <MuiThemeProvider>
+                  <DatePicker
+                      floatingLabelText="Insert Start Date"
+                      minDate={moment().add(MIN_MONTH, 'M').toDate()}
+                      maxDate={moment().add(MAX_MONTH, 'M').toDate()}
+                      autoOk={this.state.autoOk}
+                      disableYearSelection={this.state.disableYearSelection}/>
+                </MuiThemeProvider>
+                <MuiThemeProvider>
+                  <DatePicker
+                      floatingLabelText="Insert End Date"
+                      minDate={moment().add(MIN_MONTH, 'M').toDate()}
+                      maxDate={moment().add(MAX_MONTH, 'M').toDate()}
+                      autoOk={this.state.autoOk}
+                      disableYearSelection={this.state.disableYearSelection}/>
+                </MuiThemeProvider>
 
                 <div className="btn-panel">
-                  <div className="button">
+                  <div className="button" style={{marginRight: '1em'}}>
                     <i className="fa fa-cloud-download" aria-hidden="true">
                       <span style={{paddingLeft: '0.5em'}}>Sync Cloud</span>
                     </i>

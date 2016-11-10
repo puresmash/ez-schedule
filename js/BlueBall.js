@@ -9,7 +9,9 @@ import StringUtils from './utils/Utils.js';
 class Graph extends React.Component {
   constructor(){
     super();
-    this.width = 600;
+    console.log('!@!@!!!@!@!');
+    console.log(screen);
+    this.width = screen.width;
   }
   render(){
     let monthNum = 5;
@@ -19,32 +21,33 @@ class Graph extends React.Component {
     let preBallAry = this.getPreBallList(preBalls, monthAry);
     let actBallAry = this.getActBallList(actBalls, monthAry);
     let descAry = this.getDescList(preBalls);
-    let width = 600;
 
     return(
-      <svg height="500px">
-        <defs>
-          <radialGradient id="blue" cx=".4" cy=".4" r=".6">
-            <stop offset="0%" style={{stopColor: "#0066FF"}}></stop>
-            <stop offset="60%" style={{stopColor: "#005CE6"}}></stop>
-            <stop offset="80%" style={{stopColor: "#0047B3"}}></stop>
-            <stop offset="100%" style={{stopColor: "#003380"}}></stop>
-          </radialGradient>
-          <radialGradient id="green" cx=".4" cy=".4" r=".6">
-            <stop offset="0%" style={{stopColor: "#33CC33"}}></stop>
-            <stop offset="60%" style={{stopColor: "#2EB82E"}}></stop>
-            <stop offset="80%" style={{stopColor: "#248F24"}}></stop>
-            <stop offset="100%" style={{stopColor: "#196619"}}></stop>
-          </radialGradient>
-        </defs>
-        {title}
-        <line x1="0" y1="135" x2={width} y2="135"></line>
-        <line x1="0" y1="215" x2={width} y2="215"></line>
-        {preBallAry}
-        {actBallAry}
+        <div style={{backgroundColor: 'white', border: '1px solid gray'}}>
+          <svg height="500px">
+            <defs>
+              <radialGradient id="blue" cx=".4" cy=".4" r=".6">
+                <stop offset="0%" style={{stopColor: "#0066FF"}}></stop>
+                <stop offset="60%" style={{stopColor: "#005CE6"}}></stop>
+                <stop offset="80%" style={{stopColor: "#0047B3"}}></stop>
+                <stop offset="100%" style={{stopColor: "#003380"}}></stop>
+              </radialGradient>
+              <radialGradient id="green" cx=".4" cy=".4" r=".6">
+                <stop offset="0%" style={{stopColor: "#33CC33"}}></stop>
+                <stop offset="60%" style={{stopColor: "#2EB82E"}}></stop>
+                <stop offset="80%" style={{stopColor: "#248F24"}}></stop>
+                <stop offset="100%" style={{stopColor: "#196619"}}></stop>
+              </radialGradient>
+            </defs>
+            {title}
+            <line x1="0" y1="135" x2={this.width} y2="135"></line>
+            <line x1="0" y1="215" x2={this.width} y2="215"></line>
+            {preBallAry}
+            {actBallAry}
 
-        {descAry}
-      </svg>
+            {descAry}
+          </svg>
+      </div>
     );
   }
 

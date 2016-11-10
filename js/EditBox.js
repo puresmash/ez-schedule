@@ -4,6 +4,8 @@ import {connect} from 'react-redux';
 import {UpdDate, CreateCanvas, AddActBall, UpdActBall, UpdPreBall, UpdDesc} from './actions/index.js'
 import Calendar from './components/Calendar.js'
 import moment from 'moment';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import AppBar from 'material-ui/AppBar';
 
 const MAX_MONTH = 6;
 const MIN_MONTH = -3;
@@ -34,12 +36,30 @@ class EditBox extends React.Component {
     console.log('Rendering editbox');
     return(
       <div id="editbox" className="editbox">
-        <div style={{fontSize: '3em', display: 'flex', justifyContent: 'flex-end'}}>
+        <MuiThemeProvider>
+        <AppBar
+          title="Paint Schedule"
+          iconElementLeft={
+              <i
+                className="fa fa-bars"
+                aria-hidden="true"
+                style={{lineHeight: '46px', paddingLeft: '6px',
+                        paddingRight: '6px', fontSize: '20px', color: 'white'}}
+                onClick={
+                  () => this.toggleVisible()
+              }>
+              </i>
+          }
+          iconClassNameRight="muidocs-icon-navigation-expand-more"
+          style={{zIndex: '0'}}
+        />
+        </MuiThemeProvider>
+        {/* <div style={{fontSize: '3em', display: 'flex', justifyContent: 'flex-end'}}>
             <i className="fa fa-minus-square-o" aria-hidden="true" onClick={
                 () => this.toggleVisible()
             }>
             </i>
-        </div>
+        </div> */}
         <div id="container" style={{visibility: this.getVisible(visibleFlag)}}>
             <div className="edit-row edit-date">
                 <div>
