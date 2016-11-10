@@ -8,7 +8,7 @@ import {Provider} from 'react-redux';
 import svgApp from './reducers/reducer.js';
 // SVG-React Components
 // let SimpleComponent = require('./SimpleComponent.js');
-import Graph from './BlueBall.js';
+import Graph from './Graph.js';
 import EditBox from './EditBox.js'
 import Surface from './components/Surface.js';
 import App from './components/App.js';
