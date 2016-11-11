@@ -35,8 +35,9 @@ class Graph extends React.Component {
     let descAry = this.getDescList(preBalls);
 
     return(
-        <div style={{backgroundColor: 'white', border: '1px solid gray'}}>
-          <svg height="500px" width={this.state.width}>
+        <div style={{backgroundColor: 'white', border: '1px solid gray',
+                    borderRadius: '5px', marginTop: '8px'}}>
+          <svg ref="canvas" height="500px" width={this.state.width}>
             <defs>
                 <radialGradient id="red" cx=".4" cy=".4" r=".6">
                   <stop offset="0%" style={{stopColor: "#FF0066"}}></stop>
@@ -74,51 +75,52 @@ class Graph extends React.Component {
     let y= 275;
 
     let ary=[];
-    for(let [key, value] of preBalls.entries()){
-      console.log(`${key}, ${value}`);
-      let text = `${value.sort}. ${value.desc}`;
-      if(key!==0 && key%5 === 0){
-        x += 100;
-        y = 300;
-      }
-      else{
-        y +=25;
-      }
-      ary.push(<text x={x} y={y}>{text}</text>);
-    }
+
+    preBalls.forEach((value, key)=>{
+        console.log(`${key}, ${value}`);
+        let text = `${value.sort}. ${value.desc}`;
+        if(key!==0 && key%5 === 0){
+          x += 100;
+          y = 300;
+        }
+        else{
+          y +=25;
+        }
+        ary.push(<text x={x} y={y}>{text}</text>);
+    })
+
     return ary;
   }
 
   getPreBallList(preBalls=[], monthAry=[]){
     let ary = [];
-    for(let [key, value] of preBalls.entries()){
-      console.log(`${key}, ${value}`);
-      let date = StringUtils.validDate(value.date);
-      if(!date){
-        continue;
-      }
 
-      let x = this._adjustBallCord(date, monthAry);
-      ary.push(<ColorBall key={key} x={x} y={120}
+    preBalls.forEach((value, key)=>{
+        let date = StringUtils.validDate(value.date);
+        if(!date){
+            return;
+        }
+        let x = this._adjustBallCord(date, monthAry);
+        ary.push(<ColorBall key={key} x={x} y={120}
         color={value.color} desc={value.desc} text={value.sort}/>);
-    }
+    });
+
     return ary;
   }
 
   getActBallList(actBalls=[], monthAry=[]){
     let ary = [];
 
-    for(let [key, value] of actBalls.entries()){
-      console.log(`${key}, ${value}`);
-      let date = StringUtils.validDate(value.date);
-      if(!date){
-        continue;
-      }
-
-      let x = this._adjustBallCord(date, monthAry);
-      ary.push(<ColorBall key={key} x={x} y={200}
+    actBalls.forEach((value, key)=>{
+        let date = StringUtils.validDate(value.date);
+        if(!date){
+            return;
+        }
+        let x = this._adjustBallCord(date, monthAry);
+        ary.push(<ColorBall key={key} x={x} y={200}
         color={value.color} desc={value.desc} text={value.sort}/>);
-    }
+    });
+
     return ary;
   }
 

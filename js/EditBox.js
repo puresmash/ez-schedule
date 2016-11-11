@@ -1,5 +1,6 @@
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
 import {UpdDate, CreateCanvas, AddBall, UpdActBall, UpdPreBall, UpdDesc} from './actions/index.js'
 import Calendar from './components/Calendar.js'
@@ -8,6 +9,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import DatePicker from 'material-ui/DatePicker';
 
+import StringUtils from './utils/Utils.js';
 import EditRow from './components/EditRow.js';
 
 const MAX_MONTH = 6;
@@ -33,6 +35,9 @@ class EditBox extends React.Component {
         disableYearSelection: true,
         visibleFlag
     }
+  }
+  componentDidMount(){
+    this.getImage();
   }
 
   render(){
@@ -150,17 +155,27 @@ class EditBox extends React.Component {
     this.props.dispatch(AddBall());
   }
 
-  getBallPanel(ballAry=[], sDate, eDate){
+  getBallPanel(ballMap , sDate, eDate){
     let ary = [];
-    for(let [key, value] of ballAry.entries()){
-      console.log(`${key}, ${value}`);
-      let a = `act-${key}`;
-      let b = `pre-${key}`;
-      ary.push(
-        <EditRow key={`row-${key}`} sort={value.sort} a={a} b={b} sDate={sDate} eDate={eDate}/>
-      );
-    }
+
+    ballMap.forEach((value, key)=>{
+        console.log(`${key}, ${value}`);
+        key = StringUtils.extractIndexFromId(key);
+        let a = `act-${key}`;
+        let b = `pre-${key}`;
+        ary.push(
+          <EditRow key={`row-${key}`} sort={value.sort} a={a} b={b} sDate={sDate} eDate={eDate}/>
+        );
+    })
+
     return ary;
+  }
+
+  getImage(){
+    //   var html = $('#svg').html();
+    let html = ReactDOM.findDOMNode(this.refs.canvas);
+    console.log(this.refs)
+      console.log(html);
   }
 }
 
