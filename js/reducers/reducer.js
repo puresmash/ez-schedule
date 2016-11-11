@@ -31,6 +31,8 @@ function updateBall(state={actBalls: new Map(), preBalls: new Map()}, action){
         return Object.assign({}, state, {preBalls});
     }
     case 'UPD_ACT_BALL_COLOR': {
+        console.log(`reducer: ${action.type} ${action.id} ${action.color}`);
+        console.log(action.color);
         let { actBalls } = state;
         actBalls = new Map(actBalls);
 

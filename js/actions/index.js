@@ -37,7 +37,7 @@ export const AddBall = () => {
     return {
         type: 'ADD_BALL',
         id: nextBallId++,
-        color: 'red'
+        color: 'blue'
     }
 }
 
