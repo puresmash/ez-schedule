@@ -79,6 +79,7 @@ body {
         }
         div.wizard {
             padding: 1.5em 1em 1em 1em;
+
             input {
                 font-size: 1.2em;
                 // margin-left: 1em;
@@ -88,6 +89,12 @@ body {
                 min-width: 160px;
                 max-width: 160px;
                 text-align: left;
+            }
+
+            div.datepicker-wizard > div{
+                @media screen and (max-width: 500px) {
+                    width: 90% !important;
+                }
             }
 
             div.btn-panel {
@@ -126,6 +133,23 @@ div.editbox {
     div.datepicker-ball > div{
         @media screen and (max-width: 500px) {
             width: 160px !important;
+        }
+    }
+    div.colorpicker{
+        position: absolute;
+        display: inline-flex;
+        height: 90px;
+        width: 100%;
+        margin-left: -16px;
+        margin-top: -16px;
+        z-index: 2;
+        transition: width .5s ease-in;
+        div.brick{
+            flex: 1 1 0;
+            &:hover{
+                border: 3px outset gray;
+                cursor: pointer;
+            }
         }
     }
     .edit-row {
@@ -195,6 +219,10 @@ circle.blue {
 
 circle.green {
     fill: url("#green");
+}
+
+circle.red {
+    fill: url("#red");
 }
 
 .ball text {

@@ -51,6 +51,7 @@ class Surface extends React.Component {
               <div className="wizard">
                 <MuiThemeProvider>
                   <DatePicker
+                      className="datepicker-wizard"
                       onChange={this._handleChangeDateS.bind(this)}
                       shouldDisableDate={(date)=>{return date.getDate() != 1}}
                       floatingLabelText="Insert Start Date"
@@ -61,6 +62,7 @@ class Surface extends React.Component {
                 </MuiThemeProvider>
                 <MuiThemeProvider>
                   <DatePicker
+                      className="datepicker-wizard"
                       onChange={this._handleChangeDateE.bind(this)}
                       shouldDisableDate={(date)=>{
                           return date.getDate() != moment(date).daysInMonth()

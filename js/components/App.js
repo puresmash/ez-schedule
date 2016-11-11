@@ -1,5 +1,5 @@
 import React from 'react';
-import {Graph} from '../BlueBall.js';
+import {Graph} from '../Graph.js';
 import {EditBox} from '../EditBox.js';
 import {Surface} from './Surface.js';
 
