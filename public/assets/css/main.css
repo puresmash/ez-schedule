@@ -71,6 +71,9 @@ body {
         min-width: 160px;
         max-width: 160px;
         text-align: left; }
+      @media screen and (max-width: 500px) {
+        #surface div.window div.wizard div.datepicker-wizard > div {
+          width: 90% !important; } }
       #surface div.window div.wizard div.btn-panel {
         padding-top: 3em;
         display: flex; }
@@ -111,6 +114,20 @@ div.editbox {
   @media screen and (max-width: 500px) {
     div.editbox div.datepicker-ball > div {
       width: 160px !important; } }
+  div.editbox div.colorpicker {
+    position: absolute;
+    display: inline-flex;
+    height: 90px;
+    width: 100%;
+    margin-left: -16px;
+    margin-top: -16px;
+    z-index: 2;
+    transition: width .5s ease-in; }
+    div.editbox div.colorpicker div.brick {
+      flex: 1 1 0; }
+      div.editbox div.colorpicker div.brick:hover {
+        border: 3px outset gray;
+        cursor: pointer; }
   div.editbox .edit-row {
     border: 1px black solid;
     padding: 1em; }
@@ -162,6 +179,9 @@ circle.blue {
 
 circle.green {
   fill: url("#green"); }
+
+circle.red {
+  fill: url("#red"); }
 
 .ball text {
   font-size: 18px;
