@@ -3,19 +3,17 @@
 
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var extractCSS = new ExtractTextPlugin('./css/[name].css');
+var autoprefixer = require('autoprefixer');
 
 module.exports = {
     entry: ['babel-polyfill', './js/entry.js'],
     output:{
-        path: "./public/assets/",
+        path: "./public/assets",
         filename: "bundle.js",
-        publicPath: '/static/'
+        publicPath: '/public/'
     },
     module: {
         loaders: [
-            {
-                test: /\.css$/, loader: "style!css"
-            },
             {
               test: /\.jsx?$/,
               exclude: /(node_modules|bower_components)/,
@@ -27,10 +25,17 @@ module.exports = {
             },
             {
               test: /\.scss$/,
-              loader: extractCSS.extract(['css','sass'])
+              loader: ExtractTextPlugin.extract('style', ['css', 'postcss', 'sass'])
+            },
+            {
+              test: /\.css$/,
+              loader: "style!css"
             }
         ]
     },
+    postcss: [
+            autoprefixer({browsers: ['last 5 versions']})
+    ],
     plugins: [
         extractCSS
     ]
