@@ -4,6 +4,7 @@
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var extractCSS = new ExtractTextPlugin('./css/[name].css');
 var autoprefixer = require('autoprefixer');
+var webpack = require('webpack');
 
 module.exports = {
     entry: ['babel-polyfill', './js/entry.js'],
@@ -34,9 +35,14 @@ module.exports = {
         ]
     },
     postcss: [
-            autoprefixer({browsers: ['last 5 versions']})
+        autoprefixer({browsers: ['last 5 versions']})
     ],
     plugins: [
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false
+            }
+        }),
         extractCSS
     ]
 };
