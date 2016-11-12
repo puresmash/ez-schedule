@@ -60,9 +60,9 @@ class Graph extends React.Component {
             </defs>
             {title}
             <text x={CONVEX_LENGTH} y="100" style={{fill: 'lightslategray'}}>Predict Schedule</text>
-            <line x1={CONVEX_LENGTH} y1="135" x2={this.state.width} y2="135"></line>
+            <line x1={CONVEX_LENGTH} y1="135" x2={this.state.width-2} y2="135"></line>
             <text x={CONVEX_LENGTH} y="180" style={{fill: 'lightslategray'}}>Actual Schedule</text>
-            <line x1={CONVEX_LENGTH} y1="215" x2={this.state.width} y2="215"></line>
+            <line x1={CONVEX_LENGTH} y1="215" x2={this.state.width-2} y2="215"></line>
             {preBallAry}
             {actBallAry}
 
