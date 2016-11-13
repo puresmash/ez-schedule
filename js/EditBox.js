@@ -33,20 +33,49 @@ class EditBox extends React.Component {
         open: true,
         autoOk: true,
         disableYearSelection: true,
-        visibleFlag
+        visibleFlag,
     }
   }
   componentDidMount(){
-    this.getImage();
-  }
 
+  }
+  prepareImage(){
+      let {svgRef} = this.props;
+
+      let svghtml = svgRef.outerHTML;
+      let myImageSrc = 'data:image/svg+xml;base64,' + window.btoa(svghtml);
+      let image = new Image();
+      image.src = myImageSrc;
+      let canvas = document.createElement('canvas');
+      canvas.setAttribute('width', '598px');
+      canvas.setAttribute('height', '498px');
+      let context = canvas.getContext('2d');
+
+      image.onload = ()=>{
+
+        context.drawImage(image, 0, 0);
+
+        let canvasdata = canvas.toDataURL('image/png');
+        let pngimg = new Image();
+        pngimg.src = canvasdata;
+
+        let a = document.createElement('a');
+        a.download = 'sample.png';
+        a.href = canvasdata;
+        // console.log(a);
+        a.click();
+    }
+  }
   render(){
-    let {sDate, eDate, actBalls} = this.props;
+    let {sDate, eDate, actBalls, svgRef} = this.props;
     let {visibleFlag} = this.state;
     let ballPanel = this.getBallPanel(actBalls, sDate, eDate);
     console.log('Rendering editbox');
+
+
     return(
       <div id="editbox" className="editbox">
+
         <MuiThemeProvider>
         <AppBar
           title="Paint Schedule"
@@ -122,6 +151,11 @@ class EditBox extends React.Component {
                     }>
                         <i className="fa fa-repeat" aria-hidden="true"></i>
                     </div>
+                    <div className="btn-canvas" onClick={
+                        () => this.prepareImage()
+                    }>
+                        <i className="fa fa-download" aria-hidden="true"></i>
+                    </div>
                 </div>
             </div>
             {ballPanel}
@@ -171,23 +205,19 @@ class EditBox extends React.Component {
     return ary;
   }
 
-  getImage(){
-    //   var html = $('#svg').html();
-    let html = ReactDOM.findDOMNode(this.refs.canvas);
-    console.log(this.refs)
-      console.log(html);
-  }
 }
 
 function mapStateToProps(state) {
   const {sDate, eDate} = state.updateBar;
+  const {svgRef} = state.internalRef;
   console.log(`calling mSTPs: sDate=${sDate}, eDate=${eDate}`);
   return {
     sDate,
     eDate,
     monthAry: state.updateBar.monthAry,
     actBalls: state.updateBall.actBalls,
-    preBalls: state.updateBall.preBalls
+    preBalls: state.updateBall.preBalls,
+    svgRef
   };
 }
 

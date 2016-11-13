@@ -2,31 +2,42 @@
 import React from 'react';
 import {connect} from 'react-redux';
 // Actions
-import {UpdDate, CreateCanvas, AddActBall, UpdActBall, UpdPreBall} from './actions/index.js';
+import {RefSvg} from './actions/index.js';
 // Date String Validate
 import StringUtils from './utils/Utils.js';
 import MonthBar from './components/MonthBar.js'
 import ColorBall from './components/ColorBall.js';
+import uuid from 'node-uuid';
 
 const CONVEX_LENGTH = 25;
 const SCALABLE_BAR_WIDTH = 15;
 const BALL_RADIUS = 15;
+const MAX_WIDTH = 600-2;
 
 class Graph extends React.Component {
   constructor(){
     super();
     this.state = {
         width : screen.width,
+        download: ''
     }
+    console.log(navigator.userAgent);
+    console.log(navigator.platform);
+    // console.log(uuid);
+    // console.log(uuid.v4());
   }
   componentDidMount() {
         window.addEventListener("resize", this.updateDimensions.bind(this));
+        this.props.dispatch(RefSvg(this.refs.canvas));
   }
   updateDimensions() {
         this.setState({width: window.innerWidth});
   }
   render(){
-    let monthNum = 5;
+    let {width} = this.state;
+    // this.width = (width>MAX_WIDTH)? MAX_WIDTH : width;
+    this.width = MAX_WIDTH - 2;
+
     let {monthAry, preBalls, actBalls} = this.props;
     let title = this.getTitleList(monthAry);
 
@@ -34,10 +45,12 @@ class Graph extends React.Component {
     let actBallAry = this.getActBallList(actBalls, monthAry);
     let descAry = this.getDescList(preBalls);
 
+
     return(
         <div style={{backgroundColor: 'white', border: '1px solid gray',
-                    borderRadius: '5px', marginTop: '8px'}}>
-          <svg ref="canvas" height="500px" width={this.state.width}>
+                    borderRadius: '5px', marginTop: '8px', marginLeft: 'auto', marginRight: 'auto',
+                    boxSizing: 'border-box', maxWidth: '600px', width: width, overflowX: 'scroll'}}>
+          <svg xmlns="http://www.w3.org/2000/svg" ref="canvas" height="500px" width={this.width}>
             <defs>
                 <radialGradient id="red" cx=".4" cy=".4" r=".6">
                   <stop offset="0%" style={{stopColor: "#FF0066"}}></stop>
@@ -60,9 +73,9 @@ class Graph extends React.Component {
             </defs>
             {title}
             <text x={CONVEX_LENGTH} y="100" style={{fill: 'lightslategray'}}>Predict Schedule</text>
-            <line x1={CONVEX_LENGTH} y1="135" x2={this.state.width-2} y2="135"></line>
+            <line x1={CONVEX_LENGTH} y1="135" x2={this.width} y2="135" stroke="gray" strokeWidth="8px"></line>
             <text x={CONVEX_LENGTH} y="180" style={{fill: 'lightslategray'}}>Actual Schedule</text>
-            <line x1={CONVEX_LENGTH} y1="215" x2={this.state.width-2} y2="215"></line>
+            <line x1={CONVEX_LENGTH} y1="215" x2={this.width} y2="215" stroke="gray" strokeWidth="8px"></line>
             {preBallAry}
             {actBallAry}
 
@@ -139,7 +152,7 @@ class Graph extends React.Component {
 
   getTitleList(monthAry=[]){
     // w-25(n+1)/sbw * n
-    let scale = (this.state.width - CONVEX_LENGTH * (monthAry.length + 1)) / (SCALABLE_BAR_WIDTH * monthAry.length);
+    let scale = (this.width - CONVEX_LENGTH * (monthAry.length + 1)) / (SCALABLE_BAR_WIDTH * monthAry.length);
     this.scale = scale;
 
     let ary = [];

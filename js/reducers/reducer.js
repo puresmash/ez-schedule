@@ -130,6 +130,23 @@ function updateBar(state = {}, action) {
             return state;
     }
 }
+function internalRef(state={svgRef: {}, userAgent:{}}, action){
+    switch(action.type){
+        case 'REF_SVG': {
+            return Object.assign({}, state, {
+                svgRef: action.ref
+            });
+        }
+        case 'SET_UA': {
+            return Object.assign({}, state, {
+                userAgent: action.userAgent
+            });
+        }
+
+        default:
+            return state;
+    }
+}
 /*
 {
     sDate,
@@ -142,7 +159,8 @@ function updateBar(state = {}, action) {
 
 const svgApp = combineReducers({
   updateBall,
-  updateBar
+  updateBar,
+  internalRef
 })
 
 export default svgApp;

@@ -38,8 +38,16 @@ export default class MonthBar extends React.Component {
         </defs>
 
         <polygon points={points} fill="orange" stroke="white" strokeWidth="1"/>
-
-        <text className="clip-path" x={textX} y="32.5" clipPath="url(#textClip)">{title}</text>
+        <text
+            className="clip-path"
+            x={textX}
+            y="32.5"
+            clipPath="url(#textClip)"
+            fontSize="20px"
+            textAnchor="middle"
+            fill="black">
+            {title}
+        </text>
       </g>
     );
   }

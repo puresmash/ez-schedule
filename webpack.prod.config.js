@@ -5,13 +5,12 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var extractCSS = new ExtractTextPlugin('./css/[name].css');
 var autoprefixer = require('autoprefixer');
 var webpack = require('webpack');
-var PROD = (process.env.NODE_ENV === 'production');
 
 module.exports = {
     entry: ['babel-polyfill', './js/entry.js'],
     output:{
         path: "./public/assets",
-        filename: "bundle.js",
+        filename: "bundle.min.js",
         publicPath: '/public/'
     },
     module: {
@@ -41,7 +40,12 @@ module.exports = {
     plugins: [
         new webpack.DefinePlugin({
             "process.env": {
-                NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')
+                NODE_ENV: JSON.stringify('production')
+            }
+        }),
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false,
             }
         }),
         extractCSS

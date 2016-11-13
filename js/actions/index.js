@@ -62,3 +62,17 @@ export const CreateCanvas = () => {
         type: 'UPD_BAR'
     }
 }
+
+export const RefSvg = (svg) => {
+    return {
+        type: 'REF_SVG',
+        ref: svg
+    }
+}
+
+export const SetUA = (userAgent) => {
+    return {
+        type: 'SET_UA',
+        userAgent
+    }
+}
