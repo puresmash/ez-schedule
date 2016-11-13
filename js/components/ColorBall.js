@@ -16,8 +16,8 @@ export default class ColorBall extends React.Component {
         let text = this.props.text;
         return(
             <g className="ball" transform={trans}>
-                <circle cx="15" cy="15" r="15" className={color}/>
-                <text x="15" y="22">{text}</text>
+                <circle cx="15" cy="15" r="15" className={color} fill={`url(#${color})`}/>
+                <text x="15" y="22" fill="white" textAnchor="middle" fontSize="18px">{text}</text>
             </g>
         );
     }
