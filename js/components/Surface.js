@@ -1,11 +1,12 @@
 
 import React from 'react';
 import {connect} from 'react-redux';
-import {UpdDate, CreateCanvas} from '../actions/index.js';
+import {UpdDate, CreateCanvas, SetFireBase, SetUid, SyncFromStroage} from '../actions/index.js';
 import moment from 'moment';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import DatePicker from 'material-ui/DatePicker';
+import TextField from 'material-ui/TextField';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 // import MyDialog from './Window.js'
@@ -21,8 +22,14 @@ class Surface extends React.Component {
           autoOk: true,
           disableYearSelection: true,
           closeComponent: false,
+          inputUid: '',
+          errorText: '',
       };
       this.constructMap();
+
+    }
+    componentDidMount(){
+        this.props.dispatch(SetFireBase());
     }
     onChange(dateString){
       console.log(dateString);
@@ -73,9 +80,19 @@ class Surface extends React.Component {
                       autoOk={this.state.autoOk}
                       disableYearSelection={this.state.disableYearSelection}/>
                 </MuiThemeProvider>
-
+                <MuiThemeProvider>
+                <TextField
+                  floatingLabelText="Insert uid"
+                  errorText={this.state.errorText}
+                  onChange={(event)=>{
+                      this.setState({inputUid: event.target.value});
+                  }}
+                />
+                </MuiThemeProvider>
                 <div className="btn-panel">
-                  <div className="button" style={{marginRight: '1em'}}>
+                  <div className="button" style={{marginRight: '1em'}} onClick={()=>{
+                     this.getSchedule(this.state.inputUid);
+                  }}>
                     <i className="fa fa-cloud-download" aria-hidden="true">
                       <span style={{paddingLeft: '0.5em'}}>Sync Cloud</span>
                     </i>
@@ -86,6 +103,25 @@ class Surface extends React.Component {
           </div>
         </div>
       );
+    }
+    getSchedule(uid){
+        const {firebase, dispatch} = this.props
+        console.log(`Prepare to Sync by uid: ${uid}`);
+        return firebase.database().ref('/schedule/' + uid).once('value').then(function(snapshot) {
+            let sDate = snapshot.val().sDate;
+            let eDate = snapshot.val().eDate;
+            let monthAry = snapshot.val().monthAry;
+            let preBalls = snapshot.val().preBalls;
+            let actBalls = snapshot.val().actBalls;
+            console.log(monthAry);
+            dispatch(SetUid(uid));
+            dispatch(SyncFromStroage(monthAry, sDate, eDate, actBalls, preBalls));
+
+        })
+        .catch((error)=>{
+            console.error(error);
+            this.setState({errorText: 'wrong uid or file does not exist'});
+        });
     }
 
     constructMap(){
@@ -215,7 +251,8 @@ function mapStateToProps(state) {
   console.log(state);
   return {
     sDate,
-    eDate
+    eDate,
+    firebase: state.internalRef.firebase
   };
 }
 

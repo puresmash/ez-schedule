@@ -19,12 +19,12 @@ class Graph extends React.Component {
     super();
     this.state = {
         width : screen.width,
+        uuid: uuid.v4(),
         download: ''
     }
     console.log(navigator.userAgent);
     console.log(navigator.platform);
-    // console.log(uuid);
-    // console.log(uuid.v4());
+
   }
   componentDidMount() {
         window.addEventListener("resize", this.updateDimensions.bind(this));

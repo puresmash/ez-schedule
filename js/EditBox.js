@@ -2,12 +2,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
-import {UpdDate, CreateCanvas, AddBall, UpdActBall, UpdPreBall, UpdDesc} from './actions/index.js'
+import {UpdDate, CreateCanvas, AddBall, UpdActBall, UpdPreBall, UpdDesc, SetUid} from './actions/index.js'
 import Calendar from './components/Calendar.js'
 import moment from 'moment';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import DatePicker from 'material-ui/DatePicker';
+import MenuItem from 'material-ui/MenuItem';
+import IconMenu from 'material-ui/IconMenu';
+import IconButton from 'material-ui/IconButton';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+
+// import firebase from 'firebase';
+// const config = {
+//  apiKey: "AIzaSyAjC9U69Tq534yHFz8TfUOJ2M37se5ITyI",
+//  authDomain: "ez-schedule-2fd88.firebaseapp.com",
+//  databaseURL: "https://ez-schedule-2fd88.firebaseio.com",
+//  storageBucket: "ez-schedule-2fd88.appspot.com",
+//  messagingSenderId: "413243052956"
+// };
+// firebase.initializeApp(config);
 
 import StringUtils from './utils/Utils.js';
 import EditRow from './components/EditRow.js';
@@ -35,6 +49,51 @@ class EditBox extends React.Component {
         disableYearSelection: true,
         visibleFlag,
     }
+  }
+  prepareUpdateStore(){
+      let uid = this.props.uid;
+      if(uid && uid.length != 0){
+          console.log(`found uid: ${uid} prepare to update store`)
+          this._updateStore(uid);
+      }
+      else{
+          this._createAuth()
+      }
+  }
+  _createAuth(){
+    this.props.firebase.auth().signInAnonymously()
+    .then((user)=>{
+        console.log(`create uid: ${uid} prepare to create store`)
+        this.props.dispatch(SetUid(user.uid));
+        return user.uid;
+    })
+    .then((uid)=>{
+        console.log(`update store for: ${uid}`)
+        this.updateStore(uid);
+    })
+    .catch((error)=>{
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.error(`Fail Login- errorCode:${errorCode}, errorMessage:${errorMessage}`);
+    });
+  }
+  _updateStore(uid){
+      let {monthAry, actBalls, preBalls, sDate, eDate} = this.props;
+      var postData = {
+        updateBall: {
+            actBalls,
+            preBalls
+        },
+        updateBar: {
+            sDate,
+            eDate,
+            monthAry
+        }
+      };
+      var updates = {};
+      updates['/schedule/' + uid] = postData;
+      return this.props.firebase.database().ref().update(updates);
   }
   componentDidMount(){
 
@@ -90,7 +149,19 @@ class EditBox extends React.Component {
               }>
               </i>
           }
-          iconClassNameRight="muidocs-icon-navigation-expand-more"
+          iconElementRight={
+              <IconMenu
+                  iconButtonElement={
+                      <IconButton><MoreVertIcon /></IconButton>
+                  }
+                  targetOrigin={{horizontal: 'right', vertical: 'top'}}
+                  anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+                  >
+                  <MenuItem primaryText="SAVE" onClick={()=>{
+                      this.prepareUpdateStore();
+                  }}/>
+                  <MenuItem primaryText="PRINT" />
+              </IconMenu>}
           style={{zIndex: '0'}}
         />
         </MuiThemeProvider>
@@ -156,6 +227,11 @@ class EditBox extends React.Component {
                     }>
                         <i className="fa fa-download" aria-hidden="true"></i>
                     </div>
+                    {/* <div className="btn-canvas" onClick={
+                        () => this.testFirebase()
+                    }>
+                        <i className="fa fa-cloud-download" aria-hidden="true"></i>
+                    </div> */}
                 </div>
             </div>
             {ballPanel}
@@ -209,7 +285,7 @@ class EditBox extends React.Component {
 
 function mapStateToProps(state) {
   const {sDate, eDate} = state.updateBar;
-  const {svgRef} = state.internalRef;
+  const {svgRef, uid, firebase} = state.internalRef;
   console.log(`calling mSTPs: sDate=${sDate}, eDate=${eDate}`);
   return {
     sDate,
@@ -217,7 +293,9 @@ function mapStateToProps(state) {
     monthAry: state.updateBar.monthAry,
     actBalls: state.updateBall.actBalls,
     preBalls: state.updateBall.preBalls,
-    svgRef
+    svgRef,
+    uid,
+    firebase,
   };
 }
 

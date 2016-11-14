@@ -1,3 +1,6 @@
+
+import firebase from 'firebase';
+
 let nextBallId = 0;
 //let nextPreBallId = 0;
 
@@ -74,5 +77,38 @@ export const SetUA = (userAgent) => {
     return {
         type: 'SET_UA',
         userAgent
+    }
+}
+
+export const SetUid = (uid) => {
+    return {
+        type: 'SET_UID',
+        uid
+    }
+}
+
+export const SetFireBase = () => {
+    const config = {
+     apiKey: "AIzaSyAjC9U69Tq534yHFz8TfUOJ2M37se5ITyI",
+     authDomain: "ez-schedule-2fd88.firebaseapp.com",
+     databaseURL: "https://ez-schedule-2fd88.firebaseio.com",
+     storageBucket: "ez-schedule-2fd88.appspot.com",
+     messagingSenderId: "413243052956"
+    };
+    firebase.initializeApp(config);
+    return {
+        type: 'SET_FB',
+        firebase
+    }
+}
+
+export const SyncFromStroage = (monthAry, sDate, eDate, actBalls, preBalls) => {
+    return {
+        type: 'SYNC',
+        monthAry,
+        sDate,
+        eDate,
+        actBalls,
+        preBalls
     }
 }
