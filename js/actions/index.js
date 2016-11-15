@@ -102,7 +102,12 @@ export const SetFireBase = () => {
     }
 }
 
-export const SyncFromStroage = (monthAry, sDate, eDate, actBalls, preBalls) => {
+export const SyncFromStroage = (snapshot) => {
+    let sDate = snapshot.val().updateBar.sDate;
+    let eDate = snapshot.val().updateBar.eDate;
+    let monthAry = snapshot.val().updateBar.monthAry;
+    let preBalls = new Map(snapshot.val().updateBall.preBalls);
+    let actBalls = new Map(snapshot.val().updateBall.actBalls);
     return {
         type: 'SYNC',
         monthAry,

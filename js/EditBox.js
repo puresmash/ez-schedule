@@ -63,13 +63,13 @@ class EditBox extends React.Component {
   _createAuth(){
     this.props.firebase.auth().signInAnonymously()
     .then((user)=>{
-        console.log(`create uid: ${uid} prepare to create store`)
+        console.log(`create uid: ${user.uid} prepare to create store`)
         this.props.dispatch(SetUid(user.uid));
         return user.uid;
     })
     .then((uid)=>{
         console.log(`update store for: ${uid}`)
-        this.updateStore(uid);
+        this._updateStore(uid);
     })
     .catch((error)=>{
         // Handle Errors here.
@@ -126,7 +126,7 @@ class EditBox extends React.Component {
     }
   }
   render(){
-    let {sDate, eDate, actBalls, svgRef} = this.props;
+    let {sDate, eDate, actBalls, svgRef, uid} = this.props;
     let {visibleFlag} = this.state;
     let ballPanel = this.getBallPanel(actBalls, sDate, eDate);
     console.log('Rendering editbox');
@@ -137,7 +137,7 @@ class EditBox extends React.Component {
 
         <MuiThemeProvider>
         <AppBar
-          title="Paint Schedule"
+          title={"Paint Schedule-"+uid}
           iconElementLeft={
               <i
                 className="fa fa-bars"
@@ -267,7 +267,6 @@ class EditBox extends React.Component {
 
   getBallPanel(ballMap , sDate, eDate){
     let ary = [];
-
     ballMap.forEach((value, key)=>{
         console.log(`${key}, ${value}`);
         key = StringUtils.extractIndexFromId(key);

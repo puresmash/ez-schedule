@@ -108,14 +108,9 @@ class Surface extends React.Component {
         const {firebase, dispatch} = this.props
         console.log(`Prepare to Sync by uid: ${uid}`);
         return firebase.database().ref('/schedule/' + uid).once('value').then(function(snapshot) {
-            let sDate = snapshot.val().sDate;
-            let eDate = snapshot.val().eDate;
-            let monthAry = snapshot.val().monthAry;
-            let preBalls = snapshot.val().preBalls;
-            let actBalls = snapshot.val().actBalls;
-            console.log(monthAry);
+            // let sDate = snapshot.val().updateBar.sDate;
             dispatch(SetUid(uid));
-            dispatch(SyncFromStroage(monthAry, sDate, eDate, actBalls, preBalls));
+            dispatch(SyncFromStroage(snapshot));
 
         })
         .catch((error)=>{
