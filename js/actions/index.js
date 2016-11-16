@@ -86,6 +86,20 @@ export const SetUid = (uid) => {
         uid
     }
 }
+export const SetUser = (uid, email, name) => {
+    return {
+        type: 'SET_USER',
+        uid,
+        email,
+        name,
+    }
+}
+export const SetFileIds = (fileIds) => {
+    return {
+        type: 'SET_FILE_IDS',
+        fileIds,
+    }
+}
 
 export const SetFireBase = () => {
     const config = {

@@ -76,17 +76,26 @@ body {
             }
         }
         div.wizard {
-            padding: 1.5em 1em 1em 1em;
+            padding: 1em 1em 1em 1em;
 
-            input {
-                font-size: 1.2em;
-                // margin-left: 1em;
-                text-align: center;
-                background: rgba(0,0,0,0);
-                border-width: 0 0 1px 0;
-                min-width: 160px;
-                max-width: 160px;
-                text-align: left;
+            // input {
+            //     font-size: 1.2em;
+            //     text-align: center;
+            //     background: rgba(0,0,0,0);
+            //     border-width: 0 0 1px 0;
+            //     min-width: 160px;
+            //     max-width: 160px;
+            //     text-align: left;
+            // }
+            div.desciption{
+                background-color: gray;
+                div.content{
+                    background-color: #d9d9d9;
+                    margin-left: 4px;
+                    padding-left: 8px;
+                    color: gray;
+                    font-style: italic;
+                }
             }
 
             div.datepicker-wizard > div{
@@ -94,14 +103,13 @@ body {
                     width: 90% !important;
                 }
             }
-
-            div.btn-panel {
-                padding-top: 3em;
-                display: flex;
-                div.button{
-                    @include big-button {
-                        @include aLostMemory;
-                    }
+        }
+        div.btn-panel {
+            padding: 2em 1em 1em 1em;
+            display: flex;
+            div.button{
+                @include big-button {
+                    @include aLostMemory;
                 }
             }
         }
@@ -112,16 +120,65 @@ body {
 div#app {
     // display: flex;
 }
+// {
+//     position: fixed;
+//         height: 100%;
+//         width: 100%;
+//         top: 0px;
+//         left: -100%;
+//         opacity: 0;
+//         background-color: rgba(0, 0, 0, 0.541176);
+//         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+//         will-change: opacity;
+//
+//         transition: left 0ms cubic-bezier(0.23, 1, 0.32, 1) 400ms, opacity 400ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+//         z-index: 1200;
+//         pointer-events: none;
+// }
+// {
+//     position: fixed;
+// height: 100%;
+// width: 100%;
+// top: 0px;
+// left: 0px;
+// opacity: 1;
+// background-color: rgba(0, 0, 0, 0.541176);
+// -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+// will-change: opacity;
+//
+// transition: left 0ms cubic-bezier(0.23, 1, 0.32, 1) 0ms, opacity 400ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+// z-index: 1200;
+// pointer-events: auto;
+// }
 /*EditBox*/
 div.editbox {
     display: flex;
     flex-direction: column;
     // position: fixed;
     right: 0;
-    div#container{
+    div#mask{
+        width: 100vw;
+        height: 100vh;
         position: absolute;
+        background-color: black;
+        opacity: 0.5;
+        transition: left 0s linear 0s, opacity .3s linear 0s;
+    }
+    .menu-timeline{
+        position: relative;
+        background-color: white;
+    }
+    div#container{
+        // position: absolute;
+        position: fixed;
         overflow: scroll;
-        top: 64px;
+        // top: 64px;
+        max-height: 100%;
+        background-color: white;
+        transition: left .6s linear;
+        box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px;
+        width: 80%;
+        max-width: 372px;
     }
     div.datepicker-bar > div{
         @media screen and (max-width: 500px) {
@@ -150,6 +207,9 @@ div.editbox {
             }
         }
     }
+    div.main-schedule{
+        transition: height .5s ease;
+    }
     .edit-row {
         border: 1px black solid;
         padding: 1em;
@@ -167,6 +227,7 @@ div.editbox {
 
         &.ball-panel {
             background-color: $color-2;
+            position: relative;
         }
 
         label.edit-lbl {

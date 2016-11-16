@@ -15,6 +15,13 @@ const MAX_MONTH = 6;
 const MIN_MONTH = -3;
 
 class Surface extends React.Component {
+    static STEP = {
+        first: 'first',
+        googleLogin: 'googleLogin',
+        anonymous: 'anonymous',
+        new: 'new',
+        load: 'load',
+    }
     constructor(){
       super();
       this.state = {
@@ -24,8 +31,9 @@ class Surface extends React.Component {
           closeComponent: false,
           inputUid: '',
           errorText: '',
+          step: 'first',
+          traceStep: ['first'],
       };
-      this.constructMap();
 
     }
     componentDidMount(){
@@ -41,8 +49,10 @@ class Surface extends React.Component {
     handleClose(){
         this.setState({open: false});
     }
+
     render(){
        let {sDate, eDate} = this.props;
+       let { step } = this.state;
     //   let wizard = this.getWizard(sDate, eDate);
 
       return(
@@ -50,56 +60,14 @@ class Surface extends React.Component {
         <div id="surface" className="flex-center" style={this.getVisWindow()}>
           <div className="window">
               <div className="state">
-                    <h2>Sync or Create</h2>
+                    <h2>Wizard</h2>
                     <i className="fa fa-times" aria-hidden="true" onClick={
                         ()=>this.closeWindow()
                     }></i>
               </div>
-              <div className="wizard">
-                <MuiThemeProvider>
-                  <DatePicker
-                      className="datepicker-wizard"
-                      onChange={this._handleChangeDateS.bind(this)}
-                      shouldDisableDate={(date)=>{return date.getDate() != 1}}
-                      floatingLabelText="Insert Start Date"
-                      minDate={moment().add(MIN_MONTH, 'M').toDate()}
-                      maxDate={moment().add(MAX_MONTH, 'M').toDate()}
-                      autoOk={this.state.autoOk}
-                      disableYearSelection={this.state.disableYearSelection}/>
-                </MuiThemeProvider>
-                <MuiThemeProvider>
-                  <DatePicker
-                      className="datepicker-wizard"
-                      onChange={this._handleChangeDateE.bind(this)}
-                      shouldDisableDate={(date)=>{
-                          return date.getDate() != moment(date).daysInMonth()
-                      }}
-                      floatingLabelText="Insert End Date"
-                      minDate={moment().add(MIN_MONTH, 'M').toDate()}
-                      maxDate={moment().add(MAX_MONTH, 'M').toDate()}
-                      autoOk={this.state.autoOk}
-                      disableYearSelection={this.state.disableYearSelection}/>
-                </MuiThemeProvider>
-                <MuiThemeProvider>
-                <TextField
-                  floatingLabelText="Insert uid"
-                  errorText={this.state.errorText}
-                  onChange={(event)=>{
-                      this.setState({inputUid: event.target.value});
-                  }}
-                />
-                </MuiThemeProvider>
-                <div className="btn-panel">
-                  <div className="button" style={{marginRight: '1em'}} onClick={()=>{
-                     this.getSchedule(this.state.inputUid);
-                  }}>
-                    <i className="fa fa-cloud-download" aria-hidden="true">
-                      <span style={{paddingLeft: '0.5em'}}>Sync Cloud</span>
-                    </i>
-                  </div>
-                  {this.getWizardStep('paint')}
-                </div>
-              </div>
+
+                {this.getWizard(step)}
+                {this.getStep(step)}
           </div>
         </div>
       );
@@ -117,20 +85,6 @@ class Surface extends React.Component {
             console.error(error);
             this.setState({errorText: 'wrong uid or file does not exist'});
         });
-    }
-
-    constructMap(){
-        let step = new Map();
-        step.set('paint',
-            <div className="button" onClick={
-              (event) => this._createCanvas()
-            }>
-              <i className="fa fa-paint-brush" aria-hidden="true">
-                <span style={{paddingLeft: '0.5em'}}>Draw Graph</span>
-              </i>
-            </div>
-        );
-        this.step = step;
     }
 
     _createCanvas(){
@@ -167,76 +121,177 @@ class Surface extends React.Component {
         return {};
     }
 
-    getWizardStep(key){
-        return this.step.get(key);
-        // map.set('next',
-        //     <div className="button" onClick={
-        //       (event) => this._createCanvas()
-        //     }>
-        //       <i className="fa fa-paint-brush" aria-hidden="true">
-        //         <span style={{paddingLeft: '0.5em'}}>Draw Graph</span>
-        //       </i>
-        //     </div>
-        //     'fa-arrow-right'
-        // );
+    getWizard(step){
+        let {sDate, eDate} = this.props;
+
+        if(step==Surface.STEP.first){
+            return (
+                <div className="wizard">
+                    <div className="desciption">
+                        <div className="content">
+                            <p style={{paddingTop: '8px'}}>
+                                Choose you identity:
+                            </p>
+                            <p style={{paddingBottom: '8px', lineHeight: '24px'}}>
+                                You can enjoy our features anonymously,
+                                or login by your google account to draw schedules on each of your devices synchronously
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        else if(step==Surface.STEP.new){
+            return (
+                <div className="wizard">
+                    <MuiThemeProvider>
+                      <DatePicker
+                          className="datepicker-wizard"
+                          onChange={this._handleChangeDateS.bind(this)}
+                          shouldDisableDate={(date)=>{return date.getDate() != 1}}
+                          floatingLabelText="Insert Start Date"
+                          minDate={moment().add(MIN_MONTH, 'M').toDate()}
+                          maxDate={moment().add(MAX_MONTH, 'M').toDate()}
+                          autoOk={this.state.autoOk}
+                          disableYearSelection={this.state.disableYearSelection}/>
+                    </MuiThemeProvider>
+                    <MuiThemeProvider>
+                      <DatePicker
+                          className="datepicker-wizard"
+                          onChange={this._handleChangeDateE.bind(this)}
+                          shouldDisableDate={(date)=>{
+                              return date.getDate() != moment(date).daysInMonth()
+                          }}
+                          floatingLabelText="Insert End Date"
+                          minDate={moment().add(MIN_MONTH, 'M').toDate()}
+                          maxDate={moment().add(MAX_MONTH, 'M').toDate()}
+                          autoOk={this.state.autoOk}
+                          disableYearSelection={this.state.disableYearSelection}/>
+                    </MuiThemeProvider>
+                </div>
+            );
+        }
+        else if(step==Surface.STEP.load){
+            return (
+                <div className="wizard">
+                    <MuiThemeProvider>
+                    <TextField
+                      floatingLabelText="Insert uid"
+                      errorText={this.state.errorText}
+                      onChange={(event)=>{
+                          this.setState({inputUid: event.target.value});
+                      }}
+                    />
+                    </MuiThemeProvider>
+                </div>
+            );
+        }
+        else if(step==Surface.STEP.googleLogin || step==Surface.STEP.anonymous){
+            return (
+                <div className="wizard">
+                    <div className="desciption">
+                        <div className="content">
+                            <p style={{paddingTop: '8px'}}>
+                                Choose action you need:
+                            </p>
+                            <p style={{paddingBottom: '8px', lineHeight: '24px'}}>
+                                Load your old file, or create a new file ?
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
     }
+    getStep(step){
+        const wizard = {};
+        let { traceStep } = this.state;
 
-    getWizard(sDate, eDate){
-        console.log(`sDate=${sDate}, eDate=${eDate}`);
-
-        return(
-            <div>
-                <DateField
-                  dateFormat="YYYY-MM"
-                  forceValidDate={false}
-                  minDate="2016-05"
-                  maxDate="2017-01"
-                  placeholder="Insert Start Date"
-                  onChange={
-                      (dateString)=>this._handleChangeDateS(dateString)
-                  }
-                  style={{marginLeft: '1em'}}
-                >
-                  <DatePicker
-                    navigation={true}
-                    locale="en"
-                    forceValidDate={true}
-                    highlightWeekends={false}
-                    highlightToday={false}
-                    weekNumbers={false}
-                    weekStartDay={0}
-                    footer={true}
-                    weekDayNames={false}
-                  />
-                </DateField>
-
-                <DateField
-                  dateFormat="YYYY-MM"
-                  forceValidDate={false}
-                  minDate="2016-05"
-                  maxDate="2017-01"
-                  placeholder="Insert End Date"
-                  onChange={
-                      (dateString)=>this._handleChangeDateE(dateString)
-                  }
-                  style={{marginLeft: '1em'}}
-                >
-                  <DatePicker
-                    navigation={true}
-                    locale="en"
-                    forceValidDate={true}
-                    highlightWeekends={false}
-                    highlightToday={false}
-                    weekNumbers={false}
-                    weekStartDay={0}
-                    footer={true}
-                    weekDayNames={false}
-                  />
-                </DateField>
+        wizard[Surface.STEP.first] = (
+            <div className="btn-panel">
+                <div className="button" style={{marginRight: '1em'}} onClick={
+                  () => this.setState({step: Surface.STEP.anonymous})
+                }>
+                    <i className="fa fa-cloud-download" aria-hidden="true">
+                      <span style={{paddingLeft: '0.5em'}}>Anonymous</span>
+                    </i>
+                </div>
+                <div className="button" onClick={
+                  () => this.setState({step: Surface.STEP.googleLogin})
+                }>
+                    <i className="fa fa-cloud-download" aria-hidden="true">
+                      <span style={{paddingLeft: '0.5em'}}>Google Signin</span>
+                    </i>
+                </div>
             </div>
         );
-
-
+        wizard[Surface.STEP.googleLogin] = (
+            <div className="btn-panel">
+                <div className="button" style={{marginRight: '1em'}} onClick={
+                  () => {
+                      this.setState({step: Surface.STEP.new, traceStep: traceStep.push(Surface.STEP.googleLogin)});
+                  }
+                }>
+                    <i className="fa fa-cloud-download" aria-hidden="true">
+                      <span style={{paddingLeft: '0.5em'}}>New</span>
+                    </i>
+                </div>
+                <div className="button" onClick={
+                  () => {
+                      this.setState({step: Surface.STEP.load, traceStep: traceStep.push(Surface.STEP.googleLogin)});
+                  }
+                }>
+                    <i className="fa fa-cloud-download" aria-hidden="true">
+                      <span style={{paddingLeft: '0.5em'}}>Load</span>
+                    </i>
+                </div>
+            </div>
+        );
+        wizard[Surface.STEP.anonymous] = (
+            <div className="btn-panel">
+                <div className="button" style={{marginRight: '1em'}} onClick={
+                  () => {
+                      this.setState({step: Surface.STEP.new, traceStep: traceStep.push(Surface.STEP.anonymous)});
+                  }
+                }>
+                    <i className="fa fa-cloud-download" aria-hidden="true">
+                      <span style={{paddingLeft: '0.5em'}}>New</span>
+                    </i>
+                </div>
+                <div className="button" onClick={
+                  () => {
+                      this.setState({step: Surface.STEP.load, traceStep: traceStep.push(Surface.STEP.anonymous)});
+                  }
+                }>
+                    <i className="fa fa-cloud-download" aria-hidden="true">
+                      <span style={{paddingLeft: '0.5em'}}>Load</span>
+                    </i>
+                </div>
+            </div>
+        );
+        wizard[Surface.STEP.new] = (
+            <div className="btn-panel">
+                <div className="button" style={{marginRight: '1em'}} onClick={
+                  (event) => this._createCanvas()
+                }>
+                    <i className="fa fa-cloud-download" aria-hidden="true">
+                      <span style={{paddingLeft: '0.5em'}}>New</span>
+                    </i>
+                </div>
+            </div>
+        );
+        wizard[Surface.STEP.load] = (
+            <div className="btn-panel">
+                <div className="button" style={{marginRight: '1em'}} onClick={
+                    () => {}
+                }>
+                    <i className="fa fa-cloud-download" aria-hidden="true">
+                      <span style={{paddingLeft: '0.5em'}}>Load</span>
+                    </i>
+                </div>
+            </div>
+        );
+        return wizard[step];
     }
 }
 

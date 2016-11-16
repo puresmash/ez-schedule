@@ -2,9 +2,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
-import {UpdDate, CreateCanvas, AddBall, UpdActBall, UpdPreBall, UpdDesc, SetUid} from './actions/index.js'
+import {AddBall, SetUid} from './actions/index.js'
 import Calendar from './components/Calendar.js'
+import EditDate from './components/EditDate.js';
+import EditRow from './components/EditRow.js';
+import MyAccount from './components/MyAccount.js';
 import moment from 'moment';
+
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import DatePicker from 'material-ui/DatePicker';
@@ -12,7 +16,11 @@ import MenuItem from 'material-ui/MenuItem';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-
+import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+import Divider from 'material-ui/Divider';
+import Paper from 'material-ui/Paper';
 // import firebase from 'firebase';
 // const config = {
 //  apiKey: "AIzaSyAjC9U69Tq534yHFz8TfUOJ2M37se5ITyI",
@@ -24,10 +32,9 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 // firebase.initializeApp(config);
 
 import StringUtils from './utils/Utils.js';
-import EditRow from './components/EditRow.js';
 
-const MAX_MONTH = 6;
-const MIN_MONTH = -3;
+
+
 
 class EditBox extends React.Component {
 
@@ -48,6 +55,8 @@ class EditBox extends React.Component {
         autoOk: true,
         disableYearSelection: true,
         visibleFlag,
+        openMainSchedule: false,
+        openTimeline: false,
     }
   }
   prepareUpdateStore(){
@@ -78,6 +87,7 @@ class EditBox extends React.Component {
         console.error(`Fail Login- errorCode:${errorCode}, errorMessage:${errorMessage}`);
     });
   }
+
   _updateStore(uid){
       let {monthAry, actBalls, preBalls, sDate, eDate} = this.props;
       var postData = {
@@ -96,7 +106,6 @@ class EditBox extends React.Component {
       return this.props.firebase.database().ref().update(updates);
   }
   componentDidMount(){
-
   }
   prepareImage(){
       let {svgRef} = this.props;
@@ -126,8 +135,8 @@ class EditBox extends React.Component {
     }
   }
   render(){
-    let {sDate, eDate, actBalls, svgRef, uid} = this.props;
-    let {visibleFlag} = this.state;
+    let {sDate, eDate, actBalls, svgRef, uid, firebase} = this.props;
+    let {visibleFlag, openMainSchedule, openTimeline} = this.state;
     let ballPanel = this.getBallPanel(actBalls, sDate, eDate);
     console.log('Rendering editbox');
 
@@ -171,75 +180,109 @@ class EditBox extends React.Component {
             }>
             </i>
         </div> */}
-        <div id="container" style={{visibility: this.getVisible(visibleFlag)}}>
-            <div className="edit-row edit-date">
-                <div>
-                    <div className="edit-row-detail" style={{marginBottom: '8px'}}>
-                        <label className="edit-lbl">Start</label>
-                        <MuiThemeProvider>
-                          <DatePicker
-                              className="datepicker-bar"
-                              onChange={this._handleChangeDateS.bind(this)}
-                              shouldDisableDate={(date)=>{return date.getDate() != 1}}
-                              value={sDate? moment(sDate).toDate(): ''}
-                              hintText="Insert Start Date"
-                              minDate={moment().add(MIN_MONTH, 'M').toDate()}
-                              maxDate={moment().add(MAX_MONTH, 'M').toDate()}
-                              autoOk={this.state.autoOk}
-                              disableYearSelection={this.state.disableYearSelection}/>
-                        </MuiThemeProvider>
-                        {/* <Calendar onChange={this._handleChangeDateS.bind(this)} placeholder={'Insert Start Date'}
-                                  maxDate={moment().add(MAX_MONTH, 'M').format('YYYY-MM')}
-                                  minDate={moment().add(MIN_MONTH, 'M').format('YYYY-MM')}
-                                  value={sDate} clearIcon={visibleFlag}></Calendar> */}
-                    </div>
-                    <div className="edit-row-detail" style={{marginBottom: '8px'}}>
-                        <label className="edit-lbl">End</label>
-                        <MuiThemeProvider>
-                          <DatePicker
-                              className="datepicker-bar"
-                              onChange={this._handleChangeDateE.bind(this)}
-                              shouldDisableDate={(date)=>{
-                                  return date.getDate() != moment(date).daysInMonth()
-                              }}
-                              value={eDate? moment(eDate).toDate(): ''}
-                              hintText="Insert End Date"
-                              minDate={moment().add(MIN_MONTH, 'M').toDate()}
-                              maxDate={moment().add(MAX_MONTH, 'M').toDate()}
-                              autoOk={this.state.autoOk}
-                              disableYearSelection={this.state.disableYearSelection}/>
-                        </MuiThemeProvider>
-                        {/* <Calendar onChange={this._handleChangeDateE.bind(this)} placeholder={'Insert End Date'}
-                                  maxDate={moment().add(MAX_MONTH, 'M').format('YYYY-MM')}
-                                  minDate={moment().add(MIN_MONTH, 'M').format('YYYY-MM')}
-                                  value={eDate} clearIcon={visibleFlag}></Calendar> */}
-                    </div>
+        <div id="mask" style={this._getMaskVisible(visibleFlag)} onClick={()=>{
+            this.setState({visibleFlag: false});
+        }}>
+        </div>
+        <div id="container" style={this.getVisible(visibleFlag)}>
+            <MuiThemeProvider>
+            <Paper zDepth={1}>
+
+
+                <MyAccount uid={uid} firebase={firebase}></MyAccount>
+                <Divider />
+                <MenuItem
+                    primaryText="Main Schedule"
+                    leftIcon={<RemoveRedEye />}
+                    onClick={()=>{
+                        this.setState({openMainSchedule: !openMainSchedule});
+                    }}
+                    />
+                    <EditDate openMainSchedule={openMainSchedule}></EditDate>
+                    {/* <div ref="editDate" className="edit-row edit-date" style={this.getEditDateVisible(openMainSchedule)} >
+                        <div>
+                            <div className="edit-row-detail" style={{marginBottom: '8px'}}>
+                                <label className="edit-lbl">Start</label>
+                                <MuiThemeProvider>
+                                  <DatePicker
+                                      className="datepicker-bar"
+                                      onChange={this._handleChangeDateS.bind(this)}
+                                      shouldDisableDate={(date)=>{return date.getDate() != 1}}
+                                      value={sDate? moment(sDate).toDate(): ''}
+                                      hintText="Insert Start Date"
+                                      minDate={moment().add(MIN_MONTH, 'M').toDate()}
+                                      maxDate={moment().add(MAX_MONTH, 'M').toDate()}
+                                      autoOk={this.state.autoOk}
+                                      disableYearSelection={this.state.disableYearSelection}/>
+                                </MuiThemeProvider>
+                            </div>
+                            <div className="edit-row-detail" style={{marginBottom: '8px'}}>
+                                <label className="edit-lbl">End</label>
+                                <MuiThemeProvider>
+                                  <DatePicker
+                                      className="datepicker-bar"
+                                      onChange={this._handleChangeDateE.bind(this)}
+                                      shouldDisableDate={(date)=>{
+                                          return date.getDate() != moment(date).daysInMonth()
+                                      }}
+                                      value={eDate? moment(eDate).toDate(): ''}
+                                      hintText="Insert End Date"
+                                      minDate={moment().add(MIN_MONTH, 'M').toDate()}
+                                      maxDate={moment().add(MAX_MONTH, 'M').toDate()}
+                                      autoOk={this.state.autoOk}
+                                      disableYearSelection={this.state.disableYearSelection}/>
+                                </MuiThemeProvider>
+                            </div>
+                        </div>
+
+                        <div style={{display: 'inline-flex',alignItems: 'center'}}>
+                            <div className="btn-canvas" onClick={
+                                (event) => this._createCanvas()
+                            }>
+                                <i className="fa fa-repeat" aria-hidden="true"></i>
+                            </div>
+                            <div className="btn-canvas" onClick={
+                                () => this.prepareImage()
+                            }>
+                                <i className="fa fa-download" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>  */}
+            <Divider />
+                <div className="menu-timeline">
+                    <MenuItem
+                        primaryText="Timeline"
+                        leftIcon={<RemoveRedEye />}
+                        onClick={()=>{
+                            this.setState({openTimeline: !openTimeline})
+                        }}
+                        />
                 </div>
 
-                <div style={{display: 'inline-flex',alignItems: 'center'}}>
-                    <div className="btn-canvas" onClick={
-                        (event) => this._createCanvas()
-                    }>
-                        <i className="fa fa-repeat" aria-hidden="true"></i>
+                    <div style={this._getTimelineVisible(openTimeline)}>
+                        {ballPanel}
                     </div>
-                    <div className="btn-canvas" onClick={
-                        () => this.prepareImage()
-                    }>
-                        <i className="fa fa-download" aria-hidden="true"></i>
-                    </div>
-                    {/* <div className="btn-canvas" onClick={
-                        () => this.testFirebase()
-                    }>
-                        <i className="fa fa-cloud-download" aria-hidden="true"></i>
-                    </div> */}
-                </div>
-            </div>
-            {ballPanel}
-            <div className="btn-action" onClick={
+                    <Divider />
+
+                        <FloatingActionButton
+                            mini={true}
+                            style={{marginLeft: '70%', marginTop: '-20px', marginBottom: '-20px', position: 'relative', zIndex: '2'}}
+                            onClick={
+                              () => this._addBall()
+                          }>
+                          <ContentAdd />
+                        </FloatingActionButton>
+                    <MenuItem primaryText="Thanks" leftIcon={<RemoveRedEye />} style={{position: 'relative', backgroundColor: 'white'}}/>
+
+
+            {/* <div className="btn-action" onClick={
               () => this._addBall()
             }>
               <span className="circle btn-plus" >+</span>
-            </div>
+            </div> */}
+            </Paper>
+            </MuiThemeProvider>
+
         </div>
       </div>
     );
@@ -249,17 +292,45 @@ class EditBox extends React.Component {
       let flag = Boolean(this.state.visibleFlag ^ true);
       this.setState({visibleFlag: flag});
   }
+
   getVisible(flag){
-      return (flag ? 'visible':'hidden');
+      const collapse = {
+          left: '-100%',
+
+          opacity: 0
+      }
+      const visible = {
+          left: 0,
+
+          opacity: 1
+      }
+      console.log('visibleFlag change');
+      console.log(flag);
+      return (flag ? visible:collapse);
   }
-  _createCanvas(){
-    this.props.dispatch(CreateCanvas());
+  _getMaskVisible(flag){
+      const collapse = {
+          left : '-100%',
+          opacity: 0,
+      }
+      const visible = {
+          left : 0,
+      }
+      return (flag ? visible:collapse);
   }
-  _handleChangeDateS(event, dateString){
-    this.props.dispatch(UpdDate(moment(dateString).format('YYYY-MM-DD'), 'start'));
-  }
-  _handleChangeDateE(event, dateString){
-    this.props.dispatch(UpdDate(moment(dateString).format('YYYY-MM-DD'), 'end'));
+  _getTimelineVisible(flag){
+      const collapse = {
+          overflow: 'hidden',
+          visibility: 'hidden',
+          height: 0,
+          opacity: 0
+      }
+      const visible = {
+          visibility: 'visible',
+          height: 'auto',
+          opacity: 1
+      }
+      return (flag ? visible:collapse);
   }
   _addBall(){
     this.props.dispatch(AddBall());
