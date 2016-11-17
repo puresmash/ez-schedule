@@ -1,3 +1,6 @@
+
+import firebase from 'firebase';
+
 let nextBallId = 0;
 //let nextPreBallId = 0;
 
@@ -74,5 +77,68 @@ export const SetUA = (userAgent) => {
     return {
         type: 'SET_UA',
         userAgent
+    }
+}
+
+export const SetSid = (sid) => {
+    return {
+        type: 'SET_SID',
+        sid
+    }
+}
+export const SetUser = (uid, email, name, avatarSrc) => {
+    return {
+        type: 'SET_USER',
+        uid,
+        email,
+        name,
+        avatarSrc,
+    }
+}
+export const SetFileIds = (fileIds) => {
+    return {
+        type: 'SET_FILE_IDS',
+        fileIds,
+    }
+}
+
+export const SetFireBase = () => {
+    const config = {
+     apiKey: "AIzaSyAjC9U69Tq534yHFz8TfUOJ2M37se5ITyI",
+     authDomain: "ez-schedule-2fd88.firebaseapp.com",
+     databaseURL: "https://ez-schedule-2fd88.firebaseio.com",
+     storageBucket: "ez-schedule-2fd88.appspot.com",
+     messagingSenderId: "413243052956"
+    };
+    firebase.initializeApp(config);
+    return {
+        type: 'SET_FB',
+        firebase
+    }
+}
+
+export const SyncFromStroage = (snapshot) => {
+    let sDate = '';
+    let eDate = '';
+    let monthAry = [];
+    let preBalls = new Map();
+    let actBalls = new Map();
+
+    if(snapshot.child('updateBar').exists()){
+        sDate = snapshot.val().updateBar.sDate;
+        eDate = snapshot.val().updateBar.eDate;
+        monthAry = snapshot.val().updateBar.monthAry;
+    }
+    if(snapshot.child('updateBall').exists()){
+        preBalls = new Map(snapshot.val().updateBall.preBalls);
+        actBalls = new Map(snapshot.val().updateBall.actBalls);
+    }
+    return {
+        type: 'SYNC',
+        monthAry,
+        sDate,
+        eDate,
+        actBalls,
+        preBalls
     }
 }

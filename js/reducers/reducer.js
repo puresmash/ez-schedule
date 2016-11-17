@@ -74,63 +74,77 @@ function updateBall(state={actBalls: new Map(), preBalls: new Map()}, action){
             preBalls
         });
     }
+    case 'SYNC': {
+        let { actBalls, preBalls } = state;
+        return Object.assign({}, state, {
+            actBalls: action.actBalls,
+            preBalls: action.preBalls
+        });
+    }
 
     default:
       return state;
   }
 }
-function updateBar(state = {}, action) {
+function updateBar(state = {monthAry:[], sDate:'', eDate:''}, action) {
     switch (action.type) {
-        case 'UPD_DATE':
-            {
-                console.log(`reducer: ${action.type} ${action.data}`);
-                if (action.option == 'start') {
-                    return Object.assign({}, state, {
-                        sDate: action.data
-                    });
-                } else {
-                    return Object.assign({}, state, {
-                        eDate: action.data
-                    });
-                }
-            }
-        case 'UPD_BAR':
-            {
-                const { sDate, eDate } = state;
-
-                if (!sDate || !eDate || eDate < sDate) {
-                    return state;
-                }
-
-                let diff = moment(eDate, 'YYYY-MM-DD').diff(moment(sDate, 'YYYY-MM-DD'), 'months');
-                console.log(diff);
-                if (diff < 0) {
-                    console.error('invalid month range(<0)');
-                    return;
-                }
-                let ary = [];
-                for (let i = 0; i <= diff; i++) {
-                    let date = moment(sDate, 'YYYY-MM-DD').add(i, 'M');
-                    let daysInMonth = date.daysInMonth();
-                    ary.push({
-                        mstr: date.format('MMM'),
-                        y: parseInt(date.format('YYYY')),
-                        m: parseInt(date.format('MM')),
-                        daysInMonth
-                    });
-                }
-
-                console.log(`reducer: ${action.type} ${ary}`);
-
+        case 'UPD_DATE': {
+            console.log(`reducer: ${action.type} ${action.data}`);
+            if (action.option == 'start') {
                 return Object.assign({}, state, {
-                    monthAry: ary
+                    sDate: action.data
+                });
+            } else {
+                return Object.assign({}, state, {
+                    eDate: action.data
                 });
             }
+        }
+        case 'UPD_BAR': {
+            const { sDate, eDate } = state;
+
+            if (!sDate || !eDate || eDate < sDate) {
+                return state;
+            }
+
+            let diff = moment(eDate, 'YYYY-MM-DD').diff(moment(sDate, 'YYYY-MM-DD'), 'months');
+            console.log(diff);
+            if (diff < 0) {
+                console.error('invalid month range(<0)');
+                return;
+            }
+            let ary = [];
+            for (let i = 0; i <= diff; i++) {
+                let date = moment(sDate, 'YYYY-MM-DD').add(i, 'M');
+                let daysInMonth = date.daysInMonth();
+                ary.push({
+                    mstr: date.format('MMM'),
+                    y: parseInt(date.format('YYYY')),
+                    m: parseInt(date.format('MM')),
+                    daysInMonth
+                });
+            }
+
+            console.log(`reducer: ${action.type} ${ary}`);
+
+            return Object.assign({}, state, {
+                monthAry: ary
+            });
+        }
+        case 'SYNC': {
+            const { sDate, eDate, monthAry } = state;
+
+            return Object.assign({}, state, {
+                sDate: action.sDate,
+                eDate: action.eDate,
+                monthAry: action.monthAry
+            });
+        }
         default:
             return state;
     }
 }
-function internalRef(state={svgRef: {}, userAgent:{}}, action){
+function internalRef(state={svgRef: {}, userAgent:{}, sid:'', user: {}, fileIds:[]}, action){
     switch(action.type){
         case 'REF_SVG': {
             return Object.assign({}, state, {
@@ -141,6 +155,33 @@ function internalRef(state={svgRef: {}, userAgent:{}}, action){
             return Object.assign({}, state, {
                 userAgent: action.userAgent
             });
+        }
+        case 'SET_SID': {
+            return Object.assign({}, state, {
+                sid: action.sid
+            });
+        }
+        case 'SET_FB':{
+            return Object.assign({}, state, {
+                firebase: action.firebase
+            })
+        }
+        case 'SET_USER':{
+            let user = {};
+            user.uid = action.uid;
+            user.email = action.email;
+            user.name = action.name;
+            user.avatarSrc = action.avatarSrc;
+            return Object.assign({}, state, {
+                user,
+            });
+        }
+        case 'SET_FILE_IDS':{
+            let fileIds = [];
+            fileIds = [...action.fileIds];
+            return Object.assign({}, state, {
+                fileIds,
+            })
         }
 
         default:

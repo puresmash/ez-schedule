@@ -2,18 +2,45 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
-import {UpdDate, CreateCanvas, AddBall, UpdActBall, UpdPreBall, UpdDesc} from './actions/index.js'
+import {AddBall, SetSid} from './actions/index.js'
 import Calendar from './components/Calendar.js'
+import EditDate from './components/EditDate.js';
+import EditRow from './components/EditRow.js';
+import MyAccount from './components/MyAccount.js';
+import DocumentList from './components/DocumentList.js';
 import moment from 'moment';
+
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import DatePicker from 'material-ui/DatePicker';
+import MenuItem from 'material-ui/MenuItem';
+import IconMenu from 'material-ui/IconMenu';
+import IconButton from 'material-ui/IconButton';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import ExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
+import ExpandLessIcon from 'material-ui/svg-icons/navigation/expand-less';
+import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
+import Timelapse from 'material-ui/svg-icons/image/timelapse';
+import DateRange from 'material-ui/svg-icons/action/date-range';
+import Mood from 'material-ui/svg-icons/social/mood';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+import Divider from 'material-ui/Divider';
+import Paper from 'material-ui/Paper';
+// import firebase from 'firebase';
+// const config = {
+//  apiKey: "AIzaSyAjC9U69Tq534yHFz8TfUOJ2M37se5ITyI",
+//  authDomain: "ez-schedule-2fd88.firebaseapp.com",
+//  databaseURL: "https://ez-schedule-2fd88.firebaseio.com",
+//  storageBucket: "ez-schedule-2fd88.appspot.com",
+//  messagingSenderId: "413243052956"
+// };
+// firebase.initializeApp(config);
 
 import StringUtils from './utils/Utils.js';
-import EditRow from './components/EditRow.js';
 
-const MAX_MONTH = 6;
-const MIN_MONTH = -3;
+
+
 
 class EditBox extends React.Component {
 
@@ -34,10 +61,58 @@ class EditBox extends React.Component {
         autoOk: true,
         disableYearSelection: true,
         visibleFlag,
+        openMainSchedule: false,
+        openTimeline: false,
     }
   }
-  componentDidMount(){
+  // prepareUpdateStore(){
+  //     let uid = this.props.uid;
+  //     if(uid && uid.length != 0){
+  //         console.log(`found uid: ${uid} prepare to update store`)
+  //         this._updateStore(uid);
+  //     }
+  //     else{
+  //         this._createAuth()
+  //     }
+  // }
+  // _createAuth(){
+  //   this.props.firebase.auth().signInAnonymously()
+  //   .then((user)=>{
+  //       console.log(`create uid: ${user.uid} prepare to create store`)
+  //       this.props.dispatch(SetSid(user.uid));
+  //       return user.uid;
+  //   })
+  //   .then((uid)=>{
+  //       console.log(`update store for: ${uid}`)
+  //       this._updateStore(uid);
+  //   })
+  //   .catch((error)=>{
+  //       // Handle Errors here.
+  //       var errorCode = error.code;
+  //       var errorMessage = error.message;
+  //       console.error(`Fail Login- errorCode:${errorCode}, errorMessage:${errorMessage}`);
+  //   });
+  // }
 
+  // _updateStore(uid){
+  //     let {monthAry, actBalls, preBalls, sDate, eDate} = this.props;
+  //     var postData = {
+  //       updateBall: {
+  //           actBalls,
+  //           preBalls
+  //       },
+  //       updateBar: {
+  //           sDate,
+  //           eDate,
+  //           monthAry
+  //       }
+  //     };
+  //     var updates = {};
+  //     updates['/schedule/' + uid] = postData;
+  //     return this.props.firebase.database().ref().update(updates);
+  // }
+
+  componentDidMount(){
   }
   prepareImage(){
       let {svgRef} = this.props;
@@ -67,8 +142,8 @@ class EditBox extends React.Component {
     }
   }
   render(){
-    let {sDate, eDate, actBalls, svgRef} = this.props;
-    let {visibleFlag} = this.state;
+    let {sDate, eDate, actBalls, svgRef, uid, sid, firebase, fileIds} = this.props;
+    let {visibleFlag, openMainSchedule, openTimeline} = this.state;
     let ballPanel = this.getBallPanel(actBalls, sDate, eDate);
     console.log('Rendering editbox');
 
@@ -90,7 +165,19 @@ class EditBox extends React.Component {
               }>
               </i>
           }
-          iconClassNameRight="muidocs-icon-navigation-expand-more"
+          iconElementRight={
+              <IconMenu
+                  iconButtonElement={
+                      <IconButton><MoreVertIcon /></IconButton>
+                  }
+                  targetOrigin={{horizontal: 'right', vertical: 'top'}}
+                  anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+                  >
+                  <MenuItem primaryText="SAVE" onClick={()=>{
+                      this._updateStore();
+                  }}/>
+                  <MenuItem primaryText="PRINT" />
+              </IconMenu>}
           style={{zIndex: '0'}}
         />
         </MuiThemeProvider>
@@ -100,70 +187,59 @@ class EditBox extends React.Component {
             }>
             </i>
         </div> */}
-        <div id="container" style={{visibility: this.getVisible(visibleFlag)}}>
-            <div className="edit-row edit-date">
-                <div>
-                    <div className="edit-row-detail" style={{marginBottom: '8px'}}>
-                        <label className="edit-lbl">Start</label>
-                        <MuiThemeProvider>
-                          <DatePicker
-                              className="datepicker-bar"
-                              onChange={this._handleChangeDateS.bind(this)}
-                              shouldDisableDate={(date)=>{return date.getDate() != 1}}
-                              value={sDate? moment(sDate).toDate(): ''}
-                              hintText="Insert Start Date"
-                              minDate={moment().add(MIN_MONTH, 'M').toDate()}
-                              maxDate={moment().add(MAX_MONTH, 'M').toDate()}
-                              autoOk={this.state.autoOk}
-                              disableYearSelection={this.state.disableYearSelection}/>
-                        </MuiThemeProvider>
-                        {/* <Calendar onChange={this._handleChangeDateS.bind(this)} placeholder={'Insert Start Date'}
-                                  maxDate={moment().add(MAX_MONTH, 'M').format('YYYY-MM')}
-                                  minDate={moment().add(MIN_MONTH, 'M').format('YYYY-MM')}
-                                  value={sDate} clearIcon={visibleFlag}></Calendar> */}
-                    </div>
-                    <div className="edit-row-detail" style={{marginBottom: '8px'}}>
-                        <label className="edit-lbl">End</label>
-                        <MuiThemeProvider>
-                          <DatePicker
-                              className="datepicker-bar"
-                              onChange={this._handleChangeDateE.bind(this)}
-                              shouldDisableDate={(date)=>{
-                                  return date.getDate() != moment(date).daysInMonth()
-                              }}
-                              value={eDate? moment(eDate).toDate(): ''}
-                              hintText="Insert End Date"
-                              minDate={moment().add(MIN_MONTH, 'M').toDate()}
-                              maxDate={moment().add(MAX_MONTH, 'M').toDate()}
-                              autoOk={this.state.autoOk}
-                              disableYearSelection={this.state.disableYearSelection}/>
-                        </MuiThemeProvider>
-                        {/* <Calendar onChange={this._handleChangeDateE.bind(this)} placeholder={'Insert End Date'}
-                                  maxDate={moment().add(MAX_MONTH, 'M').format('YYYY-MM')}
-                                  minDate={moment().add(MIN_MONTH, 'M').format('YYYY-MM')}
-                                  value={eDate} clearIcon={visibleFlag}></Calendar> */}
-                    </div>
+        <div id="mask" style={this._getMaskVisible(visibleFlag)} onClick={()=>{
+            this.setState({visibleFlag: false});
+        }}>
+        </div>
+        <div id="container" style={this.getVisible(visibleFlag)}>
+            <MuiThemeProvider>
+            <Paper zDepth={1}>
+                <MyAccount />
+                <DocumentList fileIds={fileIds} sid={sid} />
+                <MenuItem
+                    primaryText="Main Schedule"
+                    leftIcon={<DateRange />}
+                    rightIcon={openMainSchedule? <ExpandLessIcon />:<ExpandMoreIcon />}
+                    onClick={()=>{
+                        this.setState({openMainSchedule: !openMainSchedule});
+                    }}/>
+                <EditDate openMainSchedule={openMainSchedule} />
+                <Divider />
+                <div className="menu-timeline">
+                    <MenuItem
+                        primaryText="Timeline"
+                        leftIcon={<Timelapse />}
+                        rightIcon={openTimeline? <ExpandLessIcon />:<ExpandMoreIcon />}
+                        onClick={()=>{
+                            this.setState({openTimeline: !openTimeline})
+                        }}
+                        />
                 </div>
 
-                <div style={{display: 'inline-flex',alignItems: 'center'}}>
-                    <div className="btn-canvas" onClick={
-                        (event) => this._createCanvas()
-                    }>
-                        <i className="fa fa-repeat" aria-hidden="true"></i>
-                    </div>
-                    <div className="btn-canvas" onClick={
-                        () => this.prepareImage()
-                    }>
-                        <i className="fa fa-download" aria-hidden="true"></i>
-                    </div>
+                <div style={this._getTimelineVisible(openTimeline)}>
+                    {ballPanel}
                 </div>
-            </div>
-            {ballPanel}
-            <div className="btn-action" onClick={
-              () => this._addBall()
-            }>
-              <span className="circle btn-plus" >+</span>
-            </div>
+                <Divider />
+
+                <FloatingActionButton
+                    mini={true}
+                    style={{marginLeft: '70%', marginTop: '-20px', marginBottom: '-20px', position: 'relative', zIndex: '2'}}
+                    onClick={
+                      () => this._addBall()
+                  }>
+                <ContentAdd />
+                </FloatingActionButton>
+                <MenuItem primaryText="Thanks For helping" leftIcon={<Mood />} style={{position: 'relative', backgroundColor: 'white'}}/>
+
+
+                {/* <div className="btn-action" onClick={
+                  () => this._addBall()
+                }>
+                  <span className="circle btn-plus" >+</span>
+                </div> */}
+            </Paper>
+            </MuiThemeProvider>
+
         </div>
       </div>
     );
@@ -173,17 +249,45 @@ class EditBox extends React.Component {
       let flag = Boolean(this.state.visibleFlag ^ true);
       this.setState({visibleFlag: flag});
   }
+
   getVisible(flag){
-      return (flag ? 'visible':'hidden');
+      const collapse = {
+          left: '-100%',
+
+          opacity: 0
+      }
+      const visible = {
+          left: 0,
+
+          opacity: 1
+      }
+      console.log('visibleFlag change');
+      console.log(flag);
+      return (flag ? visible:collapse);
   }
-  _createCanvas(){
-    this.props.dispatch(CreateCanvas());
+  _getMaskVisible(flag){
+      const collapse = {
+          left : '-100%',
+          opacity: 0,
+      }
+      const visible = {
+          left : 0,
+      }
+      return (flag ? visible:collapse);
   }
-  _handleChangeDateS(event, dateString){
-    this.props.dispatch(UpdDate(moment(dateString).format('YYYY-MM-DD'), 'start'));
-  }
-  _handleChangeDateE(event, dateString){
-    this.props.dispatch(UpdDate(moment(dateString).format('YYYY-MM-DD'), 'end'));
+  _getTimelineVisible(flag){
+      const collapse = {
+          overflow: 'hidden',
+          visibility: 'hidden',
+          height: 0,
+          opacity: 0
+      }
+      const visible = {
+          visibility: 'visible',
+          height: 'auto',
+          opacity: 1
+      }
+      return (flag ? visible:collapse);
   }
   _addBall(){
     this.props.dispatch(AddBall());
@@ -191,7 +295,6 @@ class EditBox extends React.Component {
 
   getBallPanel(ballMap , sDate, eDate){
     let ary = [];
-
     ballMap.forEach((value, key)=>{
         console.log(`${key}, ${value}`);
         key = StringUtils.extractIndexFromId(key);
@@ -204,12 +307,44 @@ class EditBox extends React.Component {
 
     return ary;
   }
+  /**
+   * Firebase
+   */
+  _updateStore = () => {
+      let {sid, user} = this.props;
+      let {monthAry, actBalls, preBalls, sDate, eDate} = this.props;
+      var postData = {
+        updateBall: {
+            actBalls,
+            preBalls
+        },
+        updateBar: {
+            sDate,
+            eDate,
+            monthAry
+        }
+      };
+      var updates = {};
+      updates[`/schedule/${user.uid}/${sid}`] = postData;
+      updates[`/users/${user.uid}/files/${sid}`] = 'time';
+      return this.props.firebase.database().ref().update(updates);
+  }
+  readFirebase = (path) => {
+      return this.props.firebase.database().ref(path).once('value').then(
+        (snapshot) => {
+          return snapshot.val();
+        }
+    );
+  }
+  updateFirebase = (path, payload) => {
+      return this.props.firebase.database().ref(path).update(payload);
+  }
 
 }
 
 function mapStateToProps(state) {
   const {sDate, eDate} = state.updateBar;
-  const {svgRef} = state.internalRef;
+  const {svgRef, sid, firebase, user, fileIds} = state.internalRef;
   console.log(`calling mSTPs: sDate=${sDate}, eDate=${eDate}`);
   return {
     sDate,
@@ -217,7 +352,11 @@ function mapStateToProps(state) {
     monthAry: state.updateBar.monthAry,
     actBalls: state.updateBall.actBalls,
     preBalls: state.updateBall.preBalls,
-    svgRef
+    svgRef,
+    sid,
+    firebase,
+    user,
+    fileIds,
   };
 }
 
