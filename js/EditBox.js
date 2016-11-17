@@ -153,7 +153,7 @@ class EditBox extends React.Component {
 
         <MuiThemeProvider>
         <AppBar
-          title={"Paint Schedule-"+uid}
+          title="Paint Schedule"
           iconElementLeft={
               <i
                 className="fa fa-bars"
@@ -229,7 +229,7 @@ class EditBox extends React.Component {
                   }>
                 <ContentAdd />
                 </FloatingActionButton>
-                <MenuItem primaryText="Thanks" leftIcon={<Mood />} style={{position: 'relative', backgroundColor: 'white'}}/>
+                <MenuItem primaryText="Thanks For helping" leftIcon={<Mood />} style={{position: 'relative', backgroundColor: 'white'}}/>
 
 
                 {/* <div className="btn-action" onClick={

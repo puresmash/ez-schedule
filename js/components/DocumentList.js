@@ -16,7 +16,8 @@ import ExpandLessIcon from 'material-ui/svg-icons/navigation/expand-less';
 export default class DocumentList extends Component{
 
     static defaultProps = {
-
+        fileIds: [],
+        sid: '',
     };
     static propTypes = {
         fileIds: PropTypes.array.isRequired,
@@ -27,13 +28,12 @@ export default class DocumentList extends Component{
         super(props);
         this.state = {
             expandFilesFlag: false,
-            selectFile: 0,
         }
     }
 
     render(){
         let {fileIds, sid} = this.props;
-        const {expandFilesFlag, selectFile} = this.state;
+        const {expandFilesFlag} = this.state;
         let expandIcon = expandFilesFlag? <ExpandLessIcon/> : <ExpandMoreIcon/>
 
         const items = [];
@@ -45,9 +45,10 @@ export default class DocumentList extends Component{
                   rightIcon={<MoreVertIcon />}
                   primaryText={ele}
                 //   secondaryText="Jan 10, 2014"
-                  style={{backgroundColor: (selectFile==index)?'#CCCCCC':'white'}}
+                  style={{backgroundColor: (sid==ele)?'#CCCCCC':'white'}}
                   onClick={()=>{
-                      this.setState({selectFile: index})
+                    //   this.setState({selectFile: ele})
+                    console.log('TODO');
                   }}
                 />
             );
