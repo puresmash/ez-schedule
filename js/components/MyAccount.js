@@ -1,15 +1,15 @@
 
-import React from 'react';
+import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {SetUser,SetFileIds} from '../actions/index.js'
 // import firebase from 'firebase';
 
 import MenuItem from 'material-ui/MenuItem';
-import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
+
 
 import Avatar from './Avatar.js';
 
-class MyAccount extends React.Component{
+class MyAccount extends Component{
 
     constructor(props){
         super(props);
@@ -19,9 +19,9 @@ class MyAccount extends React.Component{
     }
 
     render(){
-        let { fnDisplayFiles, user, sid } = this.props;
+        const { user } = this.props;
         return(
-            <div style={{height: '150px'}}>
+            <div>
                 <div style={{height: '102px', display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
                     <div style={{flex: 1, display: 'inline-flex', justifyContent: 'center'}}>
                         <Avatar src={user.avatarSrc}></Avatar>
@@ -30,14 +30,6 @@ class MyAccount extends React.Component{
                         <span>{user.name}</span>
                     </div>
                 </div>
-                <MenuItem
-                    onClick={()=>{
-                        fnDisplayFiles();
-                    }}
-                    primaryText={sid}
-                    rightIcon={
-                        <RemoveRedEye/>
-                }/>
             </div>
         );
     }

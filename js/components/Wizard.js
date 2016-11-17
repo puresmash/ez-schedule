@@ -188,7 +188,7 @@ class Wizard extends React.Component{
             <div className="btn-panel">
                 <WizardButton
                     wording="Anonymous"
-                    iconId="fa fa-cloud-download"
+                    iconId="fa fa-user-secret"
                     style={{marginRight: '1em'}}
                     onClick={() => {
                         this.setState({step: Wizard.STEP.waiting});
@@ -196,8 +196,8 @@ class Wizard extends React.Component{
                     }}>
                 </WizardButton>
                 <WizardButton
-                    wording="GoogleAccount"
-                    iconId="fa fa-cloud-download"
+                    wording="SignIn"
+                    iconId="fa fa-google"
                     onClick={() => {
                         this.setState({step: Wizard.STEP.waiting});
                         this._googleLogin(this._chgStateToGoogleSignIn.bind(this));
@@ -209,7 +209,7 @@ class Wizard extends React.Component{
             <div className="btn-panel">
                 <WizardButton
                     wording="New"
-                    iconId="fa fa-cloud-download"
+                    iconId="fa fa-magic"
                     style={{marginRight: '1em'}}
                     onClick={
                         () => {
@@ -220,7 +220,7 @@ class Wizard extends React.Component{
                 </WizardButton>
                 <WizardButton
                     wording="Load"
-                    iconId="fa fa-cloud-download"
+                    iconId="fa fa-folder-open"
                     onClick={
                         () => {
                             this.setState({step: Wizard.STEP.load});
@@ -234,7 +234,7 @@ class Wizard extends React.Component{
             <div className="btn-panel">
                 <WizardButton
                     wording="New"
-                    iconId="fa fa-cloud-download"
+                    iconId="fa fa-magic"
                     style={{marginRight: '1em'}}
                     onClick={
                         () => {
@@ -245,7 +245,7 @@ class Wizard extends React.Component{
                 </WizardButton>
                 <WizardButton
                     wording="Load"
-                    iconId="fa fa-cloud-download"
+                    iconId="fa fa-folder-open"
                     onClick={
                         () => {
                             this.setState({step: Wizard.STEP.load});
@@ -259,7 +259,7 @@ class Wizard extends React.Component{
             <div className="btn-panel">
                 <WizardButton
                     wording="New"
-                    iconId="fa fa-cloud-download"
+                    iconId="fa fa-magic"
                     style={{marginRight: '1em'}}
                     onClick={this._createCanvas.bind(this)}>
                 </WizardButton>
@@ -269,7 +269,7 @@ class Wizard extends React.Component{
             <div className="btn-panel">
                 <WizardButton
                     wording="Load"
-                    iconId="fa fa-cloud-download"
+                    iconId="fa fa-folder-open"
                     style={{marginRight: '1em'}}
                     onClick={this._loadfirst.bind(this)}>
                 </WizardButton>

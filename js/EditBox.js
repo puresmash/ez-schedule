@@ -7,6 +7,7 @@ import Calendar from './components/Calendar.js'
 import EditDate from './components/EditDate.js';
 import EditRow from './components/EditRow.js';
 import MyAccount from './components/MyAccount.js';
+import DocumentList from './components/DocumentList.js';
 import moment from 'moment';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -16,7 +17,12 @@ import MenuItem from 'material-ui/MenuItem';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import ExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
+import ExpandLessIcon from 'material-ui/svg-icons/navigation/expand-less';
 import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
+import Timelapse from 'material-ui/svg-icons/image/timelapse';
+import DateRange from 'material-ui/svg-icons/action/date-range';
+import Mood from 'material-ui/svg-icons/social/mood';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import Divider from 'material-ui/Divider';
@@ -136,7 +142,7 @@ class EditBox extends React.Component {
     }
   }
   render(){
-    let {sDate, eDate, actBalls, svgRef, uid, firebase} = this.props;
+    let {sDate, eDate, actBalls, svgRef, uid, sid, firebase, fileIds} = this.props;
     let {visibleFlag, openMainSchedule, openTimeline} = this.state;
     let ballPanel = this.getBallPanel(actBalls, sDate, eDate);
     console.log('Rendering editbox');
@@ -188,50 +194,49 @@ class EditBox extends React.Component {
         <div id="container" style={this.getVisible(visibleFlag)}>
             <MuiThemeProvider>
             <Paper zDepth={1}>
-
-
-                <MyAccount></MyAccount>
-                <Divider />
+                <MyAccount />
+                <DocumentList fileIds={fileIds} sid={sid} />
                 <MenuItem
                     primaryText="Main Schedule"
-                    leftIcon={<RemoveRedEye />}
+                    leftIcon={<DateRange />}
+                    rightIcon={openMainSchedule? <ExpandLessIcon />:<ExpandMoreIcon />}
                     onClick={()=>{
                         this.setState({openMainSchedule: !openMainSchedule});
-                    }}
-                    />
-                    <EditDate openMainSchedule={openMainSchedule}></EditDate>
-            <Divider />
+                    }}/>
+                <EditDate openMainSchedule={openMainSchedule} />
+                <Divider />
                 <div className="menu-timeline">
                     <MenuItem
                         primaryText="Timeline"
-                        leftIcon={<RemoveRedEye />}
+                        leftIcon={<Timelapse />}
+                        rightIcon={openTimeline? <ExpandLessIcon />:<ExpandMoreIcon />}
                         onClick={()=>{
                             this.setState({openTimeline: !openTimeline})
                         }}
                         />
                 </div>
 
-                    <div style={this._getTimelineVisible(openTimeline)}>
-                        {ballPanel}
-                    </div>
-                    <Divider />
+                <div style={this._getTimelineVisible(openTimeline)}>
+                    {ballPanel}
+                </div>
+                <Divider />
 
-                        <FloatingActionButton
-                            mini={true}
-                            style={{marginLeft: '70%', marginTop: '-20px', marginBottom: '-20px', position: 'relative', zIndex: '2'}}
-                            onClick={
-                              () => this._addBall()
-                          }>
-                          <ContentAdd />
-                        </FloatingActionButton>
-                    <MenuItem primaryText="Thanks" leftIcon={<RemoveRedEye />} style={{position: 'relative', backgroundColor: 'white'}}/>
+                <FloatingActionButton
+                    mini={true}
+                    style={{marginLeft: '70%', marginTop: '-20px', marginBottom: '-20px', position: 'relative', zIndex: '2'}}
+                    onClick={
+                      () => this._addBall()
+                  }>
+                <ContentAdd />
+                </FloatingActionButton>
+                <MenuItem primaryText="Thanks" leftIcon={<Mood />} style={{position: 'relative', backgroundColor: 'white'}}/>
 
 
-            {/* <div className="btn-action" onClick={
-              () => this._addBall()
-            }>
-              <span className="circle btn-plus" >+</span>
-            </div> */}
+                {/* <div className="btn-action" onClick={
+                  () => this._addBall()
+                }>
+                  <span className="circle btn-plus" >+</span>
+                </div> */}
             </Paper>
             </MuiThemeProvider>
 
@@ -339,7 +344,7 @@ class EditBox extends React.Component {
 
 function mapStateToProps(state) {
   const {sDate, eDate} = state.updateBar;
-  const {svgRef, sid, firebase, user} = state.internalRef;
+  const {svgRef, sid, firebase, user, fileIds} = state.internalRef;
   console.log(`calling mSTPs: sDate=${sDate}, eDate=${eDate}`);
   return {
     sDate,
@@ -351,6 +356,7 @@ function mapStateToProps(state) {
     sid,
     firebase,
     user,
+    fileIds,
   };
 }
 

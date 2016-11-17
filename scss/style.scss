@@ -58,7 +58,8 @@ body {
     div.window {
         background-color: rgba(255,255,255, .7);
         border-radius: 0.5em;
-        width: 75%;
+        width: 90%;
+        max-width: 600px;
         div.state {
             display: flex;
             justify-content: space-between;;
