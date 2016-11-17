@@ -311,8 +311,8 @@ class EditBox extends React.Component {
    * Firebase
    */
   _updateStore = () => {
-      let {sid, user} = this.props;
-      let {monthAry, actBalls, preBalls, sDate, eDate} = this.props;
+      const {sid, user, firebase} = this.props;
+      const {monthAry, actBalls, preBalls, sDate, eDate} = this.props;
       var postData = {
         updateBall: {
             actBalls,
@@ -326,8 +326,8 @@ class EditBox extends React.Component {
       };
       var updates = {};
       updates[`/schedule/${user.uid}/${sid}`] = postData;
-      updates[`/users/${user.uid}/files/${sid}`] = 'time';
-      return this.props.firebase.database().ref().update(updates);
+      updates[`/users/${user.uid}/files/${sid}`] = firebase.database.ServerValue.TIMESTAMP;
+      return firebase.database().ref().update(updates);
   }
   readFirebase = (path) => {
       return this.props.firebase.database().ref(path).once('value').then(
