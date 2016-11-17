@@ -2,7 +2,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
-import {AddBall, SetUid} from './actions/index.js'
+import {AddBall, SetSid} from './actions/index.js'
 import Calendar from './components/Calendar.js'
 import EditDate from './components/EditDate.js';
 import EditRow from './components/EditRow.js';
@@ -59,52 +59,53 @@ class EditBox extends React.Component {
         openTimeline: false,
     }
   }
-  prepareUpdateStore(){
-      let uid = this.props.uid;
-      if(uid && uid.length != 0){
-          console.log(`found uid: ${uid} prepare to update store`)
-          this._updateStore(uid);
-      }
-      else{
-          this._createAuth()
-      }
-  }
-  _createAuth(){
-    this.props.firebase.auth().signInAnonymously()
-    .then((user)=>{
-        console.log(`create uid: ${user.uid} prepare to create store`)
-        this.props.dispatch(SetUid(user.uid));
-        return user.uid;
-    })
-    .then((uid)=>{
-        console.log(`update store for: ${uid}`)
-        this._updateStore(uid);
-    })
-    .catch((error)=>{
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        console.error(`Fail Login- errorCode:${errorCode}, errorMessage:${errorMessage}`);
-    });
-  }
+  // prepareUpdateStore(){
+  //     let uid = this.props.uid;
+  //     if(uid && uid.length != 0){
+  //         console.log(`found uid: ${uid} prepare to update store`)
+  //         this._updateStore(uid);
+  //     }
+  //     else{
+  //         this._createAuth()
+  //     }
+  // }
+  // _createAuth(){
+  //   this.props.firebase.auth().signInAnonymously()
+  //   .then((user)=>{
+  //       console.log(`create uid: ${user.uid} prepare to create store`)
+  //       this.props.dispatch(SetSid(user.uid));
+  //       return user.uid;
+  //   })
+  //   .then((uid)=>{
+  //       console.log(`update store for: ${uid}`)
+  //       this._updateStore(uid);
+  //   })
+  //   .catch((error)=>{
+  //       // Handle Errors here.
+  //       var errorCode = error.code;
+  //       var errorMessage = error.message;
+  //       console.error(`Fail Login- errorCode:${errorCode}, errorMessage:${errorMessage}`);
+  //   });
+  // }
 
-  _updateStore(uid){
-      let {monthAry, actBalls, preBalls, sDate, eDate} = this.props;
-      var postData = {
-        updateBall: {
-            actBalls,
-            preBalls
-        },
-        updateBar: {
-            sDate,
-            eDate,
-            monthAry
-        }
-      };
-      var updates = {};
-      updates['/schedule/' + uid] = postData;
-      return this.props.firebase.database().ref().update(updates);
-  }
+  // _updateStore(uid){
+  //     let {monthAry, actBalls, preBalls, sDate, eDate} = this.props;
+  //     var postData = {
+  //       updateBall: {
+  //           actBalls,
+  //           preBalls
+  //       },
+  //       updateBar: {
+  //           sDate,
+  //           eDate,
+  //           monthAry
+  //       }
+  //     };
+  //     var updates = {};
+  //     updates['/schedule/' + uid] = postData;
+  //     return this.props.firebase.database().ref().update(updates);
+  // }
+
   componentDidMount(){
   }
   prepareImage(){
@@ -167,7 +168,7 @@ class EditBox extends React.Component {
                   anchorOrigin={{horizontal: 'right', vertical: 'top'}}
                   >
                   <MenuItem primaryText="SAVE" onClick={()=>{
-                      this.prepareUpdateStore();
+                      this._updateStore();
                   }}/>
                   <MenuItem primaryText="PRINT" />
               </IconMenu>}
@@ -189,7 +190,7 @@ class EditBox extends React.Component {
             <Paper zDepth={1}>
 
 
-                <MyAccount uid={uid} firebase={firebase}></MyAccount>
+                <MyAccount></MyAccount>
                 <Divider />
                 <MenuItem
                     primaryText="Main Schedule"
@@ -199,55 +200,6 @@ class EditBox extends React.Component {
                     }}
                     />
                     <EditDate openMainSchedule={openMainSchedule}></EditDate>
-                    {/* <div ref="editDate" className="edit-row edit-date" style={this.getEditDateVisible(openMainSchedule)} >
-                        <div>
-                            <div className="edit-row-detail" style={{marginBottom: '8px'}}>
-                                <label className="edit-lbl">Start</label>
-                                <MuiThemeProvider>
-                                  <DatePicker
-                                      className="datepicker-bar"
-                                      onChange={this._handleChangeDateS.bind(this)}
-                                      shouldDisableDate={(date)=>{return date.getDate() != 1}}
-                                      value={sDate? moment(sDate).toDate(): ''}
-                                      hintText="Insert Start Date"
-                                      minDate={moment().add(MIN_MONTH, 'M').toDate()}
-                                      maxDate={moment().add(MAX_MONTH, 'M').toDate()}
-                                      autoOk={this.state.autoOk}
-                                      disableYearSelection={this.state.disableYearSelection}/>
-                                </MuiThemeProvider>
-                            </div>
-                            <div className="edit-row-detail" style={{marginBottom: '8px'}}>
-                                <label className="edit-lbl">End</label>
-                                <MuiThemeProvider>
-                                  <DatePicker
-                                      className="datepicker-bar"
-                                      onChange={this._handleChangeDateE.bind(this)}
-                                      shouldDisableDate={(date)=>{
-                                          return date.getDate() != moment(date).daysInMonth()
-                                      }}
-                                      value={eDate? moment(eDate).toDate(): ''}
-                                      hintText="Insert End Date"
-                                      minDate={moment().add(MIN_MONTH, 'M').toDate()}
-                                      maxDate={moment().add(MAX_MONTH, 'M').toDate()}
-                                      autoOk={this.state.autoOk}
-                                      disableYearSelection={this.state.disableYearSelection}/>
-                                </MuiThemeProvider>
-                            </div>
-                        </div>
-
-                        <div style={{display: 'inline-flex',alignItems: 'center'}}>
-                            <div className="btn-canvas" onClick={
-                                (event) => this._createCanvas()
-                            }>
-                                <i className="fa fa-repeat" aria-hidden="true"></i>
-                            </div>
-                            <div className="btn-canvas" onClick={
-                                () => this.prepareImage()
-                            }>
-                                <i className="fa fa-download" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                    </div>  */}
             <Divider />
                 <div className="menu-timeline">
                     <MenuItem
@@ -350,12 +302,44 @@ class EditBox extends React.Component {
 
     return ary;
   }
+  /**
+   * Firebase
+   */
+  _updateStore = () => {
+      let {sid, user} = this.props;
+      let {monthAry, actBalls, preBalls, sDate, eDate} = this.props;
+      var postData = {
+        updateBall: {
+            actBalls,
+            preBalls
+        },
+        updateBar: {
+            sDate,
+            eDate,
+            monthAry
+        }
+      };
+      var updates = {};
+      updates[`/schedule/${user.uid}/${sid}`] = postData;
+      updates[`/users/${user.uid}/files/${sid}`] = 'time';
+      return this.props.firebase.database().ref().update(updates);
+  }
+  readFirebase = (path) => {
+      return this.props.firebase.database().ref(path).once('value').then(
+        (snapshot) => {
+          return snapshot.val();
+        }
+    );
+  }
+  updateFirebase = (path, payload) => {
+      return this.props.firebase.database().ref(path).update(payload);
+  }
 
 }
 
 function mapStateToProps(state) {
   const {sDate, eDate} = state.updateBar;
-  const {svgRef, uid, firebase} = state.internalRef;
+  const {svgRef, sid, firebase, user} = state.internalRef;
   console.log(`calling mSTPs: sDate=${sDate}, eDate=${eDate}`);
   return {
     sDate,
@@ -364,8 +348,9 @@ function mapStateToProps(state) {
     actBalls: state.updateBall.actBalls,
     preBalls: state.updateBall.preBalls,
     svgRef,
-    uid,
+    sid,
     firebase,
+    user,
   };
 }
 

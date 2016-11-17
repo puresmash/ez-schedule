@@ -19,26 +19,24 @@ class MyAccount extends React.Component{
     }
 
     render(){
-        let { uid, fnDisplayFiles } = this.props;
+        let { fnDisplayFiles, user, sid } = this.props;
         return(
             <div style={{height: '150px'}}>
                 <div style={{height: '102px', display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
                     <div style={{flex: 1, display: 'inline-flex', justifyContent: 'center'}}>
-                        <Avatar src={this.state.avatarSrc}></Avatar>
+                        <Avatar src={user.avatarSrc}></Avatar>
                     </div>
                     <div style={{flex: 3}}>
-                        <span>Anonymous</span>
+                        <span>{user.name}</span>
                     </div>
                 </div>
                 <MenuItem
                     onClick={()=>{
                         fnDisplayFiles();
                     }}
-                    primaryText={uid}
+                    primaryText={sid}
                     rightIcon={
-                        <RemoveRedEye onClick={()=>{
-                            this.googleLogin();
-                        }}/>
+                        <RemoveRedEye/>
                 }/>
             </div>
         );
@@ -103,9 +101,12 @@ class MyAccount extends React.Component{
 }
 
 function mapStateToProps(state) {
-  const {firebase} = state.internalRef;
+  const {firebase, user, fileIds, sid} = state.internalRef;
   return {
     firebase,
+    user,
+    fileIds,
+    sid,
   };
 }
 

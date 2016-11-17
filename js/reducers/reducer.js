@@ -144,7 +144,7 @@ function updateBar(state = {monthAry:[], sDate:'', eDate:''}, action) {
             return state;
     }
 }
-function internalRef(state={svgRef: {}, userAgent:{}, uid:'', user: {}, fileIds:[]}, action){
+function internalRef(state={svgRef: {}, userAgent:{}, sid:'', user: {}, fileIds:[]}, action){
     switch(action.type){
         case 'REF_SVG': {
             return Object.assign({}, state, {
@@ -156,9 +156,9 @@ function internalRef(state={svgRef: {}, userAgent:{}, uid:'', user: {}, fileIds:
                 userAgent: action.userAgent
             });
         }
-        case 'SET_UID': {
+        case 'SET_SID': {
             return Object.assign({}, state, {
-                uid: action.uid
+                sid: action.sid
             });
         }
         case 'SET_FB':{
@@ -171,6 +171,7 @@ function internalRef(state={svgRef: {}, userAgent:{}, uid:'', user: {}, fileIds:
             user.uid = action.uid;
             user.email = action.email;
             user.name = action.name;
+            user.avatarSrc = action.avatarSrc;
             return Object.assign({}, state, {
                 user,
             });

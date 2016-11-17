@@ -80,18 +80,19 @@ export const SetUA = (userAgent) => {
     }
 }
 
-export const SetUid = (uid) => {
+export const SetSid = (sid) => {
     return {
-        type: 'SET_UID',
-        uid
+        type: 'SET_SID',
+        sid
     }
 }
-export const SetUser = (uid, email, name) => {
+export const SetUser = (uid, email, name, avatarSrc) => {
     return {
         type: 'SET_USER',
         uid,
         email,
         name,
+        avatarSrc,
     }
 }
 export const SetFileIds = (fileIds) => {
@@ -117,11 +118,21 @@ export const SetFireBase = () => {
 }
 
 export const SyncFromStroage = (snapshot) => {
-    let sDate = snapshot.val().updateBar.sDate;
-    let eDate = snapshot.val().updateBar.eDate;
-    let monthAry = snapshot.val().updateBar.monthAry;
-    let preBalls = new Map(snapshot.val().updateBall.preBalls);
-    let actBalls = new Map(snapshot.val().updateBall.actBalls);
+    let sDate = '';
+    let eDate = '';
+    let monthAry = [];
+    let preBalls = new Map();
+    let actBalls = new Map();
+
+    if(snapshot.child('updateBar').exists()){
+        sDate = snapshot.val().updateBar.sDate;
+        eDate = snapshot.val().updateBar.eDate;
+        monthAry = snapshot.val().updateBar.monthAry;
+    }
+    if(snapshot.child('updateBall').exists()){
+        preBalls = new Map(snapshot.val().updateBall.preBalls);
+        actBalls = new Map(snapshot.val().updateBall.actBalls);
+    }
     return {
         type: 'SYNC',
         monthAry,

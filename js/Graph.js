@@ -7,7 +7,6 @@ import {RefSvg} from './actions/index.js';
 import StringUtils from './utils/Utils.js';
 import MonthBar from './components/MonthBar.js'
 import ColorBall from './components/ColorBall.js';
-import uuid from 'node-uuid';
 
 const CONVEX_LENGTH = 25;
 const SCALABLE_BAR_WIDTH = 15;
@@ -19,7 +18,6 @@ class Graph extends React.Component {
     super();
     this.state = {
         width : screen.width,
-        uuid: uuid.v4(),
         download: ''
     }
     console.log(navigator.userAgent);
