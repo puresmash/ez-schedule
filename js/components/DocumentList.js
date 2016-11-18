@@ -1,5 +1,6 @@
 
 import React, {Component, PropTypes} from 'react';
+import {connect} from 'react-redux';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {List, ListItem} from 'material-ui/List';
@@ -13,7 +14,10 @@ import {blue500} from 'material-ui/styles/colors';
 import ExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import ExpandLessIcon from 'material-ui/svg-icons/navigation/expand-less';
 
-export default class DocumentList extends Component{
+// import FirebaseHelper from '../utils/FirebaseHelper.js';
+import {SyncFromStroageEx} from '../actions/index.js';
+
+class DocumentList extends Component{
 
     static defaultProps = {
         fileIds: [],
@@ -32,7 +36,7 @@ export default class DocumentList extends Component{
     }
 
     render(){
-        let {fileIds, sid} = this.props;
+        let {fileIds, sid, dispatch, firebase} = this.props;
         const {expandFilesFlag} = this.state;
         let expandIcon = expandFilesFlag? <ExpandLessIcon/> : <ExpandMoreIcon/>
 
@@ -48,7 +52,8 @@ export default class DocumentList extends Component{
                   style={{backgroundColor: (sid==ele)?'#CCCCCC':'white'}}
                   onClick={()=>{
                     //   this.setState({selectFile: ele})
-                    console.log('TODO');
+                    // (new FirebaseHelper(firebase)).loadSchedule(ele, dispatch);
+                    dispatch(SyncFromStroageEx(ele, firebase));
                   }}
                 />
             );
@@ -75,3 +80,11 @@ export default class DocumentList extends Component{
         );
     }
 }
+
+function mapStateToProps(state) {
+  return {
+    firebase: state.internalRef.firebase,
+  };
+}
+
+export default connect(mapStateToProps)(DocumentList);

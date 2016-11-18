@@ -330,7 +330,7 @@ class Wizard extends React.Component{
            return user.uid;
         })
         .then(this._syncUser)
-        .then(this.loadSchedule)
+        .then(this.loadScheduleArray)
         .then(fnOnComplete)
         .catch(this.handleFirebaseError);
     }
@@ -369,7 +369,7 @@ class Wizard extends React.Component{
             return firebase.auth().currentUser;
         })
         .then(this._syncUser)
-        .then(this.loadSchedule)
+        .then(this.loadScheduleArray)
         .then(fnOnComplete)
         .catch(this.handleFirebaseError);
     }
@@ -407,13 +407,12 @@ class Wizard extends React.Component{
         };
         return this.updateFirebase(`/users/${user.uid}/`, postData, user);
     }
-    loadSchedule = () => {
+    loadScheduleArray = () => {
         const {firebase} = this.props;
         const user = firebase.auth().currentUser;
 
         return this._getSchedule(user)
         .then((snapshot)=>{
-            console.log('####testing console -1')
             console.log(snapshot.val());
             let fileIds = snapshot.exists()?Object.keys(snapshot.val()):[];
             this.props.dispatch(SetFileIds(fileIds));

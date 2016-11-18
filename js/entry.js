@@ -3,16 +3,20 @@ require('../scss/style.scss');
 
 let React = require('react');
 let ReactDOM = require('react-dom');
-import {createStore} from 'redux';
+import {createStore, applyMiddleware} from 'redux';
+import thunk from 'redux-thunk';
 import {Provider} from 'react-redux';
-import svgApp from './reducers/reducer.js';
+import rootReducer from './reducers/reducer.js';
 // SVG-React Components
 // let SimpleComponent = require('./SimpleComponent.js');
 import App from './components/App.js';
 // document.write(require("./content.js"));
 
 // ReactDOM.render(<FirstComponent />, document.body);
-const store = createStore(svgApp);
+const store = createStore(
+    rootReducer,
+    applyMiddleware(thunk)
+);
 
 function render(){
   ReactDOM.render(

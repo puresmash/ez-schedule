@@ -142,3 +142,44 @@ export const SyncFromStroage = (snapshot) => {
         preBalls
     }
 }
+
+/* Move fnFirebase into action END */
+export const SyncFromStroageEx = (selectFile, firebase) => {
+    return function (dispatch) {
+        return loadSchedule(selectFile, firebase).then(
+          (snapshot) => {
+            dispatch(SetSid(selectFile));
+            dispatch(SyncFromStroage(snapshot));
+            return snapshot.val();
+          }
+        )
+        .catch(handleFirebaseError);
+    };
+}
+
+const loadSchedule = (selectFile, firebase) => {
+    const user = firebase.auth().currentUser;
+
+    return readFirebase(`/schedule/${user.uid}/${selectFile}/`, firebase);
+}
+const handleFirebaseError = (error) => {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    // The email of the user's account used.
+    var email = error.email;
+    // The firebase.auth.AuthCredential type that was used.
+    var credential = error.credential;
+    // ...
+    console.error(`Fail Login- errorCode:${errorCode}, errorMessage:${errorMessage}`);
+    // fnOnComplete();
+}
+const readFirebase = (path, firebase) => {
+    console.log(`read firebase path: ${path}`);
+    return firebase.database().ref(path).once('value').then(
+      (snapshot) => {
+        return snapshot;
+      }
+  );
+}
+/* Move fnFirebase into action END */
