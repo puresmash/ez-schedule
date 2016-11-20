@@ -16,9 +16,11 @@ import DatePicker from 'material-ui/DatePicker';
 import MenuItem from 'material-ui/MenuItem';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
+import CloudUploadIcon from 'material-ui/svg-icons/file/cloud-upload';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import ExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import ExpandLessIcon from 'material-ui/svg-icons/navigation/expand-less';
+import PhotoIcon from 'material-ui/svg-icons/image/photo';
 import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
 import Timelapse from 'material-ui/svg-icons/image/timelapse';
 import DateRange from 'material-ui/svg-icons/action/date-range';
@@ -173,10 +175,12 @@ class EditBox extends React.Component {
                   targetOrigin={{horizontal: 'right', vertical: 'top'}}
                   anchorOrigin={{horizontal: 'right', vertical: 'top'}}
                   >
-                  <MenuItem primaryText="SAVE" onClick={()=>{
+                  <MenuItem primaryText="Schedule Upload" leftIcon={<CloudUploadIcon />} Click={()=>{
                       this._updateStore();
                   }}/>
-                  <MenuItem primaryText="PRINT" />
+                  <MenuItem primaryText="Download as PNG" leftIcon={<PhotoIcon />} onClick={()=>{
+                      this.prepareImage();
+                  }}/>
               </IconMenu>}
           style={{zIndex: '0'}}
         />

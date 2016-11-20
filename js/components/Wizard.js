@@ -1,7 +1,7 @@
 
 import React from 'react';
 import {connect} from 'react-redux';
-import {UpdDate, CreateCanvas, SetFireBase, SetSid, SetUser, SetFileIds, SyncFromStroage} from '../actions/index.js';
+import {UpdDate, CreateCanvas, SetFireBase, SetSid, SetUser, SetFileIds, SyncFromStroage, GoogleLogin} from '../actions/index.js';
 import WizardButton from './WizardButton.js';
 import moment from 'moment';
 import uuid from 'node-uuid';
@@ -183,6 +183,7 @@ class Wizard extends React.Component{
     _getWizardBtn(step){
         const wizard = {};
         let { traceStep } = this.state;
+        let { firebase } = this.props;
 
         wizard[Wizard.STEP.first] = (
             <div className="btn-panel">
@@ -200,7 +201,7 @@ class Wizard extends React.Component{
                     iconId="fa fa-google"
                     onClick={() => {
                         this.setState({step: Wizard.STEP.waiting});
-                        this._googleLogin(this._chgStateToGoogleSignIn.bind(this));
+                        this.props.dispatch(GoogleLogin(this._chgStateToGoogleSignIn.bind(this), firebase));
                     }}>
                 </WizardButton>
             </div>
@@ -385,7 +386,7 @@ class Wizard extends React.Component{
         });
     }
     _checkUserExist = (user)=>{
-        return this.readFirebase('/users/'+user.uid, user)
+        return this.readFirebase('/users/'+user.uid)
         .then((snapshot)=>{
             if(snapshot.exists()){
                 console.log(`user: ${user.uid} exist`);
