@@ -155,7 +155,7 @@ class EditBox extends React.Component {
 
         <MuiThemeProvider>
         <AppBar
-          title="Paint Schedule"
+          title="Schedule Canvas"
           iconElementLeft={
               <i
                 className="fa fa-bars"
@@ -330,7 +330,7 @@ class EditBox extends React.Component {
       };
       var updates = {};
       updates[`/schedule/${user.uid}/${sid}`] = postData;
-      updates[`/users/${user.uid}/files/${sid}`] = firebase.database.ServerValue.TIMESTAMP;
+      updates[`/users/${user.uid}/files/${sid}`] = { time: firebase.database.ServerValue.TIMESTAMP };
       return firebase.database().ref().update(updates);
   }
   readFirebase = (path) => {

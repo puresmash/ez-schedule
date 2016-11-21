@@ -1,7 +1,7 @@
 
 import React from 'react';
 import {connect} from 'react-redux';
-import {UpdDate, CreateCanvas, SetFireBase, SetSid, SetUser, SetFileIds, SyncFromStroage, GoogleLogin} from '../actions/index.js';
+import {UpdDate, CreateCanvas, SetSid, SetUser, GoogleLogin, AnonymousLogin, SyncFromStroageEx} from '../actions/index.js';
 import WizardButton from './WizardButton.js';
 import moment from 'moment';
 import uuid from 'node-uuid';
@@ -183,7 +183,7 @@ class Wizard extends React.Component{
     _getWizardBtn(step){
         const wizard = {};
         let { traceStep } = this.state;
-        let { firebase } = this.props;
+        const { firebase, dispatch } = this.props;
 
         wizard[Wizard.STEP.first] = (
             <div className="btn-panel">
@@ -193,7 +193,8 @@ class Wizard extends React.Component{
                     style={{marginRight: '1em'}}
                     onClick={() => {
                         this.setState({step: Wizard.STEP.waiting});
-                        this._anonymousLogin(this._chgStateToAnonymousSignIn.bind(this));
+                        dispatch(AnonymousLogin(this._chgStateToAnonymousSignIn.bind(this), firebase));
+                        //this._anonymousLogin(this._chgStateToAnonymousSignIn.bind(this));
                     }}>
                 </WizardButton>
                 <WizardButton
@@ -201,7 +202,7 @@ class Wizard extends React.Component{
                     iconId="fa fa-google"
                     onClick={() => {
                         this.setState({step: Wizard.STEP.waiting});
-                        this.props.dispatch(GoogleLogin(this._chgStateToGoogleSignIn.bind(this), firebase));
+                        dispatch(GoogleLogin(this._chgStateToGoogleSignIn.bind(this), firebase));
                     }}>
                 </WizardButton>
             </div>
@@ -293,14 +294,7 @@ class Wizard extends React.Component{
              console.error('User does not have any file yet.');
              return;
          }
-         return this.readFirebase(`/schedule/${user.uid}/${selectFile}/`).then(
-           (snapshot) => {
-             dispatch(SetSid(selectFile));
-             dispatch(SyncFromStroage(snapshot));
-             return snapshot.val();
-           }
-         )
-         .catch(this.handleFirebaseError);
+         dispatch(SyncFromStroageEx(selectFile, firebase));
      }
     /**
      * new graph
@@ -318,138 +312,138 @@ class Wizard extends React.Component{
     /**
      * anonymous
      */
-     signInAnonymous = () => {
-         const {firebase} = this.props;
-         return firebase.auth().signInAnonymously();
-     }
-     _anonymousLogin(fnOnComplete){
-        let self = this;
-        let {firebase} = this.props;
-        this.signInAnonymous().then((user)=>{
-           console.log(`anonymous signin with uid: ${user.uid}`);
-           self.props.dispatch(SetUser(user.uid, 'anonymous', 'anonymous', ''));
-           return user.uid;
-        })
-        .then(this._syncUser)
-        .then(this.loadScheduleArray)
-        .then(fnOnComplete)
-        .catch(this.handleFirebaseError);
-    }
+    //  signInAnonymous = () => {
+    //      const {firebase} = this.props;
+    //      return firebase.auth().signInAnonymously();
+    //  }
+    //  _anonymousLogin(fnOnComplete){
+    //     let self = this;
+    //     let {firebase} = this.props;
+    //     this.signInAnonymous().then((user)=>{
+    //        console.log(`anonymous signin with uid: ${user.uid}`);
+    //        self.props.dispatch(SetUser(user.uid, 'anonymous', 'anonymous', ''));
+    //        return user.uid;
+    //     })
+    //     .then(this._syncUser)
+    //     .then(this.loadScheduleArray)
+    //     .then(fnOnComplete)
+    //     .catch(this.handleFirebaseError);
+    // }
     /**
      * googleLogin
      */
-    signInWithProvider = (provider) => {
-        const {firebase} = this.props;
-        return firebase.auth().signInWithPopup(provider);
-    }
-    signInWithGoogle = () => {
-        const {firebase} = this.props;
-        return this.signInWithProvider(new firebase.auth.GoogleAuthProvider());
-    }
-    _googleLogin(fnOnComplete){
-        let self = this;
-        this.signInWithGoogle().then(() => {
-            const {firebase} = this.props;
-            const user = firebase.auth().currentUser;
-            // This gives you a Google Access Token. You can use it to access the Google API.
-            // var token = result.credential.accessToken;
-            // The signed-in user info.
-            // var user = result.user;
-            // P.S. result.user == firebase.auth().currentUser
-            var userId = firebase.auth().currentUser.uid;
-            var avatar = firebase.auth().currentUser.photoURL;
-            var email = firebase.auth().currentUser.email;
-            var displayName = firebase.auth().currentUser.displayName;
-            console.log(`userId: ${userId}`);
-            console.log(`avatar: ${avatar}`);
-            console.log(`email: ${email}`);
-            console.log(`displayName: ${displayName}`);
-            // self.setState({avatarSrc: avatar});
-            self.props.dispatch(SetUser(userId, email, displayName, avatar));
-
-            return firebase.auth().currentUser;
-        })
-        .then(this._syncUser)
-        .then(this.loadScheduleArray)
-        .then(fnOnComplete)
-        .catch(this.handleFirebaseError);
-    }
-    _syncUser = ()=>{
-        const {firebase} = this.props;
-        const user = firebase.auth().currentUser;
-
-        return this._checkUserExist(user)
-        .then((flag)=>{
-            if(!flag){
-                return this._addNewUser(user);
-            }
-        });
-    }
-    _checkUserExist = (user)=>{
-        return this.readFirebase('/users/'+user.uid)
-        .then((snapshot)=>{
-            if(snapshot.exists()){
-                console.log(`user: ${user.uid} exist`);
-                return true;
-            }
-            else{
-                console.log(`user: ${user.uid} does not exist`);
-                return false;
-            }
-        });
-    }
-    _addNewUser = (user)=>{
-        const {firebase} = this.props;
-
-        var postData = {
-            name: user.displayName,
-            email: user.email,
-            timestamp: firebase.database.ServerValue.TIMESTAMP,
-        };
-        return this.updateFirebase(`/users/${user.uid}/`, postData, user);
-    }
-    loadScheduleArray = () => {
-        const {firebase} = this.props;
-        const user = firebase.auth().currentUser;
-
-        return this._getSchedule(user)
-        .then((snapshot)=>{
-            console.log(snapshot.val());
-            let fileIds = snapshot.exists()?Object.keys(snapshot.val()):[];
-            this.props.dispatch(SetFileIds(fileIds));
-        })
-        // .catch(function(error){
-        //     console.error('loadSchedule failed');
-        //     console.error('error message: '+error.message);
-        // });
-    }
-    _getSchedule = (user) =>{
-        // var userId = firebase.auth().currentUser.uid;
-        return this.readFirebase(`/users/${user.uid}/files/`);
-    }
-    handleFirebaseError = (error) => {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // The email of the user's account used.
-        var email = error.email;
-        // The firebase.auth.AuthCredential type that was used.
-        var credential = error.credential;
-        // ...
-        console.error(`Fail Login- errorCode:${errorCode}, errorMessage:${errorMessage}`);
-        // fnOnComplete();
-    }
-    readFirebase = (path) => {
-        console.log(`read firebase path: ${path}`);
-        return this.props.firebase.database().ref(path).once('value').then(
-          (snapshot) => {
-            return snapshot;
-          }
-      );
-    }
-    updateFirebase = (path, payload) => {
-        return this.props.firebase.database().ref(path).update(payload);
-    }
+    // signInWithProvider = (provider) => {
+    //     const {firebase} = this.props;
+    //     return firebase.auth().signInWithPopup(provider);
+    // }
+    // signInWithGoogle = () => {
+    //     const {firebase} = this.props;
+    //     return this.signInWithProvider(new firebase.auth.GoogleAuthProvider());
+    // }
+    // _googleLogin(fnOnComplete){
+    //     let self = this;
+    //     this.signInWithGoogle().then(() => {
+    //         const {firebase} = this.props;
+    //         const user = firebase.auth().currentUser;
+    //         // This gives you a Google Access Token. You can use it to access the Google API.
+    //         // var token = result.credential.accessToken;
+    //         // The signed-in user info.
+    //         // var user = result.user;
+    //         // P.S. result.user == firebase.auth().currentUser
+    //         var userId = firebase.auth().currentUser.uid;
+    //         var avatar = firebase.auth().currentUser.photoURL;
+    //         var email = firebase.auth().currentUser.email;
+    //         var displayName = firebase.auth().currentUser.displayName;
+    //         console.log(`userId: ${userId}`);
+    //         console.log(`avatar: ${avatar}`);
+    //         console.log(`email: ${email}`);
+    //         console.log(`displayName: ${displayName}`);
+    //         // self.setState({avatarSrc: avatar});
+    //         self.props.dispatch(SetUser(userId, email, displayName, avatar));
+    //
+    //         return firebase.auth().currentUser;
+    //     })
+    //     .then(this._syncUser)
+    //     .then(this.loadScheduleArray)
+    //     .then(fnOnComplete)
+    //     .catch(this.handleFirebaseError);
+    // }
+    // _syncUser = ()=>{
+    //     const {firebase} = this.props;
+    //     const user = firebase.auth().currentUser;
+    //
+    //     return this._checkUserExist(user)
+    //     .then((flag)=>{
+    //         if(!flag){
+    //             return this._addNewUser(user);
+    //         }
+    //     });
+    // }
+    // _checkUserExist = (user)=>{
+    //     return this.readFirebase('/users/'+user.uid)
+    //     .then((snapshot)=>{
+    //         if(snapshot.exists()){
+    //             console.log(`user: ${user.uid} exist`);
+    //             return true;
+    //         }
+    //         else{
+    //             console.log(`user: ${user.uid} does not exist`);
+    //             return false;
+    //         }
+    //     });
+    // }
+    // _addNewUser = (user)=>{
+    //     const {firebase} = this.props;
+    //
+    //     var postData = {
+    //         name: user.displayName,
+    //         email: user.email,
+    //         timestamp: firebase.database.ServerValue.TIMESTAMP,
+    //     };
+    //     return this.updateFirebase(`/users/${user.uid}/`, postData, user);
+    // }
+    // loadScheduleArray = () => {
+    //     const {firebase} = this.props;
+    //     const user = firebase.auth().currentUser;
+    //
+    //     return this._getSchedule(user)
+    //     .then((snapshot)=>{
+    //         console.log(snapshot.val());
+    //         let fileIds = snapshot.exists()?Object.keys(snapshot.val()):[];
+    //         this.props.dispatch(SetFileIds(fileIds));
+    //     })
+    //     // .catch(function(error){
+    //     //     console.error('loadSchedule failed');
+    //     //     console.error('error message: '+error.message);
+    //     // });
+    // }
+    // _getSchedule = (user) =>{
+    //     // var userId = firebase.auth().currentUser.uid;
+    //     return this.readFirebase(`/users/${user.uid}/files/`);
+    // }
+    // handleFirebaseError = (error) => {
+    //     // Handle Errors here.
+    //     var errorCode = error.code;
+    //     var errorMessage = error.message;
+    //     // The email of the user's account used.
+    //     var email = error.email;
+    //     // The firebase.auth.AuthCredential type that was used.
+    //     var credential = error.credential;
+    //     // ...
+    //     console.error(`Fail Login- errorCode:${errorCode}, errorMessage:${errorMessage}`);
+    //     // fnOnComplete();
+    // }
+    // readFirebase = (path) => {
+    //     console.log(`read firebase path: ${path}`);
+    //     return this.props.firebase.database().ref(path).once('value').then(
+    //       (snapshot) => {
+    //         return snapshot;
+    //       }
+    //   );
+    // }
+    // updateFirebase = (path, payload) => {
+    //     return this.props.firebase.database().ref(path).update(payload);
+    // }
 
 }
 

@@ -102,110 +102,6 @@ export const SetFileIds = (fileIds) => {
     }
 }
 
-export const AnonymousLogin = (fnOnComplete, firebase) => {
-    return function(dispatch) {
-
-       signInAnonymous(firebase).then((user)=>{
-          console.log(`anonymous signin with uid: ${user.uid}`);
-          dispatch(SetUser(user.uid, 'anonymous', 'anonymous', ''));
-          return user.uid;
-       })
-       .then(_syncUser.bind(this, firebase))
-       .then(LoadScheduleArray.bind(this, firebase, dispatch))
-       .then(fnOnComplete)
-       .catch(handleFirebaseError);
-   };
-}
-const signInAnonymous = (firebase) => {
-    return firebase.auth().signInAnonymously();
-}
-
-export const GoogleLogin = (fnOnComplete, firebase) => {
-
-    return function(dispatch) {
-        signInWithGoogle(firebase).then(() => {
-            const user = firebase.auth().currentUser;
-            // This gives you a Google Access Token. You can use it to access the Google API.
-            // var token = result.credential.accessToken;
-            // The signed-in user info.
-            // var user = result.user;
-            // P.S. result.user == firebase.auth().currentUser
-            var userId = firebase.auth().currentUser.uid;
-            var avatar = firebase.auth().currentUser.photoURL;
-            var email = firebase.auth().currentUser.email;
-            var displayName = firebase.auth().currentUser.displayName;
-            console.log(`userId: ${userId}`);
-            console.log(`avatar: ${avatar}`);
-            console.log(`email: ${email}`);
-            console.log(`displayName: ${displayName}`);
-
-            dispatch(SetUser(userId, email, displayName, avatar));
-
-            return firebase.auth().currentUser;
-        })
-        .then(_syncUser.bind(this, firebase))
-        .then(LoadScheduleArray.bind(this, firebase, dispatch))
-        .then(fnOnComplete)
-        .catch(handleFirebaseError);
-    }
-}
-
-const signInWithProvider = (provider, firebase) => {
-
-    return firebase.auth().signInWithPopup(provider);
-}
-const signInWithGoogle = (firebase) => {
-    return signInWithProvider(new firebase.auth.GoogleAuthProvider(), firebase);
-}
-
-const _syncUser = (firebase)=>{
-    const user = firebase.auth().currentUser;
-
-    return _checkUserExist(user, firebase)
-    .then((flag)=>{
-        if(!flag){
-            return _addNewUser(user, firebase);
-        }
-    });
-}
-const _checkUserExist = (user, firebase)=>{
-    return readFirebase('/users/'+user.uid, firebase)
-    .then((snapshot)=>{
-        if(snapshot.exists()){
-            console.log(`user: ${user.uid} exist`);
-            return true;
-        }
-        else{
-            console.log(`user: ${user.uid} does not exist`);
-            return false;
-        }
-    });
-}
-const _addNewUser = (user, firebase)=>{
-
-    var postData = {
-        name: user.displayName,
-        email: user.email,
-        timestamp: firebase.database.ServerValue.TIMESTAMP,
-    };
-    return updateFirebase(`/users/${user.uid}/`, postData, user);
-}
-
-export const LoadScheduleArray = (firebase, dispatch) => {
-    const user = firebase.auth().currentUser;
-
-    return getScheduleArray(user, firebase)
-    .then((snapshot)=>{
-        // console.log(snapshot.val());
-        let fileIds = snapshot.exists() ? Object.keys(snapshot.val()):[];
-        dispatch(SetFileIds(fileIds));
-    });
-}
-const getScheduleArray = (user, firebase) => {
-    // var userId = firebase.auth().currentUser.uid;
-    return readFirebase(`/users/${user.uid}/files/`, firebase);
-}
-
 export const SetFireBase = () => {
     const config = {
      apiKey: "AIzaSyAjC9U69Tq534yHFz8TfUOJ2M37se5ITyI",
@@ -247,7 +143,116 @@ export const SyncFromStroage = (snapshot) => {
     }
 }
 
-/* Move fnFirebase into action END */
+/* fnFirebase START */
+
+/**
+ * Anonymous Sign in
+ */
+export const AnonymousLogin = (fnOnComplete, firebase) => {
+    return function(dispatch) {
+
+       _signInAnonymous(firebase).then((user)=>{
+          console.log(`anonymous signin with uid: ${user.uid}`);
+          dispatch(SetUser(user.uid, 'anonymous', 'anonymous', ''));
+          return user.uid;
+       })
+       .then(_syncUser.bind(this, firebase))
+       .then(LoadScheduleArray.bind(this, firebase, dispatch))
+       .then(fnOnComplete)
+       .catch(handleFirebaseError);
+   };
+}
+const _signInAnonymous = (firebase) => {
+    return firebase.auth().signInAnonymously();
+}
+
+/**
+ * Google Sign in
+ */
+export const GoogleLogin = (fnOnComplete, firebase) => {
+
+    return function(dispatch) {
+        _signInWithGoogle(firebase).then(() => {
+            const user = firebase.auth().currentUser;
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            // var token = result.credential.accessToken;
+            // P.S. result.user == firebase.auth().currentUser
+            var userId = firebase.auth().currentUser.uid;
+            var avatar = firebase.auth().currentUser.photoURL;
+            var email = firebase.auth().currentUser.email;
+            var displayName = firebase.auth().currentUser.displayName;
+            console.log(`userId: ${userId}`);
+            console.log(`avatar: ${avatar}`);
+            console.log(`email: ${email}`);
+            console.log(`displayName: ${displayName}`);
+
+            dispatch(SetUser(userId, email, displayName, avatar));
+
+            return firebase.auth().currentUser;
+        })
+        .then(_syncUser.bind(this, firebase))
+        .then(LoadScheduleArray.bind(this, firebase, dispatch))
+        .then(fnOnComplete)
+        .catch(handleFirebaseError);
+    }
+}
+
+const _signInWithProvider = (provider, firebase) => {
+
+    return firebase.auth().signInWithPopup(provider);
+}
+const _signInWithGoogle = (firebase) => {
+    return _signInWithProvider(new firebase.auth.GoogleAuthProvider(), firebase);
+}
+
+const _syncUser = (firebase)=>{
+    const user = firebase.auth().currentUser;
+
+    return _checkUserExist(user, firebase)
+    .then((flag)=>{
+        if(!flag){
+            return _addNewUser(user, firebase);
+        }
+    });
+}
+const _checkUserExist = (user, firebase)=>{
+    return readFirebase('/users/'+user.uid, firebase)
+    .then((snapshot)=>{
+        if(snapshot.exists()){
+            console.log(`user: ${user.uid} exist`);
+            return true;
+        }
+        else{
+            console.log(`user: ${user.uid} does not exist`);
+            return false;
+        }
+    });
+}
+const _addNewUser = (user, firebase)=>{
+    var postData = {
+        name: user.displayName,
+        email: user.email,
+        timestamp: firebase.database.ServerValue.TIMESTAMP,
+    };
+    return updateFirebase(`/users/${user.uid}/`, postData, firebase);
+}
+
+export const LoadScheduleArray = (firebase, dispatch) => {
+    const user = firebase.auth().currentUser;
+
+    return getScheduleArray(user, firebase)
+    .then((snapshot)=>{
+        // console.log(snapshot.val());
+        let fileIds = snapshot.exists() ? Object.keys(snapshot.val()):[];
+        dispatch(SetFileIds(fileIds));
+    });
+}
+const getScheduleArray = (user, firebase) => {
+    // var userId = firebase.auth().currentUser.uid;
+    return readFirebase(`/users/${user.uid}/files/`, firebase);
+}
+/* Sign in*/
+
 export const SyncFromStroageEx = (selectFile, firebase) => {
     return function (dispatch) {
         return loadSchedule(selectFile, firebase).then(
@@ -289,4 +294,4 @@ const readFirebase = (path, firebase) => {
 const updateFirebase = (path, payload, firebase) => {
     return firebase.database().ref(path).update(payload);
 }
-/* Move fnFirebase into action END */
+/* fnFirebase END */

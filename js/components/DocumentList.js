@@ -56,18 +56,15 @@ class DocumentList extends Component{
                             </IconButton>
                         }
                       >
-                        <MenuItem primaryText="Load File" />
-                        <MenuItem primaryText="Rename" />
+                        <MenuItem primaryText="Load File" onClick={()=>{
+                            dispatch(SyncFromStroageEx(ele, firebase));
+                        }}/>
+                        <MenuItem primaryText="Rename"/>
                       </IconMenu>
                   }
                   primaryText={ele}
                 //   secondaryText="Jan 10, 2014"
                   style={{backgroundColor: (sid==ele)?'#CCCCCC':'white'}}
-                  onClick={()=>{
-                    //   this.setState({selectFile: ele})
-                    // (new FirebaseHelper(firebase)).loadSchedule(ele, dispatch);
-                    dispatch(SyncFromStroageEx(ele, firebase));
-                  }}
                 />
             );
         });
@@ -92,6 +89,16 @@ class DocumentList extends Component{
             </div>
         );
     }
+
+    // rename = (fileId, newName) => {
+    //     const { firebase } = this.props;
+    //     const user = firebase.auth().currentUser;
+    //     var fileNameRef = firebase.database().ref(`users/${user.uid}/files/${fileId}/name`);
+    //     fileNameRef.transaction(function(name) {
+    //
+    //       return newName;
+    //     });
+    // }
 }
 
 function mapStateToProps(state) {
