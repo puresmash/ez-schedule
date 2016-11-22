@@ -21,8 +21,8 @@ class EditRow extends React.Component {
       this.state = {
           openActBallColorPicker: false,
           openPreBallColorPicker: false,
-          preBallColor: ColorPicker.Color['blue'],
-          actBallColor: ColorPicker.Color['blue'],
+          preBallColor: props.pre.color? ColorPicker.Color[props.pre.color]:ColorPicker.Color['blue'],
+          actBallColor: props.act.color? ColorPicker.Color[props.act.color]:ColorPicker.Color['blue'],
       }
   }
   componentWillMount(){
@@ -40,14 +40,14 @@ class EditRow extends React.Component {
       console.log('EditRow will update' + this.props.eDate);
   }
   render(){
-    let {sort, a, b, sDate, eDate} = this.props;
+    let {sort, act, pre, sDate, eDate} = this.props;
     let {openActBallColorPicker, openPreBallColorPicker, actBallColor, preBallColor} = this.state;
     return(
-      <div className="edit-row ball-panel">
-        <div className="edit-row-detail" style={{marginBottom: '8px'}}>
+      <div className="edit-row edit-timeline">
+        <div className="edit-detail" style={{marginBottom: '8px'}}>
             <ColorPicker open={openPreBallColorPicker} onClick={this.chgPreBallColor.bind(this)}></ColorPicker>
             <span
-                id={b}
+                id={pre.id}
                 className="circle edit-ball"
                 style={{backgroundColor: preBallColor}}
                 onClick={this.togglePreBallColorPicker.bind(this)}
@@ -56,7 +56,8 @@ class EditRow extends React.Component {
                 <DatePicker
                     className="datepicker-ball"
                     style={{display: 'inline'}}
-                    onChange={(event, dateString) => this._updPreBall(event, dateString, b)}
+                    onChange={(event, dateString) => this._updPreBall(event, dateString, pre.id)}
+                    value={pre.date? moment(pre.date).toDate(): ''}
                     floatingLabelText="Insert Predict Date"
                     minDate={moment(sDate).toDate()}
                     maxDate={moment(eDate).toDate()}
@@ -64,10 +65,10 @@ class EditRow extends React.Component {
                     disableYearSelection={this.props.disableYearSelection}/>
             </MuiThemeProvider>
         </div>
-        <div className="edit-row-detail" style={{marginBottom: '8px'}}>
+        <div className="edit-detail" style={{marginBottom: '8px'}}>
             <ColorPicker open={openActBallColorPicker} onClick={this.chgActBallColor.bind(this)}></ColorPicker>
             <span
-                id={a}
+                id={act.id}
                 className="circle edit-ball"
                 style={{backgroundColor: actBallColor}}
                 onClick={this.toggleActBallColorPicker.bind(this)}
@@ -76,7 +77,8 @@ class EditRow extends React.Component {
                 <DatePicker
                     className="datepicker-ball"
                     style={{display: 'inline'}}
-                    onChange={(event, dateString) => this._updActBall(event, dateString, a)}
+                    onChange={(event, dateString) => this._updActBall(event, dateString, act.id)}
+                    value={act.date? moment(act.date).toDate(): ''}
                     floatingLabelText="Insert Actual Date"
                     minDate={moment(sDate).toDate()}
                     maxDate={moment(eDate).toDate()}
@@ -84,10 +86,11 @@ class EditRow extends React.Component {
                     disableYearSelection={this.props.disableYearSelection}/>
             </MuiThemeProvider>
         </div>
-        <div className="edit-row-detail" style={{marginBottom: '8px'}}>
+        <div className="edit-detail" style={{marginBottom: '8px'}}>
             <label className="edit-lbl">Desc</label>
             <input type="text" defaultValue="" placeholder="description"
-              onChange={ (event) => this._updDesc(event, {b})}/>
+              value={pre.desc}
+              onChange={ (event) => this._updDesc(event, pre.id)}/>
         </div>
       </div>
     );
@@ -111,18 +114,17 @@ class EditRow extends React.Component {
   //   this.props.dispatch(UpdPreBall(id, event.target.value));
   // }
   _updDesc(event, id){
-    id = id.b;
     this.props.dispatch(UpdDesc(id, event.target.value));
   }
   chgActBallColor(color){
-      let {a} = this.props;
-      this.props.dispatch(UpdActBallColor(a, color));
+      let {act} = this.props;
+      this.props.dispatch(UpdActBallColor(act.id, color));
       this.toggleActBallColorPicker();
       this.setState({actBallColor: ColorPicker.Color[color]})
   }
   chgPreBallColor(color){
-      let {b} = this.props;
-      this.props.dispatch(UpdPreBallColor(b, color));
+      let {pre} = this.props;
+      this.props.dispatch(UpdPreBallColor(pre.id, color));
       this.togglePreBallColorPicker();
       this.setState({preBallColor: ColorPicker.Color[color]})
   }

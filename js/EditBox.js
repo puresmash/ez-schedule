@@ -16,9 +16,11 @@ import DatePicker from 'material-ui/DatePicker';
 import MenuItem from 'material-ui/MenuItem';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
+import CloudUploadIcon from 'material-ui/svg-icons/file/cloud-upload';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import ExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import ExpandLessIcon from 'material-ui/svg-icons/navigation/expand-less';
+import PhotoIcon from 'material-ui/svg-icons/image/photo';
 import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
 import Timelapse from 'material-ui/svg-icons/image/timelapse';
 import DateRange from 'material-ui/svg-icons/action/date-range';
@@ -27,6 +29,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import Divider from 'material-ui/Divider';
 import Paper from 'material-ui/Paper';
+import Badge from 'material-ui/Badge';
 // import firebase from 'firebase';
 // const config = {
 //  apiKey: "AIzaSyAjC9U69Tq534yHFz8TfUOJ2M37se5ITyI",
@@ -142,9 +145,9 @@ class EditBox extends React.Component {
     }
   }
   render(){
-    let {sDate, eDate, actBalls, svgRef, uid, sid, firebase, fileIds} = this.props;
+    let {sDate, eDate, actBalls, preBalls, svgRef, uid, sid, firebase, fileInfos} = this.props;
     let {visibleFlag, openMainSchedule, openTimeline} = this.state;
-    let ballPanel = this.getBallPanel(actBalls, sDate, eDate);
+    let ballPanel = this.getBallPanel(actBalls, preBalls, sDate, eDate);
     console.log('Rendering editbox');
 
 
@@ -153,7 +156,7 @@ class EditBox extends React.Component {
 
         <MuiThemeProvider>
         <AppBar
-          title="Paint Schedule"
+          title="Schedule Canvas"
           iconElementLeft={
               <i
                 className="fa fa-bars"
@@ -173,10 +176,12 @@ class EditBox extends React.Component {
                   targetOrigin={{horizontal: 'right', vertical: 'top'}}
                   anchorOrigin={{horizontal: 'right', vertical: 'top'}}
                   >
-                  <MenuItem primaryText="SAVE" onClick={()=>{
+                  <MenuItem primaryText="Schedule Upload" leftIcon={<CloudUploadIcon />} onClick={()=>{
                       this._updateStore();
                   }}/>
-                  <MenuItem primaryText="PRINT" />
+                  <MenuItem primaryText="Download as PNG" leftIcon={<PhotoIcon />} onClick={()=>{
+                      this.prepareImage();
+                  }}/>
               </IconMenu>}
           style={{zIndex: '0'}}
         />
@@ -195,7 +200,7 @@ class EditBox extends React.Component {
             <MuiThemeProvider>
             <Paper zDepth={1}>
                 <MyAccount />
-                <DocumentList fileIds={fileIds} sid={sid} />
+                <DocumentList fileInfos={fileInfos} sid={sid} />
                 <MenuItem
                     primaryText="Main Schedule"
                     leftIcon={<DateRange />}
@@ -205,38 +210,50 @@ class EditBox extends React.Component {
                     }}/>
                 <EditDate openMainSchedule={openMainSchedule} />
                 <Divider />
-                <div className="menu-timeline">
-                    <MenuItem
-                        primaryText="Timeline"
-                        leftIcon={<Timelapse />}
-                        rightIcon={openTimeline? <ExpandLessIcon />:<ExpandMoreIcon />}
-                        onClick={()=>{
-                            this.setState({openTimeline: !openTimeline})
-                        }}
-                        />
-                </div>
+
+                <MenuItem
+                    className="menu-item"
+                    primaryText={
+                        <div style={{display: 'flex', alignItems: 'center'}}>
+                            <span>Timeline</span>
+                            <Badge badgeContent={ballPanel.length} secondary={true} style={{marginLeft: '8px', padding: 0}} badgeStyle={{position: 'relative'}}/>
+                        </div>
+                    }
+                    leftIcon={<Timelapse />}
+                    rightIcon={openTimeline? <ExpandLessIcon />:<ExpandMoreIcon />}
+                    onClick={()=>{
+                        this.setState({openTimeline: !openTimeline})
+                    }}
+                />
 
                 <div style={this._getTimelineVisible(openTimeline)}>
                     {ballPanel}
                 </div>
-                <Divider />
-
+                <Divider style={{marginTop: openTimeline?-1:0}}/>
                 <FloatingActionButton
                     mini={true}
                     style={{marginLeft: '70%', marginTop: '-20px', marginBottom: '-20px', position: 'relative', zIndex: '2'}}
                     onClick={
                       () => this._addBall()
                   }>
-                <ContentAdd />
+                  <ContentAdd />
                 </FloatingActionButton>
-                <MenuItem primaryText="Thanks For helping" leftIcon={<Mood />} style={{position: 'relative', backgroundColor: 'white'}}/>
 
-
-                {/* <div className="btn-action" onClick={
-                  () => this._addBall()
-                }>
-                  <span className="circle btn-plus" >+</span>
-                </div> */}
+                <MenuItem
+                    className="menu-item"
+                    primaryText="Schedule Upload"
+                    leftIcon={<CloudUploadIcon />}
+                    onClick={()=>{
+                        this._updateStore();
+                }}/>
+                <MenuItem
+                    className="menu-item"
+                    primaryText="Download as PNG"
+                    leftIcon={<PhotoIcon />}
+                    onClick={()=>{
+                        this.prepareImage();
+                }}/>
+                {/* <MenuItem primaryText="Thanks For helping" leftIcon={<Mood />} style={{position: 'relative', backgroundColor: 'white'}}/> */}
             </Paper>
             </MuiThemeProvider>
 
@@ -293,15 +310,16 @@ class EditBox extends React.Component {
     this.props.dispatch(AddBall());
   }
 
-  getBallPanel(ballMap , sDate, eDate){
+  getBallPanel(actBalls, preBalls, sDate, eDate){
     let ary = [];
-    ballMap.forEach((value, key)=>{
+    actBalls.forEach((value, key)=>{
         console.log(`${key}, ${value}`);
         key = StringUtils.extractIndexFromId(key);
-        let a = `act-${key}`;
-        let b = `pre-${key}`;
+        // preBalls always has same length with actBalls
+        let act = value;
+        let pre = preBalls.get(`pre-${key}`);
         ary.push(
-          <EditRow key={`row-${key}`} sort={value.sort} a={a} b={b} sDate={sDate} eDate={eDate}/>
+          <EditRow key={`row-${key}`} sort={value.sort} act={act} pre={pre} sDate={sDate} eDate={eDate}/>
         );
     })
 
@@ -311,8 +329,8 @@ class EditBox extends React.Component {
    * Firebase
    */
   _updateStore = () => {
-      let {sid, user} = this.props;
-      let {monthAry, actBalls, preBalls, sDate, eDate} = this.props;
+      const {sid, user, firebase} = this.props;
+      const {monthAry, actBalls, preBalls, sDate, eDate} = this.props;
       var postData = {
         updateBall: {
             actBalls,
@@ -326,8 +344,8 @@ class EditBox extends React.Component {
       };
       var updates = {};
       updates[`/schedule/${user.uid}/${sid}`] = postData;
-      updates[`/users/${user.uid}/files/${sid}`] = 'time';
-      return this.props.firebase.database().ref().update(updates);
+      updates[`/users/${user.uid}/files/${sid}/time`] = firebase.database.ServerValue.TIMESTAMP;
+      return firebase.database().ref().update(updates);
   }
   readFirebase = (path) => {
       return this.props.firebase.database().ref(path).once('value').then(
@@ -344,7 +362,7 @@ class EditBox extends React.Component {
 
 function mapStateToProps(state) {
   const {sDate, eDate} = state.updateBar;
-  const {svgRef, sid, firebase, user, fileIds} = state.internalRef;
+  const {svgRef, sid, firebase, user, fileInfos} = state.internalRef;
   console.log(`calling mSTPs: sDate=${sDate}, eDate=${eDate}`);
   return {
     sDate,
@@ -356,7 +374,7 @@ function mapStateToProps(state) {
     sid,
     firebase,
     user,
-    fileIds,
+    fileInfos,
   };
 }
 
