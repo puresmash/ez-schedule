@@ -137,6 +137,7 @@ export const SyncFromStroage = (snapshot) => {
     if(snapshot.child('updateBall').exists()){
         preBalls = new Map(snapshot.val().updateBall.preBalls);
         actBalls = new Map(snapshot.val().updateBall.actBalls);
+        nextBallId = preBalls.size;
     }
     return {
         type: 'SYNC',

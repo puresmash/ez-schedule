@@ -21,8 +21,8 @@ class EditRow extends React.Component {
       this.state = {
           openActBallColorPicker: false,
           openPreBallColorPicker: false,
-          preBallColor: ColorPicker.Color['blue'],
-          actBallColor: ColorPicker.Color['blue'],
+          preBallColor: props.pre.color? ColorPicker.Color[props.pre.color]:ColorPicker.Color['blue'],
+          actBallColor: props.act.color? ColorPicker.Color[props.act.color]:ColorPicker.Color['blue'],
       }
   }
   componentWillMount(){
@@ -57,7 +57,7 @@ class EditRow extends React.Component {
                     className="datepicker-ball"
                     style={{display: 'inline'}}
                     onChange={(event, dateString) => this._updPreBall(event, dateString, pre.id)}
-                    value={moment(pre.date).toDate()}
+                    value={pre.date? moment(pre.date).toDate(): ''}
                     floatingLabelText="Insert Predict Date"
                     minDate={moment(sDate).toDate()}
                     maxDate={moment(eDate).toDate()}
@@ -78,7 +78,7 @@ class EditRow extends React.Component {
                     className="datepicker-ball"
                     style={{display: 'inline'}}
                     onChange={(event, dateString) => this._updActBall(event, dateString, act.id)}
-                    value={moment(act.date).toDate()}
+                    value={act.date? moment(act.date).toDate(): ''}
                     floatingLabelText="Insert Actual Date"
                     minDate={moment(sDate).toDate()}
                     maxDate={moment(eDate).toDate()}

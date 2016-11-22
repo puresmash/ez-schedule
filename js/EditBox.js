@@ -316,8 +316,8 @@ class EditBox extends React.Component {
         console.log(`${key}, ${value}`);
         key = StringUtils.extractIndexFromId(key);
         // preBalls always has same length with actBalls
-        let act = {id: `act-${key}`, date: value.date};
-        let pre = {id: `pre-${key}`, date: preBalls.get(`pre-${key}`).date, desc: preBalls.get(`pre-${key}`).desc};
+        let act = value;
+        let pre = preBalls.get(`pre-${key}`);
         ary.push(
           <EditRow key={`row-${key}`} sort={value.sort} act={act} pre={pre} sDate={sDate} eDate={eDate}/>
         );
@@ -344,10 +344,7 @@ class EditBox extends React.Component {
       };
       var updates = {};
       updates[`/schedule/${user.uid}/${sid}`] = postData;
-      updates[`/users/${user.uid}/files/${sid}`] = {
-
-          time: firebase.database.ServerValue.TIMESTAMP
-      };
+      updates[`/users/${user.uid}/files/${sid}/time`] = firebase.database.ServerValue.TIMESTAMP;
       return firebase.database().ref().update(updates);
   }
   readFirebase = (path) => {
