@@ -145,9 +145,9 @@ class EditBox extends React.Component {
     }
   }
   render(){
-    let {sDate, eDate, actBalls, svgRef, uid, sid, firebase, fileInfos} = this.props;
+    let {sDate, eDate, actBalls, preBalls, svgRef, uid, sid, firebase, fileInfos} = this.props;
     let {visibleFlag, openMainSchedule, openTimeline} = this.state;
-    let ballPanel = this.getBallPanel(actBalls, sDate, eDate);
+    let ballPanel = this.getBallPanel(actBalls, preBalls, sDate, eDate);
     console.log('Rendering editbox');
 
 
@@ -219,11 +219,7 @@ class EditBox extends React.Component {
                             <Badge badgeContent={ballPanel.length} secondary={true} style={{marginLeft: '8px', padding: 0}} badgeStyle={{position: 'relative'}}/>
                         </div>
                     }
-                    leftIcon={
-
-                            <Timelapse />
-
-                    }
+                    leftIcon={<Timelapse />}
                     rightIcon={openTimeline? <ExpandLessIcon />:<ExpandMoreIcon />}
                     onClick={()=>{
                         this.setState({openTimeline: !openTimeline})
@@ -314,15 +310,16 @@ class EditBox extends React.Component {
     this.props.dispatch(AddBall());
   }
 
-  getBallPanel(ballMap , sDate, eDate){
+  getBallPanel(actBalls, preBalls, sDate, eDate){
     let ary = [];
-    ballMap.forEach((value, key)=>{
+    actBalls.forEach((value, key)=>{
         console.log(`${key}, ${value}`);
         key = StringUtils.extractIndexFromId(key);
-        let a = `act-${key}`;
-        let b = `pre-${key}`;
+        // preBalls always has same length with actBalls
+        let act = {id: `act-${key}`, date: value.date};
+        let pre = {id: `pre-${key}`, date: preBalls.get(`pre-${key}`).date, desc: preBalls.get(`pre-${key}`).desc};
         ary.push(
-          <EditRow key={`row-${key}`} sort={value.sort} a={a} b={b} sDate={sDate} eDate={eDate}/>
+          <EditRow key={`row-${key}`} sort={value.sort} act={act} pre={pre} sDate={sDate} eDate={eDate}/>
         );
     })
 
