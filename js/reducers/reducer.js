@@ -144,7 +144,7 @@ function updateBar(state = {monthAry:[], sDate:'', eDate:''}, action) {
             return state;
     }
 }
-function internalRef(state={svgRef: {}, userAgent:{}, sid:'', user: {}, fileIds:[]}, action){
+function internalRef(state={svgRef: {}, userAgent:{}, sid:'', user: {}, fileIds:[], fileInfos:[]}, action){
     switch(action.type){
         case 'REF_SVG': {
             return Object.assign({}, state, {
@@ -181,6 +181,13 @@ function internalRef(state={svgRef: {}, userAgent:{}, sid:'', user: {}, fileIds:
             fileIds = [...action.fileIds];
             return Object.assign({}, state, {
                 fileIds,
+            })
+        }
+        case 'SET_FILE_INFOS':{
+            let fileInfos = {};
+            fileInfos = {...action.fileInfos};
+            return Object.assign({}, state, {
+                fileInfos,
             })
         }
 

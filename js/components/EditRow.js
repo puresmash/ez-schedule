@@ -43,8 +43,8 @@ class EditRow extends React.Component {
     let {sort, a, b, sDate, eDate} = this.props;
     let {openActBallColorPicker, openPreBallColorPicker, actBallColor, preBallColor} = this.state;
     return(
-      <div className="edit-row ball-panel">
-        <div className="edit-row-detail" style={{marginBottom: '8px'}}>
+      <div className="edit-row edit-timeline">
+        <div className="edit-detail" style={{marginBottom: '8px'}}>
             <ColorPicker open={openPreBallColorPicker} onClick={this.chgPreBallColor.bind(this)}></ColorPicker>
             <span
                 id={b}
@@ -64,7 +64,7 @@ class EditRow extends React.Component {
                     disableYearSelection={this.props.disableYearSelection}/>
             </MuiThemeProvider>
         </div>
-        <div className="edit-row-detail" style={{marginBottom: '8px'}}>
+        <div className="edit-detail" style={{marginBottom: '8px'}}>
             <ColorPicker open={openActBallColorPicker} onClick={this.chgActBallColor.bind(this)}></ColorPicker>
             <span
                 id={a}
@@ -84,7 +84,7 @@ class EditRow extends React.Component {
                     disableYearSelection={this.props.disableYearSelection}/>
             </MuiThemeProvider>
         </div>
-        <div className="edit-row-detail" style={{marginBottom: '8px'}}>
+        <div className="edit-detail" style={{marginBottom: '8px'}}>
             <label className="edit-lbl">Desc</label>
             <input type="text" defaultValue="" placeholder="description"
               onChange={ (event) => this._updDesc(event, {b})}/>

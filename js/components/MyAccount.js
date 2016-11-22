@@ -1,7 +1,7 @@
 
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
-import {SetUser,SetFileIds} from '../actions/index.js'
+import {SetUser} from '../actions/index.js'
 // import firebase from 'firebase';
 
 import MenuItem from 'material-ui/MenuItem';

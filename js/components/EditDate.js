@@ -35,48 +35,40 @@ class EditDate extends React.Component{
         // From parent
         let { openMainSchedule } = this.props;
         return(
-            <div className="main-schedule" style={this._getEditDateVisible(openMainSchedule)}>
+            <div className="edit-box-animation" style={this._getEditDateVisible(openMainSchedule)}>
                 <div className="edit-row edit-date" >
                     <div>
-                        <div className="edit-row-detail" style={{marginBottom: '8px'}}>
+                        <div className="edit-detail" style={{marginBottom: '8px'}}>
                             <label className="edit-lbl">Start</label>
 
-                              <DatePicker
-                                  className="datepicker-bar"
-                                  onChange={this._handleChangeDateS.bind(this)}
-                                  shouldDisableDate={(date)=>{return date.getDate() != 1}}
-                                  value={sDate? moment(sDate).toDate(): ''}
-                                  hintText="Insert Start Date"
-                                  minDate={moment().add(MIN_MONTH, 'M').toDate()}
-                                  maxDate={moment().add(MAX_MONTH, 'M').toDate()}
-                                  autoOk={this.state.autoOk}
-                                  disableYearSelection={this.state.disableYearSelection}/>
-
-                            {/* <Calendar onChange={this._handleChangeDateS.bind(this)} placeholder={'Insert Start Date'}
-                                      maxDate={moment().add(MAX_MONTH, 'M').format('YYYY-MM')}
-                                      minDate={moment().add(MIN_MONTH, 'M').format('YYYY-MM')}
-                                      value={sDate} clearIcon={visibleFlag}></Calendar> */}
+                            <DatePicker
+                                className="datepicker-bar"
+                                onChange={this._handleChangeDateS.bind(this)}
+                                shouldDisableDate={(date)=>{return date.getDate() != 1}}
+                                value={sDate? moment(sDate).toDate(): ''}
+                                hintText="Insert Start Date"
+                                minDate={moment().add(MIN_MONTH, 'M').toDate()}
+                                maxDate={moment().add(MAX_MONTH, 'M').toDate()}
+                                autoOk={this.state.autoOk}
+                                disableYearSelection={this.state.disableYearSelection}
+                            />
                         </div>
-                        <div className="edit-row-detail" style={{marginBottom: '8px'}}>
+                        <div className="edit-detail" style={{marginBottom: '8px'}}>
                             <label className="edit-lbl">End</label>
 
-                              <DatePicker
-                                  className="datepicker-bar"
-                                  onChange={this._handleChangeDateE.bind(this)}
-                                  shouldDisableDate={(date)=>{
-                                      return date.getDate() != moment(date).daysInMonth()
-                                  }}
-                                  value={eDate? moment(eDate).toDate(): ''}
-                                  hintText="Insert End Date"
-                                  minDate={moment().add(MIN_MONTH, 'M').toDate()}
-                                  maxDate={moment().add(MAX_MONTH, 'M').toDate()}
-                                  autoOk={this.state.autoOk}
-                                  disableYearSelection={this.state.disableYearSelection}/>
-
-                            {/* <Calendar onChange={this._handleChangeDateE.bind(this)} placeholder={'Insert End Date'}
-                                      maxDate={moment().add(MAX_MONTH, 'M').format('YYYY-MM')}
-                                      minDate={moment().add(MIN_MONTH, 'M').format('YYYY-MM')}
-                                      value={eDate} clearIcon={visibleFlag}></Calendar> */}
+                            <DatePicker
+                                className="datepicker-bar"
+                                onChange={this._handleChangeDateE.bind(this)}
+                                shouldDisableDate={(date)=>{
+                                    return date.getDate() != moment(date).daysInMonth()
+                                }}
+                                value={eDate? moment(eDate).toDate(): ''}
+                                hintText="Insert End Date"
+                                minDate={moment().add(MIN_MONTH, 'M').toDate()}
+                                maxDate={moment().add(MAX_MONTH, 'M').toDate()}
+                                autoOk={this.state.autoOk}
+                                disableYearSelection={this.state.disableYearSelection}
+                            />
                         </div>
                     </div>
 
@@ -86,16 +78,6 @@ class EditDate extends React.Component{
                         }>
                             <i className="fa fa-repeat" aria-hidden="true"></i>
                         </div>
-                        {/* <div className="btn-canvas" onClick={
-                            () => this.prepareImage()
-                        }>
-                            <i className="fa fa-download" aria-hidden="true"></i>
-                        </div> */}
-                        {/* <div className="btn-canvas" onClick={
-                            () => this.testFirebase()
-                        }>
-                            <i className="fa fa-cloud-download" aria-hidden="true"></i>
-                        </div> */}
                     </div>
                 </div>
             </div>

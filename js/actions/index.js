@@ -101,7 +101,12 @@ export const SetFileIds = (fileIds) => {
         fileIds,
     }
 }
-
+export const SetFileInfos = (fileInfos) => {
+    return {
+        type: 'SET_FILE_INFOS',
+        fileInfos,
+    }
+}
 export const SetFireBase = () => {
     const config = {
      apiKey: "AIzaSyAjC9U69Tq534yHFz8TfUOJ2M37se5ITyI",
@@ -243,8 +248,8 @@ export const LoadScheduleArray = (firebase, dispatch) => {
     return getScheduleArray(user, firebase)
     .then((snapshot)=>{
         // console.log(snapshot.val());
-        let fileIds = snapshot.exists() ? Object.keys(snapshot.val()):[];
-        dispatch(SetFileIds(fileIds));
+        let fileInfos = snapshot.exists() ? snapshot.val():[];
+        dispatch(SetFileInfos(fileInfos));
     });
 }
 const getScheduleArray = (user, firebase) => {
@@ -255,9 +260,10 @@ const getScheduleArray = (user, firebase) => {
 
 export const SyncFromStroageEx = (selectFile, firebase) => {
     return function (dispatch) {
-        return loadSchedule(selectFile, firebase).then(
+        const sid = selectFile;
+        return loadSchedule(sid, firebase).then(
           (snapshot) => {
-            dispatch(SetSid(selectFile));
+            dispatch(SetSid(sid));
             dispatch(SyncFromStroage(snapshot));
             return snapshot.val();
           }

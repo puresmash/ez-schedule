@@ -10,7 +10,11 @@ import IconButton from 'material-ui/IconButton';
 import Divider from 'material-ui/Divider';
 import Subheader from 'material-ui/Subheader';
 import Avatar from 'material-ui/Avatar';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import EditorInsertChart from 'material-ui/svg-icons/editor/insert-chart';
+import FolderIcon from 'material-ui/svg-icons/file/folder';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import {blue500, grey600} from 'material-ui/styles/colors';
 import ExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
@@ -18,15 +22,16 @@ import ExpandLessIcon from 'material-ui/svg-icons/navigation/expand-less';
 
 // import FirebaseHelper from '../utils/FirebaseHelper.js';
 import {SyncFromStroageEx} from '../actions/index.js';
+import RenameDialog from './RenameDialog.js';
 
 class DocumentList extends Component{
 
     static defaultProps = {
-        fileIds: [],
+        fileInfos: {},
         sid: '',
     };
     static propTypes = {
-        fileIds: PropTypes.array.isRequired,
+        fileInfos: PropTypes.object.isRequired,
         sid: PropTypes.string.isRequired,
     };
 
@@ -34,19 +39,25 @@ class DocumentList extends Component{
         super(props);
         this.state = {
             expandFilesFlag: false,
+            selectFile: '',
         }
     }
 
     render(){
-        let {fileIds, sid, dispatch, firebase} = this.props;
+        let {fileInfos, sid, dispatch, firebase} = this.props;
         const {expandFilesFlag} = this.state;
         let expandIcon = expandFilesFlag? <ExpandLessIcon/> : <ExpandMoreIcon/>
 
         const items = [];
-        fileIds.forEach((ele, index)=>{
+
+
+
+        // fileInfos.forEach((ele, index)=>{
+        for(let fileId in fileInfos){
+            const fileInfo = fileInfos[fileId];
             items.push(
                 <ListItem
-                  value={index}
+                  value={fileId}
                   leftAvatar={<Avatar icon={<EditorInsertChart />} backgroundColor={blue500} />}
                   rightIcon={
                       <IconMenu
@@ -57,25 +68,31 @@ class DocumentList extends Component{
                         }
                       >
                         <MenuItem primaryText="Load File" onClick={()=>{
-                            dispatch(SyncFromStroageEx(ele, firebase));
+                            dispatch(SyncFromStroageEx(fileId, firebase));
                         }}/>
-                        <MenuItem primaryText="Rename"/>
+                        <MenuItem primaryText="Rename" onClick={()=>{
+                            this.refs.renameDialog.handleOpen();
+                            this.setState({selectFile: fileId});
+                        }}/>
                       </IconMenu>
                   }
-                  primaryText={ele}
-                //   secondaryText="Jan 10, 2014"
-                  style={{backgroundColor: (sid==ele)?'#CCCCCC':'white'}}
+                  primaryText={fileInfo.name}
+                  secondaryText={new Date(fileInfo.time).toDateString()}
+                  style={{backgroundColor: (sid==fileId)?'#CCCCCC':'white'}}
                 />
             );
-        });
+        }
+        // });
 
         return(
             <div>
+                <RenameDialog ref="renameDialog" fileId={this.state.selectFile} firebase={firebase} dispatch={dispatch}/>
                 <MenuItem
                     onClick={()=>{
                         this.setState({expandFilesFlag: !expandFilesFlag});
                     }}
-                    primaryText={sid}
+                    primaryText="Files Management"
+                    leftIcon={<FolderIcon />}
                     rightIcon={expandIcon}>
                 </MenuItem>
                 <Divider />
@@ -90,15 +107,6 @@ class DocumentList extends Component{
         );
     }
 
-    // rename = (fileId, newName) => {
-    //     const { firebase } = this.props;
-    //     const user = firebase.auth().currentUser;
-    //     var fileNameRef = firebase.database().ref(`users/${user.uid}/files/${fileId}/name`);
-    //     fileNameRef.transaction(function(name) {
-    //
-    //       return newName;
-    //     });
-    // }
 }
 
 function mapStateToProps(state) {

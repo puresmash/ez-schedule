@@ -111,11 +111,11 @@ class Wizard extends React.Component{
             );
         }
         else if(step==Wizard.STEP.load){
-            const {fileIds} = this.props;
+            const {fileInfos} = this.props;
             const items = [];
-            fileIds.forEach((ele, index)=>{
-                items.push(<MenuItem value={ele} key={index} primaryText={`${ele}`} />);
-            });
+            for(let fileId in fileInfos){
+                items.push(<MenuItem value={fileId} key={fileId} primaryText={`${fileInfos[fileId].name}`} />);
+            }
 
             return (
                 <div className="wizard">
@@ -288,8 +288,7 @@ class Wizard extends React.Component{
      }
      _loadfirst(){
          let {selectFile} = this.state;
-         let {user, dispatch, firebase} = this.props;
-
+         let {dispatch, firebase} = this.props;
          if(!selectFile){
              console.error('User does not have any file yet.');
              return;
@@ -455,7 +454,7 @@ function mapStateToProps(state) {
     sDate,
     eDate,
     firebase: state.internalRef.firebase,
-    fileIds: state.internalRef.fileIds,
+    fileInfos: state.internalRef.fileInfos,
     user: state.internalRef.user,
   };
 }
