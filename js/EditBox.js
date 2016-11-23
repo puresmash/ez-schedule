@@ -3,7 +3,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
 import {AddBall, SetSid} from './actions/index.js'
-import Calendar from './components/Calendar.js'
 import EditDate from './components/EditDate.js';
 import EditRow from './components/EditRow.js';
 import MyAccount from './components/MyAccount.js';

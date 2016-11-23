@@ -139,13 +139,12 @@ class EditRow extends React.Component {
 
 }
 
-// function mapStateToProps(state) {
-//   const {sDate, eDate} = state.updateBar;
-//   console.log(`calling mSTPs in EditRow: sDate=${sDate}, eDate=${eDate}`);
-//   return {
-//     sDate,
-//     eDate
-//   };
-// }
+function mapStateToProps(state) {
+  const {actBalls, preBalls} = state.updateBall;
+  return {
+    actBalls,
+    preBalls,
+  };
+}
 
-export default connect()(EditRow)
+export default connect(mapStateToProps)(EditRow)
