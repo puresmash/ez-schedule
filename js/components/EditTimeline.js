@@ -7,7 +7,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import DatePicker from 'material-ui/DatePicker';
 import ColorPicker from './ColorPicker.js';
 
-class EditRow extends React.Component {
+class EditTimeline extends React.Component {
     static defaultProps = {
         autoOk: true,
         disableYearSelection: true
@@ -26,18 +26,18 @@ class EditRow extends React.Component {
       }
   }
   componentWillMount(){
-    console.log('EditRow will mount');
+    console.log('EditTimeline will mount');
   }
   componentDidMount(){
-    console.log('EditRow mounted');
+    console.log('EditTimeline mounted');
     // console.log(ReactDOM.findDOMNode(this));
     // ReactDOM.findDOMNode().findDOMNode(`${a}`).datepicker();
   }
   componentWillReceiveProps(){
-      console.log('EditRow receive props');
+      console.log('EditTimeline receive props');
   }
   componentWillUpdate(){
-      console.log('EditRow will update' + this.props.eDate);
+      console.log('EditTimeline will update' + this.props.eDate);
   }
   render(){
     let {sort, act, pre, sDate, eDate} = this.props;
@@ -139,13 +139,12 @@ class EditRow extends React.Component {
 
 }
 
-// function mapStateToProps(state) {
-//   const {sDate, eDate} = state.updateBar;
-//   console.log(`calling mSTPs in EditRow: sDate=${sDate}, eDate=${eDate}`);
-//   return {
-//     sDate,
-//     eDate
-//   };
-// }
+function mapStateToProps(state) {
+  const {actBalls, preBalls} = state.updateBall;
+  return {
+    actBalls,
+    preBalls,
+  };
+}
 
-export default connect()(EditRow)
+export default connect(mapStateToProps)(EditTimeline)

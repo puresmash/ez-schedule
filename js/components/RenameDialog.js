@@ -53,7 +53,7 @@ export default class RenameDialog extends Component{
         return(
             <div>
                 <Dialog
-                  title="Dialog With Actions"
+                  title="Rename This File"
                   actions={actions}
                   modal={false}
                   open={this.state.openRenameDialog}

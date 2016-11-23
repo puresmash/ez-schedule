@@ -15,7 +15,6 @@
     "moment": "^2.15.2",
     "node-uuid": "^1.4.7",
     "react": "^15.3.2",
-    "react-date-picker": "^5.3.28",
     "react-dom": "^15.3.2",
     "react-redux": "^4.4.5",
     "react-tap-event-plugin": "^1.0.0",
