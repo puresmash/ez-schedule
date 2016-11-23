@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
 import {AddBall, SetSid} from './actions/index.js'
 import EditDate from './components/EditDate.js';
-import EditRow from './components/EditRow.js';
+import EditTimeline from './components/EditTimeline.js';
 import MyAccount from './components/MyAccount.js';
 import DocumentList from './components/DocumentList.js';
 import moment from 'moment';
@@ -318,7 +318,7 @@ class EditBox extends React.Component {
         let act = value;
         let pre = preBalls.get(`pre-${key}`);
         ary.push(
-          <EditRow key={`row-${key}`} sort={value.sort} act={act} pre={pre} sDate={sDate} eDate={eDate}/>
+          <EditTimeline key={`row-${key}`} sort={value.sort} act={act} pre={pre} sDate={sDate} eDate={eDate}/>
         );
     })
 
