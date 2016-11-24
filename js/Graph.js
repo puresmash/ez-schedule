@@ -90,10 +90,9 @@ class Graph extends React.Component {
     let ary=[];
 
     preBalls.forEach((value, key)=>{
-        console.log(`${key}, ${value}`);
         let text = `${value.sort}. ${value.desc}`;
-        if(key!==0 && key%5 === 0){
-          x += 100;
+        if(value.sort!==0 && value.sort%6 === 0){
+          x += 225;
           y = 300;
         }
         else{
