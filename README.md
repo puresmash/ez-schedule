@@ -20,7 +20,7 @@ Download Dependencies with npm.
 npm install
 ```
 
-Run the bellow scripts to package javascript and scss into assests. 
+Run the bellow scripts to package javascript and scss into assets.
 
 ```sh
 # Production
@@ -36,7 +36,7 @@ Because we are using [UglifyJs](https://github.com/mishoo/UglifyJS2) on producti
 
 **Firebase**
 
-Remember to enable providers and add domains for your app in your [firebase console](https://console.firebase.google.com/) under "Authentication > SIGN-IN METHOD" tag. 
+Remember to enable providers and add domains for your app in your [firebase console](https://console.firebase.google.com/) under "Authentication > SIGN-IN METHOD" tag.
 
 <img src="provider.png" style="width : 90%" />
 <img src="domain.png" style="width : 90%" />
