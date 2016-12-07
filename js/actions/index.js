@@ -287,7 +287,7 @@ const handleFirebaseError = (error) => {
     // The firebase.auth.AuthCredential type that was used.
     var credential = error.credential;
     // ...
-    console.error(`Fail Login- errorCode:${errorCode}, errorMessage:${errorMessage}`);
+    console.error(`Firebase Failed- errorCode:${errorCode}, errorMessage:${errorMessage}`);
     // fnOnComplete();
 }
 const readFirebase = (path, firebase) => {

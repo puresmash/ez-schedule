@@ -156,6 +156,7 @@ class EditBox extends React.Component {
         <MuiThemeProvider>
         <AppBar
           title="Schedule Canvas"
+          className="appbar"
           iconElementLeft={
               <i
                 className="fa fa-bars"
@@ -195,9 +196,9 @@ class EditBox extends React.Component {
             this.setState({visibleFlag: false});
         }}>
         </div>
-        <div id="container" style={this.getVisible(visibleFlag)}>
+        <div id="side-nav" style={this.getVisible(visibleFlag)}>
             <MuiThemeProvider>
-            <Paper zDepth={1}>
+            <Paper zDepth={1} className="side-nav-wrapper">
                 <MyAccount />
                 <DocumentList fileInfos={fileInfos} sid={sid} />
                 <MenuItem
@@ -269,14 +270,9 @@ class EditBox extends React.Component {
   getVisible(flag){
       const collapse = {
           left: '-100%',
-
           opacity: 0
       }
-      const visible = {
-          left: 0,
-
-          opacity: 1
-      }
+      const visible = {}
       console.log('visibleFlag change');
       console.log(flag);
       return (flag ? visible:collapse);

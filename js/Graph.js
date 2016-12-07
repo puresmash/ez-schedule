@@ -45,40 +45,40 @@ class Graph extends React.Component {
 
 
     return(
-        <div style={{backgroundColor: 'white', border: '1px solid gray',
-                    borderRadius: '5px', marginTop: '8px', marginLeft: 'auto', marginRight: 'auto',
-                    boxSizing: 'border-box', maxWidth: '600px', width: width, overflowX: 'scroll'}}>
-          <svg xmlns="http://www.w3.org/2000/svg" ref="canvas" height="500px" width={this.width}>
-            <defs>
-                <radialGradient id="red" cx=".4" cy=".4" r=".6">
-                  <stop offset="0%" style={{stopColor: "#FF0066"}}></stop>
-                  <stop offset="60%" style={{stopColor: "#E6005C"}}></stop>
-                  <stop offset="80%" style={{stopColor: "#B30047"}}></stop>
-                  <stop offset="100%" style={{stopColor: "#800033"}}></stop>
-                </radialGradient>
-              <radialGradient id="blue" cx=".4" cy=".4" r=".6">
-                <stop offset="0%" style={{stopColor: "#0066FF"}}></stop>
-                <stop offset="60%" style={{stopColor: "#005CE6"}}></stop>
-                <stop offset="80%" style={{stopColor: "#0047B3"}}></stop>
-                <stop offset="100%" style={{stopColor: "#003380"}}></stop>
-              </radialGradient>
-              <radialGradient id="green" cx=".4" cy=".4" r=".6">
-                <stop offset="0%" style={{stopColor: "#33CC33"}}></stop>
-                <stop offset="60%" style={{stopColor: "#2EB82E"}}></stop>
-                <stop offset="80%" style={{stopColor: "#248F24"}}></stop>
-                <stop offset="100%" style={{stopColor: "#196619"}}></stop>
-              </radialGradient>
-            </defs>
-            {title}
-            <text x={CONVEX_LENGTH} y="100" style={{fill: 'lightslategray'}}>Predict Schedule</text>
-            <line x1={CONVEX_LENGTH} y1="135" x2={this.width} y2="135" stroke="gray" strokeWidth="8px"></line>
-            <text x={CONVEX_LENGTH} y="180" style={{fill: 'lightslategray'}}>Actual Schedule</text>
-            <line x1={CONVEX_LENGTH} y1="215" x2={this.width} y2="215" stroke="gray" strokeWidth="8px"></line>
-            {preBallAry}
-            {actBallAry}
+        <div id="graph">
+            <div className="graph-wrapper" style={{width: width}}>
+              <svg xmlns="http://www.w3.org/2000/svg" ref="canvas" height="500px" width={this.width}>
+                <defs>
+                    <radialGradient id="red" cx=".4" cy=".4" r=".6">
+                      <stop offset="0%" style={{stopColor: "#FF0066"}}></stop>
+                      <stop offset="60%" style={{stopColor: "#E6005C"}}></stop>
+                      <stop offset="80%" style={{stopColor: "#B30047"}}></stop>
+                      <stop offset="100%" style={{stopColor: "#800033"}}></stop>
+                    </radialGradient>
+                  <radialGradient id="blue" cx=".4" cy=".4" r=".6">
+                    <stop offset="0%" style={{stopColor: "#0066FF"}}></stop>
+                    <stop offset="60%" style={{stopColor: "#005CE6"}}></stop>
+                    <stop offset="80%" style={{stopColor: "#0047B3"}}></stop>
+                    <stop offset="100%" style={{stopColor: "#003380"}}></stop>
+                  </radialGradient>
+                  <radialGradient id="green" cx=".4" cy=".4" r=".6">
+                    <stop offset="0%" style={{stopColor: "#33CC33"}}></stop>
+                    <stop offset="60%" style={{stopColor: "#2EB82E"}}></stop>
+                    <stop offset="80%" style={{stopColor: "#248F24"}}></stop>
+                    <stop offset="100%" style={{stopColor: "#196619"}}></stop>
+                  </radialGradient>
+                </defs>
+                {title}
+                <text x={CONVEX_LENGTH} y="100" style={{fill: 'lightslategray'}}>Predict Schedule</text>
+                <line x1={CONVEX_LENGTH} y1="135" x2={this.width} y2="135" stroke="gray" strokeWidth="8px"></line>
+                <text x={CONVEX_LENGTH} y="180" style={{fill: 'lightslategray'}}>Actual Schedule</text>
+                <line x1={CONVEX_LENGTH} y1="215" x2={this.width} y2="215" stroke="gray" strokeWidth="8px"></line>
+                {preBallAry}
+                {actBallAry}
 
-            {descAry}
-          </svg>
+                {descAry}
+              </svg>
+          </div>
       </div>
     );
   }
@@ -90,10 +90,9 @@ class Graph extends React.Component {
     let ary=[];
 
     preBalls.forEach((value, key)=>{
-        console.log(`${key}, ${value}`);
         let text = `${value.sort}. ${value.desc}`;
-        if(key!==0 && key%5 === 0){
-          x += 100;
+        if(value.sort!==0 && value.sort%6 === 0){
+          x += 225;
           y = 300;
         }
         else{
