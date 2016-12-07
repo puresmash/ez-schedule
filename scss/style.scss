@@ -4,6 +4,9 @@ $color-3: #647678;
 $color-4: #2F3738;
 $color-5: #59D8E5;
 $divider: 8px;
+$GRAY50: #FAFAFA;
+
+$side-nav-width: 375px;
 
 @mixin freshTurboscent {
     background: #F1F2B5;
@@ -25,7 +28,7 @@ $divider: 8px;
 @import "component";
 
 body {
-    background-color: $color-1;
+    background-color: $GRAY50;
     margin: 0px;
     //background: url("../public/img/bg.jpg") 0 /cover fixed;
 }
@@ -116,27 +119,43 @@ div.editbox {
     flex-direction: column;
     // position: fixed;
     right: 0;
+    div.appbar{
+        // @media screen and (min-width: 1000px) {
+        //
+        // }
+    }
+
     div#mask{
         width: 100vw;
         height: 100vh;
         position: absolute;
         background-color: black;
         opacity: 0.5;
-        transition: left 0s linear 0s, opacity .3s linear 0s;
+        transition: opacity .3s linear 0s;
     }
 
-    div#container{
+    div#side-nav{
+        top: 0px;
+        left: 0px;
+        bottom: 0px;
         // position: absolute;
         position: fixed;
-        overflow: scroll;
+        overflow-y: auto;
         // top: 64px;
         max-height: 100%;
         background-color: white;
-        transition: left .6s linear;
+        transition: left .3s linear .3s;
         box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px;
-        width: 80%;
         max-width: 372px;
-
+        width: 80%;
+        // Force show nav when wider than 1000px
+        @media screen and (min-width: 1000px) {
+            left: 0 !important;
+            opacity: 1 !important;
+        }
+        .side-nav-wrapper{
+            min-height: 100%;
+        }
         .menu-item{
             position: relative;
             background-color: white!important;
@@ -220,8 +239,22 @@ div.editbox {
 }
 
 /*SVG*/
-svg {
-    // float: left;
+div#graph {
+    // Force show nav when wider than 1000px
+    @media screen and (min-width: 1000px) {
+        padding-left: $side-nav-width;
+    }
+    .graph-wrapper{
+        background-color: white;
+        border: 1px solid gray;
+        border-radius: 5px;
+        margin-top: 8px;
+        margin-left: auto;
+        margin-right: auto;
+        box-sizing: border-box;
+        max-width: 600px;
+        overflow-x: scroll;
+    }
 }
 
 circle.blue {
