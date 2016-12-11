@@ -1,6 +1,6 @@
 
 @mixin flex-center(){
-    @include inline-flex();
-    @include align-items(center);
-    @include justify-content(center);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
