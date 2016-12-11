@@ -254,9 +254,12 @@ class Wizard extends Component{
      * new graph
      */
      _createCanvas = (onComplete) => {
+        const { sDate, eDate } = this.props;
         this.props.dispatch(SetSid(uuid.v4()));
         this.props.dispatch(CreateCanvas());
-        onComplete();
+        if(sDate && eDate){
+            onComplete();
+        }
      }
      _handleChangeDateS(event, dateString){
        this.props.dispatch(UpdDate(moment(dateString).format('YYYY-MM-DD'), 'start'));
@@ -270,7 +273,9 @@ class Wizard extends Component{
 function mapStateToProps(state) {
   return {
     firebase: state.internalRef.firebase,
-    fileInfos: state.internalRef.fileInfos
+    fileInfos: state.internalRef.fileInfos,
+    sDate: state.updateBar.sDate,
+    eDate: state.updateBar.eDate
   };
 }
 
