@@ -2,7 +2,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {connect} from 'react-redux';
-import {AddBall, SetSid} from './actions/index.js'
+import {AddBall, SetSid, DownloadImage} from './actions/index.js'
 import EditDate from './components/EditDate.js';
 import EditTimeline from './components/EditTimeline.js';
 import MyAccount from './components/MyAccount.js';
@@ -67,84 +67,12 @@ class EditBox extends React.Component {
         openTimeline: false,
     }
   }
-  // prepareUpdateStore(){
-  //     let uid = this.props.uid;
-  //     if(uid && uid.length != 0){
-  //         console.log(`found uid: ${uid} prepare to update store`)
-  //         this._updateStore(uid);
-  //     }
-  //     else{
-  //         this._createAuth()
-  //     }
-  // }
-  // _createAuth(){
-  //   this.props.firebase.auth().signInAnonymously()
-  //   .then((user)=>{
-  //       console.log(`create uid: ${user.uid} prepare to create store`)
-  //       this.props.dispatch(SetSid(user.uid));
-  //       return user.uid;
-  //   })
-  //   .then((uid)=>{
-  //       console.log(`update store for: ${uid}`)
-  //       this._updateStore(uid);
-  //   })
-  //   .catch((error)=>{
-  //       // Handle Errors here.
-  //       var errorCode = error.code;
-  //       var errorMessage = error.message;
-  //       console.error(`Fail Login- errorCode:${errorCode}, errorMessage:${errorMessage}`);
-  //   });
-  // }
-
-  // _updateStore(uid){
-  //     let {monthAry, actBalls, preBalls, sDate, eDate} = this.props;
-  //     var postData = {
-  //       updateBall: {
-  //           actBalls,
-  //           preBalls
-  //       },
-  //       updateBar: {
-  //           sDate,
-  //           eDate,
-  //           monthAry
-  //       }
-  //     };
-  //     var updates = {};
-  //     updates['/schedule/' + uid] = postData;
-  //     return this.props.firebase.database().ref().update(updates);
-  // }
 
   componentDidMount(){
   }
-  prepareImage(){
-      let {svgRef} = this.props;
-
-      let svghtml = svgRef.outerHTML;
-      let myImageSrc = 'data:image/svg+xml;base64,' + window.btoa(svghtml);
-      let image = new Image();
-      image.src = myImageSrc;
-      let canvas = document.createElement('canvas');
-      canvas.setAttribute('width', '598px');
-      canvas.setAttribute('height', '498px');
-      let context = canvas.getContext('2d');
-
-      image.onload = ()=>{
-
-        context.drawImage(image, 0, 0);
-
-        let canvasdata = canvas.toDataURL('image/png');
-        let pngimg = new Image();
-        pngimg.src = canvasdata;
-
-        let a = document.createElement('a');
-        a.download = 'sample.png';
-        a.href = canvasdata;
-        // console.log(a);
-        a.click();
-    }
-  }
+  
   render(){
-    let {sDate, eDate, actBalls, preBalls, svgRef, uid, sid, firebase, fileInfos} = this.props;
+    let {sDate, eDate, actBalls, preBalls, svgRef, uid, sid, firebase, fileInfos, dispatch} = this.props;
     let {visibleFlag, openMainSchedule, openTimeline} = this.state;
     let ballPanel = this.getBallPanel(actBalls, preBalls, sDate, eDate);
     console.log('Rendering editbox');
@@ -180,7 +108,7 @@ class EditBox extends React.Component {
                       this._updateStore();
                   }}/>
                   <MenuItem primaryText="Download as PNG" leftIcon={<PhotoIcon />} onClick={()=>{
-                      this.prepareImage();
+                      dispatch(DownloadImage(svgRef));
                   }}/>
               </IconMenu>}
           style={{zIndex: '0'}}
@@ -253,7 +181,7 @@ class EditBox extends React.Component {
                         primaryText="Download as PNG"
                         leftIcon={<PhotoIcon />}
                         onClick={()=>{
-                            this.prepareImage();
+                            dispatch(DownloadImage(svgRef));
                     }}/>
                 </nav>
                 {/* <MenuItem primaryText="Thanks For helping" leftIcon={<Mood />} style={{position: 'relative', backgroundColor: 'white'}}/> */}

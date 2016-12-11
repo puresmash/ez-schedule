@@ -17,7 +17,7 @@ class Surface extends React.Component {
       super();
       this.state = {
           openModal: true,
-          enableBtnClose: false
+          openBtnClose: false
       };
 
     }
