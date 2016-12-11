@@ -221,7 +221,8 @@ class Wizard extends Component{
         const {fileInfos} = this.props;
         const items = [];
         for(let fileId in fileInfos){
-            items.push(<MenuItem value={fileId} key={fileId} primaryText={`${fileInfos[fileId].name}`} />);
+            let filename = fileInfos[fileId].name || fileId;
+            items.push(<MenuItem value={fileId} key={fileId} primaryText={filename} />);
         }
         return items;
     }
@@ -247,7 +248,6 @@ class Wizard extends Component{
              console.error('User does not have any file yet.');
              return;
          }
-         console.error(onComplete);
          dispatch(SyncFromStroageEx(selectFile, firebase, onComplete));
      }
     /**
