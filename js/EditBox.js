@@ -15,6 +15,7 @@ import DatePicker from 'material-ui/DatePicker';
 import MenuItem from 'material-ui/MenuItem';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
+import Snackbar from 'material-ui/Snackbar';
 import CloudUploadIcon from 'material-ui/svg-icons/file/cloud-upload';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import ExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
@@ -65,15 +66,16 @@ class EditBox extends React.Component {
         visibleFlag,
         openMainSchedule: false,
         openTimeline: false,
+        openSnackbar: false,
     }
   }
 
   componentDidMount(){
   }
-  
+
   render(){
     let {sDate, eDate, actBalls, preBalls, svgRef, uid, sid, firebase, fileInfos, dispatch} = this.props;
-    let {visibleFlag, openMainSchedule, openTimeline} = this.state;
+    let {visibleFlag, openMainSchedule, openTimeline, openSnackbar} = this.state;
     let ballPanel = this.getBallPanel(actBalls, preBalls, sDate, eDate);
     console.log('Rendering editbox');
 
@@ -187,11 +189,20 @@ class EditBox extends React.Component {
                 {/* <MenuItem primaryText="Thanks For helping" leftIcon={<Mood />} style={{position: 'relative', backgroundColor: 'white'}}/> */}
             </Paper>
             </MuiThemeProvider>
-
+            <MuiThemeProvider>
+                <Snackbar
+                  open={openSnackbar}
+                  message="Save schedule to Cloud succeed"
+                  autoHideDuration={4000}
+                  onRequestClose={this.toogleSnack}
+                />
+            </MuiThemeProvider>
         </div>
       </div>
     );
   }
+
+
 
   toggleVisible(){
       let flag = Boolean(this.state.visibleFlag ^ true);
@@ -251,6 +262,12 @@ class EditBox extends React.Component {
 
     return ary;
   }
+
+  toogleSnack = () => {
+      const {openSnackbar} = this.state;
+      this.setState({openSnackbar: !openSnackbar});
+  }
+
   /**
    * Firebase
    */
@@ -271,7 +288,8 @@ class EditBox extends React.Component {
       var updates = {};
       updates[`/schedule/${user.uid}/${sid}`] = postData;
       updates[`/users/${user.uid}/files/${sid}/time`] = firebase.database.ServerValue.TIMESTAMP;
-      return firebase.database().ref().update(updates);
+      return firebase.database().ref().update(updates)
+                .then(this.toogleSnack);
   }
   readFirebase = (path) => {
       return this.props.firebase.database().ref(path).once('value').then(

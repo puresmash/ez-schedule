@@ -55,6 +55,7 @@ class DocumentList extends Component{
         // fileInfos.forEach((ele, index)=>{
         for(let fileId in fileInfos){
             const fileInfo = fileInfos[fileId];
+            const filename = fileInfo.name || fileId;
             items.push(
                 <ListItem
                   value={fileId}
@@ -76,7 +77,7 @@ class DocumentList extends Component{
                         }}/>
                       </IconMenu>
                   }
-                  primaryText={fileInfo.name}
+                  primaryText={filename}
                   secondaryText={new Date(fileInfo.time).toDateString()}
                   style={{backgroundColor: (sid==fileId)?'#CCCCCC':'white'}}
                 />
