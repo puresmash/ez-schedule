@@ -186,12 +186,6 @@ class EditBox extends React.Component {
           style={{zIndex: '0'}}
         />
         </MuiThemeProvider>
-        {/* <div style={{fontSize: '3em', display: 'flex', justifyContent: 'flex-end'}}>
-            <i className="fa fa-minus-square-o" aria-hidden="true" onClick={
-                () => this.toggleVisible()
-            }>
-            </i>
-        </div> */}
         <div id="mask" style={this._getMaskVisible(visibleFlag)} onClick={()=>{
             this.setState({visibleFlag: false});
         }}>
@@ -199,60 +193,69 @@ class EditBox extends React.Component {
         <div id="side-nav" style={this.getVisible(visibleFlag)}>
             <MuiThemeProvider>
             <Paper zDepth={1} className="side-nav-wrapper">
-                <MyAccount />
-                <DocumentList fileInfos={fileInfos} sid={sid} />
-                <MenuItem
-                    primaryText="Main Schedule"
-                    leftIcon={<DateRange />}
-                    rightIcon={openMainSchedule? <ExpandLessIcon />:<ExpandMoreIcon />}
-                    onClick={()=>{
-                        this.setState({openMainSchedule: !openMainSchedule});
+                {/* <h2 style={{margin: 0, lineHeight: '63px', color: 'gray', paddingLeft: '72px',
+                            borderBottom: '1px solid rgb(224, 224, 224)'}}>
+                    Schedule
+                </h2> */}
+                <nav>
+
+                    <MyAccount />
+                    <DocumentList fileInfos={fileInfos} sid={sid} />
+                    <MenuItem
+                        primaryText="Main Schedule"
+                        leftIcon={<DateRange />}
+                        rightIcon={openMainSchedule? <ExpandLessIcon />:<ExpandMoreIcon />}
+                        onClick={()=>{
+                            this.setState({openMainSchedule: !openMainSchedule});
+                        }}/>
+                    <EditDate openMainSchedule={openMainSchedule} />
+                    <Divider />
+
+                    <MenuItem
+                        className="menu-item"
+                        primaryText={
+                            <div style={{display: 'flex', alignItems: 'center'}}>
+                                <span>Timeline</span>
+                                <Badge badgeContent={ballPanel.length} secondary={true}
+                                    style={{marginLeft: '8px', padding: 0}} badgeStyle={{position: 'relative'}}/>
+                            </div>
+                        }
+                        leftIcon={<Timelapse />}
+                        rightIcon={openTimeline? <ExpandLessIcon />:<ExpandMoreIcon />}
+                        onClick={()=>{
+                            this.setState({openTimeline: !openTimeline})
+                        }}
+                    />
+
+                    <div style={this._getTimelineVisible(openTimeline)}>
+                        {ballPanel}
+                    </div>
+                    <Divider style={{marginTop: openTimeline?-1:0}}/>
+                    <FloatingActionButton
+                        mini={true}
+                        style={{marginLeft: '70%', marginTop: '-20px',
+                            marginBottom: '-20px', position: 'relative', zIndex: '2'}}
+                        onClick={
+                          () => this._addBall()
+                      }>
+                      <ContentAdd />
+                    </FloatingActionButton>
+
+                    <MenuItem
+                        className="menu-item"
+                        primaryText="Schedule Upload"
+                        leftIcon={<CloudUploadIcon />}
+                        onClick={()=>{
+                            this._updateStore();
                     }}/>
-                <EditDate openMainSchedule={openMainSchedule} />
-                <Divider />
-
-                <MenuItem
-                    className="menu-item"
-                    primaryText={
-                        <div style={{display: 'flex', alignItems: 'center'}}>
-                            <span>Timeline</span>
-                            <Badge badgeContent={ballPanel.length} secondary={true} style={{marginLeft: '8px', padding: 0}} badgeStyle={{position: 'relative'}}/>
-                        </div>
-                    }
-                    leftIcon={<Timelapse />}
-                    rightIcon={openTimeline? <ExpandLessIcon />:<ExpandMoreIcon />}
-                    onClick={()=>{
-                        this.setState({openTimeline: !openTimeline})
-                    }}
-                />
-
-                <div style={this._getTimelineVisible(openTimeline)}>
-                    {ballPanel}
-                </div>
-                <Divider style={{marginTop: openTimeline?-1:0}}/>
-                <FloatingActionButton
-                    mini={true}
-                    style={{marginLeft: '70%', marginTop: '-20px', marginBottom: '-20px', position: 'relative', zIndex: '2'}}
-                    onClick={
-                      () => this._addBall()
-                  }>
-                  <ContentAdd />
-                </FloatingActionButton>
-
-                <MenuItem
-                    className="menu-item"
-                    primaryText="Schedule Upload"
-                    leftIcon={<CloudUploadIcon />}
-                    onClick={()=>{
-                        this._updateStore();
-                }}/>
-                <MenuItem
-                    className="menu-item"
-                    primaryText="Download as PNG"
-                    leftIcon={<PhotoIcon />}
-                    onClick={()=>{
-                        this.prepareImage();
-                }}/>
+                    <MenuItem
+                        className="menu-item"
+                        primaryText="Download as PNG"
+                        leftIcon={<PhotoIcon />}
+                        onClick={()=>{
+                            this.prepareImage();
+                    }}/>
+                </nav>
                 {/* <MenuItem primaryText="Thanks For helping" leftIcon={<Mood />} style={{position: 'relative', backgroundColor: 'white'}}/> */}
             </Paper>
             </MuiThemeProvider>

@@ -79,10 +79,10 @@ body {
 
             }
         }
-        div.wizard {
+        div.wiz-wrapper {
             padding: 1em 1em 1em 1em;
 
-            div.desciption{
+            div.blockquote{
                 background-color: gray;
                 div.content{
                     background-color: #d9d9d9;
@@ -99,7 +99,7 @@ body {
                 }
             }
         }
-        div.btn-panel {
+        div.wiz-footer {
             padding: 2em 1em 1em 1em;
             display: flex;
             div.button{

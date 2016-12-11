@@ -1,7 +1,7 @@
 
 import React, {Component, PropTypes} from 'react';
 
-export default class WizardButton extends Component{
+class StepButton extends Component{
 
     static defaultProps = {
         iconId: 'fa fa-cloud-download',
@@ -26,4 +26,22 @@ export default class WizardButton extends Component{
             </div>
         );
     }
+}
+
+class StepFooter extends Component{
+    constructor(props){
+        super(props);
+    }
+    render(){
+        return(
+            <div className="wiz-footer">
+                {this.props.children}
+            </div>
+        );
+    }
+}
+
+module.exports = {
+    StepButton,
+    StepFooter
 }
