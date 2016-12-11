@@ -8,111 +8,16 @@ $GRAY50: #FAFAFA;
 
 $side-nav-width: 375px;
 
-@mixin freshTurboscent {
-    background: #F1F2B5;
-    /* fallback for old browsers */
-    background: -webkit-linear-gradient(#F1F2B5 , #135058);
-    /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(#F1F2B5 , #135058);
-    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-}
-@mixin aLostMemory {
-    background-color: #FFB88C;
-    /* fallback for old browsers */
-    background-image: -webkit-linear-gradient(#DE6262 , #FFB88C);
-    /* Chrome 10-25, Safari 5.1-6 */
-    background-image: linear-gradient(#DE6262 , #FFB88C);
-    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-}
-@import "compass";
-@import "flexbox";
+// Common
 @import "component";
+// Specific Component
+@import "wizard";
 
 body {
     background-color: $GRAY50;
     margin: 0px;
     //background: url("../public/img/bg.jpg") 0 /cover fixed;
 }
-/*Wizard*/
-#surface {
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-    display: inline-flex;
-    flex-direction: column;
-    overflow: hidden;
-    z-index: 1;
-
-    &.flex-center {
-        @include flex-center();
-    }
-
-    &:before {
-        content: '';
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background-color: rgba(0, 0, 0, .5);
-        width: 100vw;
-        height: 100vh;
-        z-index: -1;
-    }
-    div.window {
-        background-color: rgba(255,255,255, .7);
-        border-radius: 0.5em;
-        width: 90%;
-        max-width: 600px;
-        div.state {
-            display: flex;
-            justify-content: space-between;;
-            padding-top: 0.5em;
-            h2 {
-                margin-left: 16px;
-            }
-            i {
-                margin-right: 0.5em;
-                @include thumb{
-                    line-height: 23px;
-                };
-                @include aLostMemory
-
-            }
-        }
-        div.wizard {
-            padding: 1em 1em 1em 1em;
-
-            div.desciption{
-                background-color: gray;
-                div.content{
-                    background-color: #d9d9d9;
-                    margin-left: 4px;
-                    padding-left: 8px;
-                    color: gray;
-                    font-style: italic;
-                }
-            }
-
-            div.datepicker-wizard > div{
-                @media screen and (max-width: 500px) {
-                    width: 90% !important;
-                }
-            }
-        }
-        div.btn-panel {
-            padding: 2em 1em 1em 1em;
-            display: flex;
-            div.button{
-                @include big-button {
-                    @include aLostMemory;
-                }
-            }
-        }
-    }
-
-}
-
 
 /*EditBox*/
 div.editbox {

@@ -24,7 +24,7 @@ export default class Avatar extends React.Component{
                     borderRadius: '50%',
                     textAlign: 'center',
                 }}>
-                    <i className="fa fa-user" aria-hidden="true"
+                    <i className="fa fa-user-secret" aria-hidden="true"
                         style={{
                             lineHeight: '48px',
                             fontSize: '24px'

@@ -35,3 +35,21 @@
         background-repeat: repeat-x;
     }
 }
+
+// Gradient
+@mixin freshTurboscent {
+    background: #F1F2B5;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(#F1F2B5 , #135058);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(#F1F2B5 , #135058);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+@mixin aLostMemory {
+    background-color: #FFB88C;
+    /* fallback for old browsers */
+    background-image: -webkit-linear-gradient(#DE6262 , #FFB88C);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background-image: linear-gradient(#DE6262 , #FFB88C);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
