@@ -182,7 +182,9 @@ class Wizard extends Component{
                         wording="New"
                         iconId="fa fa-magic"
                         style={{marginRight: '1em'}}
-                        onClick={this._createCanvas.bind(this)}>
+                        onClick={()=>{
+                            this._createCanvas(onComplete);
+                        }}>
                     </StepButton>
                 </StepFooter>
             </Step>
@@ -251,9 +253,10 @@ class Wizard extends Component{
     /**
      * new graph
      */
-     _createCanvas(){
+     _createCanvas = (onComplete) => {
         this.props.dispatch(SetSid(uuid.v4()));
         this.props.dispatch(CreateCanvas());
+        onComplete();
      }
      _handleChangeDateS(event, dateString){
        this.props.dispatch(UpdDate(moment(dateString).format('YYYY-MM-DD'), 'start'));
