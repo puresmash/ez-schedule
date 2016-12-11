@@ -303,3 +303,29 @@ const updateFirebase = (path, payload, firebase) => {
     return firebase.database().ref(path).update(payload);
 }
 /* fnFirebase END */
+
+
+export const DownloadImage = (svgRef) => {
+    let svghtml = svgRef.outerHTML;
+    let myImageSrc = 'data:image/svg+xml;base64,' + window.btoa(svghtml);
+    let image = new Image();
+    image.src = myImageSrc;
+    let canvas = document.createElement('canvas');
+    canvas.setAttribute('width', '598px');
+    canvas.setAttribute('height', '498px');
+    let context = canvas.getContext('2d');
+
+    image.onload = ()=>{
+
+      context.drawImage(image, 0, 0);
+
+      let canvasdata = canvas.toDataURL('image/png');
+      let pngimg = new Image();
+      pngimg.src = canvasdata;
+
+      let a = document.createElement('a');
+      a.download = 'sample.png';
+      a.href = canvasdata;
+      a.click();
+  }
+}

@@ -145,12 +145,36 @@ div.editbox {
 }
 
 /*SVG*/
+$graph-header-height: 32px;
 div#graph {
     // Force show nav when wider than 1000px
     @media screen and (min-width: 1000px) {
         padding-left: $side-nav-width;
     }
     .graph-wrapper{
+        .graph-header{
+            width: 100%;
+            height: $graph-header-height;
+            // background-color: rgb(242, 242, 242);
+            border-bottom: 1px solid #808080;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: flex-end;
+            .graph-action{
+                width: $graph-header-height;
+                height: $graph-header-height;
+                text-align: center;
+                &:hover{
+                    background-color: rgba(0,0,0,0.3);
+                    transition: background .5s ease, color .3s ease;
+                    color: white;
+                    cursor: pointer;
+                }
+                i{
+                    line-height: $graph-header-height;
+                }
+            }
+        }
         background-color: white;
         border: 1px solid gray;
         border-radius: 5px;

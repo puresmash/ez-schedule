@@ -2,7 +2,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 // Actions
-import {RefSvg} from './actions/index.js';
+import {RefSvg, DownloadImage} from './actions/index.js';
 // Date String Validate
 import StringUtils from './utils/Utils.js';
 import MonthBar from './components/MonthBar.js'
@@ -36,17 +36,23 @@ class Graph extends React.Component {
     // this.width = (width>MAX_WIDTH)? MAX_WIDTH : width;
     this.width = MAX_WIDTH - 2;
 
-    let {monthAry, preBalls, actBalls} = this.props;
+    let {monthAry, preBalls, actBalls, dispatch, svgRef} = this.props;
     let title = this.getTitleList(monthAry);
 
     let preBallAry = this.getPreBallList(preBalls, monthAry);
     let actBallAry = this.getActBallList(actBalls, monthAry);
     let descAry = this.getDescList(preBalls);
 
-
     return(
         <div id="graph">
             <div className="graph-wrapper" style={{width: width}}>
+              <div className="graph-header">
+                <div className="graph-action" onClick={()=>{
+                  dispatch(DownloadImage(svgRef))
+                }}>
+                  <i className="fa fa-floppy-o"></i>
+                </div>
+              </div>
               <svg xmlns="http://www.w3.org/2000/svg" ref="canvas" height="500px" width={this.width}>
                 <defs>
                     <radialGradient id="red" cx=".4" cy=".4" r=".6">
@@ -173,7 +179,8 @@ function mapStateToProps(state) {
   return {
     monthAry: state.updateBar.monthAry,
     actBalls: state.updateBall.actBalls,
-    preBalls: state.updateBall.preBalls
+    preBalls: state.updateBall.preBalls,
+    svgRef: state.internalRef.svgRef
   };
 }
 
