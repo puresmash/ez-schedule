@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {UpdDate, CreateCanvas, SetSid, SetUser, GoogleLogin, AnonymousLogin, SyncFromStroageEx} from '../actions/index.js';
 import moment from 'moment';
@@ -18,7 +18,7 @@ import {Step, StepTitle, StepDescription, StepTextContent, StepButton,
 const MAX_MONTH = 6;
 const MIN_MONTH = -3;
 
-class Wizard extends React.Component{
+class Wizard extends Component{
 
     static STEP = {
         first: 'first',
@@ -28,6 +28,10 @@ class Wizard extends React.Component{
         load: 'load',
         waiting: 'waiting',
     }
+
+    static propTypes = {
+        onComplete: PropTypes.func.isRequired
+    };
 
     constructor(props){
         super(props);
@@ -41,7 +45,7 @@ class Wizard extends React.Component{
     }
 
     render(){
-        const { firebase, dispatch } = this.props;
+        const { firebase, dispatch, onComplete } = this.props;
         const { step, traceStep } = this.state;
 
         return (
@@ -201,7 +205,9 @@ class Wizard extends React.Component{
                         wording="Load"
                         iconId="fa fa-folder-open"
                         style={{marginRight: '1em'}}
-                        onClick={this._loadfirst.bind(this)}>
+                        onClick={()=>{
+                            this._loadfirst(onComplete);
+                        }}>
                     </StepButton>
                 </StepFooter>
             </Step>
@@ -232,14 +238,15 @@ class Wizard extends React.Component{
      handleChangeSelect = (event, index, value) => {
          this.setState({selectFile: value});
      }
-     _loadfirst(){
+     _loadfirst = (onComplete) => {
          let {selectFile} = this.state;
-         let {dispatch, firebase} = this.props;
+         let {dispatch, firebase } = this.props;
          if(!selectFile){
              console.error('User does not have any file yet.');
              return;
          }
-         dispatch(SyncFromStroageEx(selectFile, firebase));
+         console.error(onComplete);
+         dispatch(SyncFromStroageEx(selectFile, firebase, onComplete));
      }
     /**
      * new graph

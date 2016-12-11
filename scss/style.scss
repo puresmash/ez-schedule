@@ -58,12 +58,12 @@ body {
         height: 100vh;
         z-index: -1;
     }
-    div.window {
+    div.modal {
         background-color: rgba(255,255,255, .7);
         border-radius: 0.5em;
         width: 90%;
         max-width: 600px;
-        div.state {
+        div.wiz-header {
             display: flex;
             justify-content: space-between;;
             padding-top: 0.5em;

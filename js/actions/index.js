@@ -259,13 +259,14 @@ const getScheduleArray = (user, firebase) => {
 }
 /* Sign in*/
 
-export const SyncFromStroageEx = (selectFile, firebase) => {
+export const SyncFromStroageEx = (selectFile, firebase, onComplete) => {
     return function (dispatch) {
         const sid = selectFile;
         return loadSchedule(sid, firebase).then(
           (snapshot) => {
             dispatch(SetSid(sid));
             dispatch(SyncFromStroage(snapshot));
+            onComplete();
             return snapshot.val();
           }
         )
