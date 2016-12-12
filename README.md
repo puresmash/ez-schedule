@@ -4,13 +4,18 @@ This project is crafted to help users report the progress of their projects on w
 
 The project is using React.js as the frontend framework, and firebase realtime database plays the role of the backend (BaaS).
 
+**Demo**
+
+<img src="docs/demo.gif" style="width : 90%" />
+
 **Interface**
 
-<img src="interface.png" style="width : 90%" />
+<img src="docs/mac.png" style="width : 90%" />
 
 **Result**
 
-<img src="sample.png" style="width : 90%" />
+<img src="docs/sample.png" style="width : 90%" />
+
 
 ## Install
 
@@ -38,8 +43,8 @@ Because we are using [UglifyJs](https://github.com/mishoo/UglifyJS2) on producti
 
 Remember to enable providers and add domains for your app in your [firebase console](https://console.firebase.google.com/) under "Authentication > SIGN-IN METHOD" tag.
 
-<img src="provider.png" style="width : 90%" />
-<img src="domain.png" style="width : 90%" />
+<img src="docs/provider.png" style="width : 90%" />
+<img src="docs/domain.png" style="width : 90%" />
 
 Modify database access rules like below
 
