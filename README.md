@@ -59,10 +59,10 @@ Modify database access rules like below
     },
     "users":{
       "$uid":{
-        ".read": "auth != null && auth.uid ==$uid"
+        ".read": "auth != null && auth.uid ==$uid",
+        ".write": "auth !== null && auth.uid == $uid",
       }
     },
-    ".write": "auth != null"
   }
 }
 ```
