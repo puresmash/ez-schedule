@@ -1,7 +1,7 @@
 import React from 'react';
-import {Graph} from '../Graph.js';
-import {EditBox} from '../EditBox.js';
-import {Surface} from './Surface.js';
+import { Graph } from '../Graph.js';
+import EditBox from '../EditBox';
+import { Surface } from './Surface.js';
 
 const App = () => (
   <div id="App">
