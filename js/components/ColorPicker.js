@@ -1,48 +1,41 @@
 
-import React from 'react';
-// import {UpdActBallColor, UpdPreBallColor} from '../actions/index.js'
+import React, { Component, PropTypes } from 'react';
 
-export default class ColorPicker extends React.Component {
+export default class ColorPicker extends Component {
 
-    static Color = {
-        red: '#ff6782',
-        green: '#00f5a3',
-        blue: '#0088ff'
-    };
+  static Color = {
+    RED: '#ff6782',
+    GREEN: '#00f5a3',
+    BLUE: '#0088ff',
+  };
 
-    static defaultProps = {
-        color: 'blue'
-    };
-    static propTypes = {
-        open: React.PropTypes.bool.isRequired,
-        color: React.PropTypes.string,
-        onClick: React.PropTypes.func.isRequired,
-    };
+  static propTypes = {
+    open: PropTypes.bool.isRequired,
+    onClick: PropTypes.func.isRequired,
+  };
 
-    constructor(props){
-        super(props)
-    }
-
-    render(){
-        let {open, onClick} = this.props;
-        let visibility = open? 'visible': 'hidden';
-        let zIndex = open? 2: -1;
-        let width = open? '100%':'0px';
-        return(
-            <div className="colorpicker" style={{width: width}}>
-                <div className="brick" style={{backgroundColor: ColorPicker.Color['red']}} onClick={()=>{
-                    console.log(onClick);
-                    onClick('red');
-                }}></div>
-                <div className="brick" style={{backgroundColor: ColorPicker.Color['green']}} onClick={()=>{
-                    onClick('green');
-                }}></div>
-                <div className="brick" style={{backgroundColor: ColorPicker.Color['blue']}} onClick={()=>{
-                    onClick('blue');
-                }}></div>
-            </div>
-        );
-
-    }
+  render() {
+    const { open, onClick } = this.props;
+    // const visibility = open ? 'visible' : 'hidden';
+    // const zIndex = open ? 2 : -1;
+    const width = open ? '100%' : '0px';
+    return (
+      <div className="colorpicker" style={{ width }}>
+        <button className="brick" style={{ backgroundColor: ColorPicker.Color.RED }}
+          onClick={() => {
+            console.log(onClick);
+            onClick(ColorPicker.Color.RED);
+          }} />
+        <button className="brick" style={{ backgroundColor: ColorPicker.Color.GREEN }}
+          onClick={() => {
+            onClick(ColorPicker.Color.GREEN);
+          }} />
+        <button className="brick" style={{ backgroundColor: ColorPicker.Color.BLUE }}
+          onClick={() => {
+            onClick(ColorPicker.Color.BLUE);
+          }} />
+      </div>
+    );
+  }
 
 }

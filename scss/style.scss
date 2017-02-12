@@ -103,14 +103,16 @@ div.editbox {
         div.colorpicker{
             position: absolute;
             display: inline-flex;
-            height: 90px;
+            height: 80px;
             width: 100%;
             margin-left: -16px;
             margin-top: -16px;
             z-index: 2;
             transition: width .5s ease-in;
-            div.brick{
+            button.brick{
                 flex: 1 1 0;
+                padding: 0;
+                border: 0;
                 &:hover{
                     border: 3px outset gray;
                     cursor: pointer;

@@ -1,10 +1,10 @@
 
-import React, {Component, PropTypes} from 'react';
-import {connect} from 'react-redux';
-import {UpdDate, CreateCanvas, SetSid, SetUser, GoogleLogin, AnonymousLogin, SyncFromStroageEx} from '../actions/index.js';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 import moment from 'moment';
 import uuid from 'node-uuid';
 
+import { UpdDate, CreateCanvas, SetSid, SetUser, GoogleLogin, AnonymousLogin, SyncFromStroageEx } from '../actions/index.js';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import DatePicker from 'material-ui/DatePicker';
 import TextField from 'material-ui/TextField';
@@ -45,35 +45,35 @@ class Wizard extends Component{
     }
 
     render(){
-        const { firebase, dispatch, onComplete } = this.props;
+        const { dispatch, onComplete } = this.props;
         const { step, traceStep } = this.state;
 
         return (
             <div>
-            <Step stepIndex={Wizard.STEP.first} activeStep={step}>
+              <Step stepIndex={Wizard.STEP.first} activeStep={step}>
                 <StepTextContent>
-                    <StepTitle>Choose you identity:</StepTitle>
-                    <StepDescription>
-                        You can enjoy our features anonymously,
-                        or login by your google account to draw schedules on each of your devices synchronously
-                    </StepDescription>
+                  <StepTitle>Choose you identity:</StepTitle>
+                  <StepDescription>
+                    You can enjoy our features anonymously,
+                    or login by your google account to draw schedules on each of your devices synchronously
+                  </StepDescription>
                 </StepTextContent>
                 <StepFooter>
-                    <StepButton
-                        wording="Anonymous"
-                        iconId="fa fa-user-secret"
-                        style={{marginRight: '1em'}}
-                        onClick={() => {
-                            this.setState({step: Wizard.STEP.waiting});
-                            dispatch(AnonymousLogin(this._chgStateToAnonymousSignIn.bind(this), firebase));
-                        }}>
-                    </StepButton>
-                    <StepButton
-                        wording="SignIn"
-                        iconId="fa fa-google"
-                        onClick={() => {
-                            this.setState({step: Wizard.STEP.waiting});
-                            dispatch(GoogleLogin(this._chgStateToGoogleSignIn.bind(this), firebase));
+                  <StepButton
+                    wording="Anonymous"
+                    iconId="fa fa-user-secret"
+                    style={{marginRight: '1em'}}
+                    onClick={() => {
+                      this.setState({step: Wizard.STEP.waiting});
+                      dispatch(AnonymousLogin(this._chgStateToAnonymousSignIn.bind(this)));
+                    }}>
+                  </StepButton>
+                  <StepButton
+                    wording="SignIn"
+                    iconId="fa fa-google"
+                    onClick={() => {
+                      this.setState({step: Wizard.STEP.waiting});
+                      dispatch(GoogleLogin(this._chgStateToGoogleSignIn.bind(this)));
                         }}>
                     </StepButton>
                 </StepFooter>
@@ -243,12 +243,12 @@ class Wizard extends Component{
      }
      _loadfirst = (onComplete) => {
          let {selectFile} = this.state;
-         let {dispatch, firebase } = this.props;
+         let { dispatch } = this.props;
          if(!selectFile){
              console.error('User does not have any file yet.');
              return;
          }
-         dispatch(SyncFromStroageEx(selectFile, firebase, onComplete));
+         dispatch(SyncFromStroageEx(selectFile, onComplete));
      }
     /**
      * new graph
@@ -272,7 +272,6 @@ class Wizard extends Component{
 
 function mapStateToProps(state) {
   return {
-    firebase: state.internalRef.firebase,
     fileInfos: state.internalRef.fileInfos,
     sDate: state.updateBar.sDate,
     eDate: state.updateBar.eDate

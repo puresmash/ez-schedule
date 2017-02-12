@@ -107,7 +107,6 @@ class EditDate extends React.Component{
 
 function mapStateToProps(state) {
   const {sDate, eDate} = state.updateBar;
-  // const {svgRef, uid, firebase} = state.internalRef;
   console.log(`calling mSTPs: sDate=${sDate}, eDate=${eDate}`);
   return {
     sDate,

@@ -1,10 +1,10 @@
-let React = require('react');
+import React from 'react';
 
 class SimpleComponent extends React.Component {
-  constructor(){
-    super();
-  }
-  render(){
+  // constructor(){
+  //   super();
+  // }
+  render() {
     return (
       <div>This is my first component.</div>
     );

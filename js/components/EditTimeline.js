@@ -45,7 +45,7 @@ class EditTimeline extends React.Component {
     return(
       <div className="edit-row edit-timeline">
         <div className="edit-detail" style={{marginBottom: '8px'}}>
-            <ColorPicker open={openPreBallColorPicker} onClick={this.chgPreBallColor.bind(this)}></ColorPicker>
+          <ColorPicker open={openPreBallColorPicker} onClick={this.chgPreBallColor.bind(this)}></ColorPicker>
             <span
                 id={pre.id}
                 className="circle edit-ball"
