@@ -1,6 +1,9 @@
-import React, { PropTypes } from 'react';
+// @flow
 
-const Avatar = ({ src }) => {
+import React from 'react';
+
+// Test the basic usage of flowtype at stateless component
+const Avatar = ({ src = null } : { src: ?string }) => {
   if (src) {
     return (
       <img className="avatar"
@@ -28,14 +31,6 @@ const Avatar = ({ src }) => {
         }} />
     </div>
   );
-};
-
-Avatar.defaultProps = {
-  src: null,
-};
-
-Avatar.propTypes = {
-  src: PropTypes.string,
 };
 
 export default Avatar;
