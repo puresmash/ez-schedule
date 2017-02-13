@@ -8,9 +8,10 @@
   },
   "rules": {
     "no-console": 0,
+    "comma-dangle": [ 2, "always-multiline" ],
     "react/no-array-index-key": 0,
     "react/jsx-filename-extension": 0,
-    "react/jsx-first-prop-new-line": [ 0, "multiline"],
+    "react/jsx-first-prop-new-line": [ 0, "multiline" ],
     "react/jsx-closing-bracket-location": [
       1, {
         "selfClosing": "after-props",
