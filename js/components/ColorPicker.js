@@ -24,15 +24,15 @@ export default class ColorPicker extends Component {
         <button className="brick" style={{ backgroundColor: ColorPicker.Color.RED }}
           onClick={() => {
             console.log(onClick);
-            onClick(ColorPicker.Color.RED);
+            onClick('red');
           }} />
         <button className="brick" style={{ backgroundColor: ColorPicker.Color.GREEN }}
           onClick={() => {
-            onClick(ColorPicker.Color.GREEN);
+            onClick('green');
           }} />
         <button className="brick" style={{ backgroundColor: ColorPicker.Color.BLUE }}
           onClick={() => {
-            onClick(ColorPicker.Color.BLUE);
+            onClick('blue');
           }} />
       </div>
     );

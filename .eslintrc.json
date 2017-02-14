@@ -8,6 +8,7 @@
   },
   "rules": {
     "no-console": 0,
+    "class-methods-use-this": 0,
     "comma-dangle": [ 2, "always-multiline" ],
     "react/no-array-index-key": 0,
     "react/jsx-filename-extension": 0,
@@ -17,6 +18,7 @@
         "selfClosing": "after-props",
         "nonEmpty": "after-props"
       }
-    ]
+    ],
+    "react/sort-comp": 0
   }
 }
