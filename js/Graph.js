@@ -186,7 +186,6 @@ class Graph extends Component {
     this.scale = scale;
 
     const ary = monthAry.map((ele, index) => {
-      console.log(`${index}, ${ele}`);
       const title = `t-${index}`;
       return <MonthBar key={title} index={index} title={ele.mstr} scale={this.scale} />;
     });
@@ -198,8 +197,6 @@ class Graph extends Component {
 }
 
 function mapStateToProps(state) {
-  console.log(`calling mSTPs: monthAry=${state.updateBar.monthAry}`);
-  console.log(state);
   return {
     monthAry: state.updateBar.monthAry,
     actBalls: state.updateBall.actBalls,
